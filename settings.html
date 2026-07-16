@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <img src="assets/logo.png">
+            <h2>Wedding Guestbook</h2>
+        </div>
+
+        <nav>
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="guests.html">👥 Daftar Tamu</a>
+            <a href="scanner.html">📷 Scanner</a>
+            <a href="settings.html" class="active">⚙ Pengaturan</a>
+        </nav>
+
+    </aside>
+
+    <main class="content">
+
+        <h1>Pengaturan Wedding</h1>
+
+        <div class="card">
+
+            <label>Nama Pengantin Wanita</label>
+            <input id="bride" type="text">
+
+            <br><br>
+
+            <label>Nama Pengantin Pria</label>
+            <input id="groom" type="text">
+
+            <br><br>
+
+            <label>Tanggal Wedding</label>
+            <input id="date" type="date">
+
+            <br><br>
+
+            <label>Lokasi</label>
+            <input id="venue" type="text">
+
+            <br><br>
+
+            <button id="saveBtn">💾 Simpan</button>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="js/settings.js"></script>
+
+</body>
+</html>

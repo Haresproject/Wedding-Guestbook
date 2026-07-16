@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Wedding Guestbook</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <img src="assets/logo.png" alt="Logo">
+            <h2>Wedding Guestbook</h2>
+        </div>
+
+        <nav>
+
+            <a href="dashboard.html" class="active">🏠 Dashboard</a>
+
+            <a href="guests.html">👥 Daftar Tamu</a>
+
+            <a href="scanner.html">📷 Scanner</a>
+
+            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
+                📺 Display
+            </a>
+
+            <a href="settings.html">⚙ Pengaturan</a>
+
+        </nav>
+
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Selamat datang di Wedding Guestbook</p>
+            </div>
+
+            <div class="admin">
+                👤 Admin
+            </div>
+
+        </header>
+        <section class="hero">
+
+    <img id="weddingLogo"
+         src="assets/logo.png"
+         class="hero-logo">
+
+    <h1 id="coupleName">
+        Loading...
+    </h1>
+
+    <p id="weddingDate"></p>
+
+    <p id="weddingVenue"></p>
+
+</section>
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Tamu</h3>
+                <h2 id="total">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Sudah Hadir</h3>
+                <h2 id="hadir">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Belum Hadir</h3>
+                <h2 id="belum">0</h2>
+            </div>
+
+        </section>
+
+        <section class="activity">
+
+            <h2>Aktivitas Terbaru</h2>
+
+            <div id="latestGuest">
+                Belum ada tamu yang check-in.
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
