@@ -1,59 +1,138 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Guestbook</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
+<title>Login Admin</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+body{
+    margin:0;
+    background:#f8f5f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:Arial,sans-serif;
+}
+
+.login-box{
+
+    width:350px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:16px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+
+    text-align:center;
+
+}
+
+.login-box img{
+
+    width:90px;
+
+    margin-bottom:20px;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:12px;
+
+    margin:10px 0;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    box-sizing:border-box;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#b88952;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+button:hover{
+
+    opacity:.9;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<div class="container">
+<div class="login-box">
 
-    <header>
-        <h1>💍 Wedding Guestbook</h1>
-        <p>Dashboard Buku Tamu Digital</p>
-    </header>
+<img src="assets/logo.png">
 
-    <div class="cards">
+<h2>Wedding Guestbook</h2>
 
-        <div class="card">
-            <h3>Total Tamu</h3>
-            <h2 id="total">0</h2>
-        </div>
+<p>Silakan login sebagai Admin</p>
 
-        <div class="card">
-            <h3>Sudah Hadir</h3>
-            <h2 id="hadir">0</h2>
-        </div>
+<input id="username" placeholder="Username">
 
-        <div class="card">
-            <h3>Belum Hadir</h3>
-            <h2 id="belum">0</h2>
-        </div>
+<input id="password" type="password" placeholder="Password">
 
-    </div>
+<button onclick="login()">
 
-    <div class="menu">
+Masuk Dashboard
 
-        <button onclick="location.href='scanner.html'">
-            📷 Scan QR
-        </button>
-
-        <button onclick="location.href='guests.html'">
-            👥 Daftar Tamu
-        </button>
-
-        <button onclick="window.open('https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display')">
-            📺 Display Screen
-        </button>
-
-    </div>
+</button>
 
 </div>
 
-<script src="js/api.js"></script>
+<script>
+
+function login(){
+
+    const username=document.getElementById("username").value;
+
+    const password=document.getElementById("password").value;
+
+    if(username==="admin" && password==="admin123"){
+
+        location.href="dashboard.html";
+
+    }else{
+
+        alert("Username atau Password salah.");
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>
