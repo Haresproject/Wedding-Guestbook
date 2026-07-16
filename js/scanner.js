@@ -1,45 +1,60 @@
 const scanner = new Html5Qrcode("reader");
 
-async function startScanner() {
+function onScanSuccess(decodedText) {
 
-    try {
+    document.getElementById("status").innerHTML =
+        "✅ QR berhasil dibaca";
 
-        const cameras = await Html5Qrcode.getCameras();
+    scanner.stop().then(() => {
 
-        if (cameras.length === 0) {
-            document.getElementById("status").innerHTML =
-                "❌ Tidak ada kamera yang ditemukan";
-            return;
-        }
+        window.location.href = decodedText;
 
-        await scanner.start(
-            cameras[0].id,
-            {
-                fps: 10,
-                qrbox: { width: 250, height: 250 }
-            },
-            (decodedText) => {
-
-                document.getElementById("status").innerHTML =
-                    "✅ QR berhasil dibaca";
-
-                scanner.stop();
-
-                window.location.href = decodedText;
-
-            },
-            () => {}
-        );
-
-    } catch (err) {
-
-        console.error(err);
-
-        document.getElementById("status").innerHTML =
-            JSON.stringify(err);
-
-    }
+    });
 
 }
 
-startScanner();
+function onScanFailure(error){}
+
+// Ambil daftar kamera
+Html5Qrcode.getCameras().then(cameras => {
+
+    if(cameras && cameras.length){
+
+        // Cari kamera belakang
+        let cameraId = cameras[0].id;
+
+        cameras.forEach(cam => {
+
+            const name = cam.label.toLowerCase();
+
+            if(
+                name.includes("back") ||
+                name.includes("rear") ||
+                name.includes("environment") ||
+                name.includes("belakang")
+            ){
+                cameraId = cam.id;
+            }
+
+        });
+
+        scanner.start(
+            cameraId,
+            {
+                fps:10,
+                qrbox:250
+            },
+            onScanSuccess,
+            onScanFailure
+        );
+
+    }
+
+}).catch(err=>{
+
+    document.getElementById("status").innerHTML =
+        "❌ Kamera tidak ditemukan";
+
+    console.log(err);
+
+});
