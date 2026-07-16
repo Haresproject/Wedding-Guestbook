@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Scanner QR</title>
+<title>Scanner QR Wedding</title>
 
 <link rel="stylesheet" href="css/style.css">
 
@@ -12,11 +12,21 @@
 
 <style>
 
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+}
+
 .container{
     max-width:700px;
     margin:auto;
     padding:20px;
     text-align:center;
+}
+
+h1{
+    margin-bottom:20px;
 }
 
 #reader{
@@ -31,7 +41,7 @@ button{
     padding:12px;
     font-size:16px;
     margin-top:10px;
-    border-radius:8px;
+    border-radius:10px;
 
 }
 
@@ -58,6 +68,94 @@ button:hover{
 
 }
 
+/* ================= POPUP ================= */
+
+.popup{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.65);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.popup-card{
+
+    background:white;
+
+    width:85%;
+    max-width:420px;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    animation:pop .3s ease;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+
+}
+
+.popup-card h1{
+
+    margin:0;
+
+    color:#4CAF50;
+
+    font-size:42px;
+
+}
+
+.popup-card h2{
+
+    margin:20px 0 10px;
+
+    font-size:30px;
+
+}
+
+.popup-card p{
+
+    font-size:22px;
+
+    color:#666;
+
+}
+
+@keyframes pop{
+
+from{
+
+transform:scale(.7);
+
+opacity:0;
+
+}
+
+to{
+
+transform:scale(1);
+
+opacity:1;
+
+}
+
+}
+
 </style>
 
 </head>
@@ -75,6 +173,20 @@ button:hover{
 </button>
 
 <div id="reader"></div>
+
+<div id="popupSuccess" class="popup">
+
+    <div class="popup-card">
+
+        <h1>✅ BERHASIL</h1>
+
+        <h2 id="guestName"></h2>
+
+        <p id="guestType"></p>
+
+    </div>
+
+</div>
 
 <p id="status">
 Pilih kamera lalu tekan Mulai Scanner

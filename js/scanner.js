@@ -3,11 +3,11 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6f
 let scanner = null;
 let scanning = false;
 
-// ========================
-// Load Kamera
-// ========================
+// =======================
+// Load daftar kamera
+// =======================
 
-async function loadCameras(){
+async function loadCameras() {
 
     const cameras = await Html5Qrcode.getCameras();
 
@@ -15,32 +15,31 @@ async function loadCameras(){
 
     select.innerHTML = "";
 
-    cameras.forEach(cam=>{
+    cameras.forEach(cam => {
 
-        const option=document.createElement("option");
+        const option = document.createElement("option");
 
-        option.value=cam.id;
+        option.value = cam.id;
 
-        option.text=cam.label || "Camera";
+        option.text = cam.label || "Camera";
 
         select.appendChild(option);
 
     });
 
-    // otomatis pilih kamera belakang kalau ada
-    for(let i=0;i<select.options.length;i++){
+    // Pilih kamera belakang otomatis jika ada
+    for (let i = 0; i < select.options.length; i++) {
 
-        const text=select.options[i].text.toLowerCase();
+        const text = select.options[i].text.toLowerCase();
 
-        if(
+        if (
             text.includes("back") ||
             text.includes("rear") ||
             text.includes("environment") ||
             text.includes("belakang")
-        ){
+        ) {
 
-            select.selectedIndex=i;
-
+            select.selectedIndex = i;
             break;
 
         }
@@ -49,116 +48,155 @@ async function loadCameras(){
 
 }
 
-// ========================
+// =======================
 // Mulai Scanner
-// ========================
+// =======================
 
-async function startScanner(){
+async function startScanner() {
 
-    const cameraId=document.getElementById("cameraSelect").value;
+    if (scanner) {
 
-    scanner=new Html5Qrcode("reader");
+        try {
+            await scanner.stop();
+        } catch (e) {}
 
-    await scanner.start(
+        scanner.clear();
+
+    }
+
+    const cameraId = document.getElementById("cameraSelect").value;
+
+    scanner = new Html5Qrcode("reader");
+
+    scanner.start(
 
         cameraId,
 
         {
 
-            fps:10,
+            fps: 10,
 
-            qrbox:250
+            qrbox: {
+                width: 250,
+                height: 250
+            }
 
         },
 
         onScanSuccess,
 
-        ()=>{}
+        () => {}
 
     );
 
 }
 
-// ========================
-// Scan Berhasil
-// ========================
+// =======================
+// Saat QR berhasil dibaca
+// =======================
 
-async function onScanSuccess(decodedText){
+async function onScanSuccess(decodedText) {
 
-    if(scanning) return;
+    if (scanning) return;
 
-    scanning=true;
+    scanning = true;
 
-    document.getElementById("status").innerHTML="⏳ Memproses...";
+    document.getElementById("status").innerHTML = "⏳ Memproses...";
 
-    try{
+    try {
 
-        const res=await fetch(
+        const res = await fetch(
 
-            API_URL+
-
-            "?action=checkin&id="+
-
+            API_URL +
+            "?action=checkin&id=" +
             encodeURIComponent(decodedText)
 
         );
 
-        const data=await res.json();
+        const data = await res.json();
 
-        if(data.success){
+        if (data.success) {
 
-            document.getElementById("status").innerHTML=
+            // Popup
+            document.getElementById("guestName").innerHTML = data.nama;
 
-            "✅ "+data.nama+" berhasil check-in";
+            document.getElementById("guestType").innerHTML = data.tipe || "";
 
-            if(navigator.vibrate){
+            document.getElementById("popupSuccess").style.display = "flex";
 
-                navigator.vibrate(200);
+            document.getElementById("status").innerHTML = "✅ Berhasil";
+
+            // Getar
+            if (navigator.vibrate) {
+
+                navigator.vibrate([200,100,200]);
 
             }
 
-            const audio=new Audio(
+            // Bunyi beep menggunakan Web Audio API
+            try {
 
-                "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-            );
+                const oscillator = audioContext.createOscillator();
 
-            audio.play();
+                const gainNode = audioContext.createGain();
 
-        }else{
+                oscillator.connect(gainNode);
 
-            document.getElementById("status").innerHTML=
+                gainNode.connect(audioContext.destination);
 
-            "❌ "+data.message;
+                oscillator.type = "sine";
+
+                oscillator.frequency.value = 900;
+
+                oscillator.start();
+
+                gainNode.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    audioContext.currentTime + 0.25
+                );
+
+                oscillator.stop(audioContext.currentTime + 0.25);
+
+            } catch(e) {
+
+                console.log("Audio gagal", e);
+
+            }
+
+        } else {
+
+            alert(data.message);
 
         }
 
-    }catch(e){
+    } catch (err) {
 
-        document.getElementById("status").innerHTML=
+        console.log(err);
 
-        "❌ Gagal menghubungi server";
-
-        console.log(e);
+        alert("Gagal menghubungi server");
 
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
-        scanning=false;
+        document.getElementById("popupSuccess").style.display = "none";
 
-        document.getElementById("status").innerHTML=
+        document.getElementById("status").innerHTML = "📷 Scanner siap";
 
-        "Siap scan berikutnya";
+        scanning = false;
 
-    },2000);
+    }, 2000);
 
 }
+
+// =======================
 
 document
 
 .getElementById("startBtn")
 
-.addEventListener("click",startScanner);
+.addEventListener("click", startScanner);
 
 loadCameras();
