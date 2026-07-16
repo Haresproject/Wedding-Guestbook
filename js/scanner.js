@@ -133,37 +133,14 @@ async function onScanSuccess(decodedText) {
 
             }
 
-            // Bunyi beep menggunakan Web Audio API
-            try {
+    // Bunyi beep
+const beep = new Audio("assets/beep.mp3");
 
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+beep.volume = 1;
 
-                const oscillator = audioContext.createOscillator();
-
-                const gainNode = audioContext.createGain();
-
-                oscillator.connect(gainNode);
-
-                gainNode.connect(audioContext.destination);
-
-                oscillator.type = "sine";
-
-                oscillator.frequency.value = 900;
-
-                oscillator.start();
-
-                gainNode.gain.exponentialRampToValueAtTime(
-                    0.0001,
-                    audioContext.currentTime + 0.25
-                );
-
-                oscillator.stop(audioContext.currentTime + 0.25);
-
-            } catch(e) {
-
-                console.log("Audio gagal", e);
-
-            }
+beep.play().catch(err => {
+    console.log("Gagal memutar beep", err);
+});
 
         } else {
 
