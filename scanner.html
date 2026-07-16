@@ -1,26 +1,84 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan QR Tamu</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
+<title>Scanner QR</title>
 
-    <script src="https://unpkg.com/html5-qrcode"></script>
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:20px;
+    text-align:center;
+}
+
+#reader{
+    width:100%;
+    margin-top:20px;
+}
+
+select,
+button{
+
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    margin-top:10px;
+    border-radius:8px;
+
+}
+
+button{
+
+    background:#4CAF50;
+    color:white;
+    border:none;
+    cursor:pointer;
+
+}
+
+button:hover{
+
+    opacity:.9;
+
+}
+
+#status{
+
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>📷 Scan QR Tamu</h1>
+<h1>📷 Scanner QR Wedding</h1>
 
-    <div id="reader"></div>
+<select id="cameraSelect"></select>
 
-    <p id="status">
-        Arahkan kamera ke QR Code
-    </p>
+<button id="startBtn">
+▶ Mulai Scanner
+</button>
+
+<div id="reader"></div>
+
+<p id="status">
+Pilih kamera lalu tekan Mulai Scanner
+</p>
 
 </div>
 
