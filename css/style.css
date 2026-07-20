@@ -269,3 +269,44 @@ button{
 button:hover{
     background:#2f6a5c;
 }
+.latest-card{
+    background:linear-gradient(135deg,#214E43,#2f6a5c);
+    color:white;
+    padding:25px;
+    border-radius:18px;
+    text-align:center;
+    animation:fadeIn .5s;
+}
+
+.latest-card h2{
+    font-size:34px;
+    margin:15px 0;
+}
+
+.latest-card p{
+    opacity:.8;
+}
+
+.card h2{
+    transition:.3s;
+}
+
+.card:hover h2{
+    transform:scale(1.08);
+}
+
+.hero{
+    background:linear-gradient(135deg,#ffffff,#f6f7f8);
+}
+
+.hero-logo{
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.hero h1{
+    font-size:40px;
+}
+
+.hero p{
+    font-size:18px;
+}

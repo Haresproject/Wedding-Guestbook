@@ -3,38 +3,27 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6f
 let lastGuestTime = "";
 
 // ================= SETTINGS =================
+
 async function loadSettings(){
-
-    const res = await fetch(API_URL + "?action=settings");
-
-    const data = await res.json();
-
-    document.getElementById("coupleName").innerHTML =
-        `${data.bride} ❤️ ${data.groom}`;
-
-    document.getElementById("weddingDate").innerHTML =
-        formatTanggal(data.date);
-
-    document.getElementById("weddingVenue").innerHTML =
-        data.venue;
-
-    document.getElementById("weddingLogo").src =
-        data.logo;
-
-}
-
-// ================= STATISTIK =================
-async function loadStats(){
 
     try{
 
-        const res = await fetch(API_URL + "?action=stats");
+        const res = await fetch(API_URL + "?action=settings");
 
         const data = await res.json();
 
-        document.getElementById("total").innerText = data.total;
-        document.getElementById("hadir").innerText = data.hadir;
-        document.getElementById("belum").innerText = data.belum;
+        document.getElementById("coupleName").innerHTML =
+            `${data.bride} ❤️ ${data.groom}`;
+
+        document.getElementById("weddingDate").innerHTML =
+            formatTanggal(data.date);
+
+        document.getElementById("weddingVenue").innerHTML =
+            "📍 " + data.venue;
+
+        if(data.logo){
+            document.getElementById("weddingLogo").src = data.logo;
+        }
 
     }catch(err){
 
@@ -44,12 +33,35 @@ async function loadStats(){
 
 }
 
-// Tamu terakhir
+// ================= STATS =================
+
+async function loadStats(){
+
+    try{
+
+        const res = await fetch(API_URL + "?action=stats");
+
+        const data = await res.json();
+
+        animateNumber("total", data.total);
+        animateNumber("hadir", data.hadir);
+        animateNumber("belum", data.belum);
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+// ================= LATEST GUEST =================
+
 async function loadLatestGuest(){
 
     try{
 
-        const res = await fetch(API_URL + "?action=latest");
+        const res = await fetch(API_URL + "?action=latest&t=" + Date.now());
 
         const data = await res.json();
 
@@ -58,9 +70,15 @@ async function loadLatestGuest(){
             lastGuestTime = data.time;
 
             document.getElementById("latestGuest").innerHTML = `
-                <h3>🎉 Tamu Terakhir Check-in</h3>
-                <br>
-                <h2>${data.nama || "-"}</h2>
+                <div class="latest-card">
+
+                    <h3>🎉 Check-in Terbaru</h3>
+
+                    <h2>${data.nama || "-"}</h2>
+
+                    <p>${formatJam(data.time)}</p>
+
+                </div>
             `;
 
         }
@@ -73,20 +91,78 @@ async function loadLatestGuest(){
 
 }
 
-loadSettings();
-loadStats();
-loadLatestGuest();
+// ================= ANIMATION =================
 
-setInterval(loadStats,3000);
-setInterval(loadLatestGuest,2000);
+function animateNumber(id,target){
+
+    const el = document.getElementById(id);
+
+    let current = parseInt(el.innerText) || 0;
+
+    const step = target > current ? 1 : -1;
+
+    const interval = setInterval(()=>{
+
+        current += step;
+
+        el.innerText = current;
+
+        if(current == target){
+
+            clearInterval(interval);
+
+        }
+
+    },15);
+
+}
+
+// ================= FORMAT =================
+
 function formatTanggal(tanggal){
+
+    if(!tanggal) return "-";
 
     const d = new Date(tanggal);
 
     return d.toLocaleDateString("id-ID",{
+
         day:"numeric",
+
         month:"long",
+
         year:"numeric"
+
     });
 
 }
+
+function formatJam(time){
+
+    if(!time) return "";
+
+    const d = new Date(time);
+
+    return d.toLocaleTimeString("id-ID",{
+
+        hour:"2-digit",
+
+        minute:"2-digit",
+
+        second:"2-digit"
+
+    });
+
+}
+
+// ================= LOAD =================
+
+loadSettings();
+
+loadStats();
+
+loadLatestGuest();
+
+setInterval(loadStats,3000);
+
+setInterval(loadLatestGuest,2000);
