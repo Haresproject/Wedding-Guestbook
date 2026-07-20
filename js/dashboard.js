@@ -1,6 +1,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec";
 
 let lastGuestTime = "";
+let chart;
 
 // ================= SETTINGS =================
 
@@ -46,6 +47,8 @@ async function loadStats(){
         animateNumber("total", data.total);
         animateNumber("hadir", data.hadir);
         animateNumber("belum", data.belum);
+
+        updateChart(data.hadir, data.belum);
 
     }catch(err){
 
@@ -184,3 +187,68 @@ loadLatestGuest();
 setInterval(loadStats,3000);
 
 setInterval(loadLatestGuest,2000);
+function updateChart(hadir, belum){
+
+    const ctx = document
+        .getElementById("attendanceChart")
+        .getContext("2d");
+
+    if(chart){
+
+        chart.data.datasets[0].data = [
+            hadir,
+            belum
+        ];
+
+        chart.update();
+
+        return;
+
+    }
+
+    chart = new Chart(ctx,{
+
+        type:"doughnut",
+
+        data:{
+
+            labels:[
+                "Sudah Hadir",
+                "Belum Hadir"
+            ],
+
+            datasets:[{
+
+                data:[
+                    hadir,
+                    belum
+                ],
+
+                backgroundColor:[
+                    "#214E43",
+                    "#E8C547"
+                ],
+
+                borderWidth:0
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            plugins:{
+
+                legend:{
+                    position:"bottom"
+                }
+
+            }
+
+        }
+
+    });
+
+}
