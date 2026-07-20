@@ -44,10 +44,30 @@ async function loadStats(){
 
         const data = await res.json();
 
-        animateNumber("total", data.total);
-        animateNumber("hadir", data.hadir);
-        animateNumber("belum", data.belum);
+        // Angka langsung tampil
+        document.getElementById("total").innerText = data.total;
+        document.getElementById("hadir").innerText = data.hadir;
+        document.getElementById("belum").innerText = data.belum;
+        const persen = data.total > 0
+    ? ((data.hadir / data.total) * 100).toFixed(1)
+    : 0;
 
+document.getElementById("progressFill").style.width =
+    persen + "%";
+
+document.getElementById("progressText").innerHTML =
+    persen + "% Tamu Sudah Hadir";
+
+        // Progress Bar
+        const persen = data.total > 0
+            ? ((data.hadir / data.total) * 100).toFixed(1)
+            : 0;
+
+        document.getElementById("progressFill").style.width = persen + "%";
+        document.getElementById("progressText").innerHTML =
+            persen + "% Tamu Sudah Hadir";
+
+        // Donut Chart
         updateChart(data.hadir, data.belum);
 
     }catch(err){
@@ -57,7 +77,6 @@ async function loadStats(){
     }
 
 }
-
 // ================= LATEST GUEST =================
 
 async function loadLatestGuest(){
@@ -110,31 +129,6 @@ async function loadLatestGuest(){
         console.log(err);
 
     }
-
-}
-// ================= ANIMATION =================
-
-function animateNumber(id,target){
-
-    const el = document.getElementById(id);
-
-    let current = parseInt(el.innerText) || 0;
-
-    const step = target > current ? 1 : -1;
-
-    const interval = setInterval(()=>{
-
-        current += step;
-
-        el.innerText = current;
-
-        if(current == target){
-
-            clearInterval(interval);
-
-        }
-
-    },15);
 
 }
 
