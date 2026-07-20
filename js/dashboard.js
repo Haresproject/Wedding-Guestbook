@@ -22,6 +22,18 @@ async function loadSettings(){
 
         if(data.logo){
             document.getElementById("weddingLogo").src = data.logo;
+        if(data.background){
+
+    document.querySelector(".hero").style.backgroundImage =
+        `url(${data.background})`;
+
+    document.querySelector(".hero").style.backgroundSize =
+        "cover";
+
+    document.querySelector(".hero").style.backgroundPosition =
+        "center";
+
+}
         }
         // Dynamic Theme
 if(data.primaryColor){

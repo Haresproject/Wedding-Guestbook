@@ -13,6 +13,10 @@ async function loadSettings(){
         document.getElementById("bride").value = data.bride || "";
         document.getElementById("groom").value = data.groom || "";
         document.getElementById("venue").value = data.venue || "";
+        document.getElementById("logo").value = data.logo || "";
+        document.getElementById("background").value = data.background || "";
+        document.getElementById("theme").value = data.theme || "emerald";
+        applyTheme(data.theme || "emerald");
 
         if(data.date){
 
@@ -37,17 +41,23 @@ async function saveSettings(){
 
     const body = {
 
-        action:"saveSettings",
+    action:"saveSettings",
 
-        bride:document.getElementById("bride").value,
+    bride:document.getElementById("bride").value,
 
-        groom:document.getElementById("groom").value,
+    groom:document.getElementById("groom").value,
 
-        date:document.getElementById("date").value,
+    date:document.getElementById("date").value,
 
-        venue:document.getElementById("venue").value
+    venue:document.getElementById("venue").value,
 
-    };
+    logo:document.getElementById("logo").value,
+
+    background:document.getElementById("background").value,
+
+    theme:document.getElementById("theme").value
+
+};
 
     try{
 
@@ -82,3 +92,59 @@ document
 .addEventListener("click",saveSettings);
 
 loadSettings();
+document
+.getElementById("theme")
+.addEventListener("change", function(){
+
+    applyTheme(this.value);
+
+});
+
+function applyTheme(theme){
+
+    const themes = {
+
+        emerald:{
+            primary:"#214E43",
+            secondary:"#2f6a5c",
+            accent:"#E8C547"
+        },
+
+        gold:{
+            primary:"#B8860B",
+            secondary:"#D4AF37",
+            accent:"#F5DEB3"
+        },
+
+        rosegold:{
+            primary:"#B76E79",
+            secondary:"#D98C99",
+            accent:"#F4D6CC"
+        },
+
+        royalblue:{
+            primary:"#1E3A8A",
+            secondary:"#2563EB",
+            accent:"#60A5FA"
+        },
+
+        black:{
+            primary:"#222222",
+            secondary:"#444444",
+            accent:"#C9A227"
+        }
+
+    };
+
+    const c = themes[theme];
+
+    document.documentElement.style
+        .setProperty("--primary", c.primary);
+
+    document.documentElement.style
+        .setProperty("--secondary", c.secondary);
+
+    document.documentElement.style
+        .setProperty("--accent", c.accent);
+
+}

@@ -1,4 +1,11 @@
 *{
+    :root{
+
+    --primary:#214E43;
+    --secondary:#2f6a5c;
+    --accent:#E8C547;
+
+}
     margin:0;
     padding:0;
     box-sizing:border-box;
@@ -74,7 +81,7 @@ body{
 }
 
 .topbar h1{
-    color:#214E43;
+     color:var(--primary);
 }
 
 .admin{
@@ -111,7 +118,7 @@ body{
 }
 
 .card h2{
-    color:#214E43;
+     color:var(--primary);
     font-size:40px;
 }
 
@@ -426,7 +433,7 @@ button:hover{
 .progress-fill{
     width:0%;
     height:100%;
-    background:#214E43;
+    background:var(--primary);
     transition:.5s;
 }
 
@@ -442,4 +449,19 @@ button:hover{
 
 .latest-card:last-child{
     margin-bottom:0;
+}
+select{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
+
+    font-size:16px;
+
+    background:white;
+
 }
