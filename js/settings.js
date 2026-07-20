@@ -7,16 +7,28 @@ async function loadSettings(){
     try{
 
         const res = await fetch(API_URL + "?action=settings");
-
         const data = await res.json();
 
         document.getElementById("bride").value = data.bride || "";
         document.getElementById("groom").value = data.groom || "";
         document.getElementById("venue").value = data.venue || "";
+
         document.getElementById("logo").value = data.logo || "";
         document.getElementById("background").value = data.background || "";
-        document.getElementById("theme").value = data.theme || "emerald";
-        applyTheme(data.theme || "emerald");
+
+        if(data.logo){
+
+            document.getElementById("logoPreview").src = data.logo;
+            document.getElementById("logoPreview").style.display="block";
+
+        }
+
+        if(data.background){
+
+            document.getElementById("bgPreview").src = data.background;
+            document.getElementById("bgPreview").style.display="block";
+
+        }
 
         if(data.date){
 
@@ -27,9 +39,14 @@ async function loadSettings(){
 
         }
 
+        document.getElementById("theme").value =
+            data.theme || "emerald";
+
+        applyTheme(data.theme || "emerald");
+
     }catch(err){
 
-        console.error(err);
+        console.log(err);
 
     }
 
@@ -39,25 +56,25 @@ async function loadSettings(){
 
 async function saveSettings(){
 
-    const body = {
+    const body={
 
-    action:"saveSettings",
+        action:"saveSettings",
 
-    bride:document.getElementById("bride").value,
+        bride:document.getElementById("bride").value,
 
-    groom:document.getElementById("groom").value,
+        groom:document.getElementById("groom").value,
 
-    date:document.getElementById("date").value,
+        date:document.getElementById("date").value,
 
-    venue:document.getElementById("venue").value,
+        venue:document.getElementById("venue").value,
 
-    logo:document.getElementById("logo").value,
+        logo:document.getElementById("logo").value,
 
-    background:document.getElementById("background").value,
+        background:document.getElementById("background").value,
 
-    theme:document.getElementById("theme").value
+        theme:document.getElementById("theme").value
 
-};
+    };
 
     try{
 
@@ -79,7 +96,7 @@ async function saveSettings(){
 
     }catch(err){
 
-        console.error(err);
+        console.log(err);
 
         alert("Gagal menyimpan.");
 
@@ -87,22 +104,11 @@ async function saveSettings(){
 
 }
 
-document
-.getElementById("saveBtn")
-.addEventListener("click",saveSettings);
-
-loadSettings();
-document
-.getElementById("theme")
-.addEventListener("change", function(){
-
-    applyTheme(this.value);
-
-});
+// ================= THEME =================
 
 function applyTheme(theme){
 
-    const themes = {
+    const themes={
 
         emerald:{
             primary:"#214E43",
@@ -136,66 +142,144 @@ function applyTheme(theme){
 
     };
 
-    const c = themes[theme];
+    const c=themes[theme];
 
-    document.documentElement.style
-        .setProperty("--primary", c.primary);
-
-    document.documentElement.style
-        .setProperty("--secondary", c.secondary);
-
-    document.documentElement.style
-        .setProperty("--accent", c.accent);
+    document.documentElement.style.setProperty("--primary",c.primary);
+    document.documentElement.style.setProperty("--secondary",c.secondary);
+    document.documentElement.style.setProperty("--accent",c.accent);
 
 }
-// ================= PREVIEW LOGO =================
+
+document
+.getElementById("theme")
+.addEventListener("change",function(){
+
+    applyTheme(this.value);
+
+});
+
+document
+.getElementById("saveBtn")
+.addEventListener("click",saveSettings);
+// ================= UPLOAD FILE =================
+
+async function uploadFile(file){
+
+    return new Promise((resolve,reject)=>{
+
+        const reader = new FileReader();
+
+        reader.onload = async function(e){
+
+            try{
+
+                const base64 = e.target.result.split(",")[1];
+
+                const res = await fetch(API_URL,{
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        action:"uploadImage",
+
+                        base64:base64,
+
+                        fileName:file.name,
+
+                        mimeType:file.type
+
+                    })
+
+                });
+
+                const data = await res.json();
+
+                resolve(data.url);
+
+            }catch(err){
+
+                reject(err);
+
+            }
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+
+// ================= LOGO =================
 
 document
 .getElementById("logoFile")
-.addEventListener("change",function(){
+.addEventListener("change",async function(){
+
+    if(this.files.length===0) return;
 
     const file=this.files[0];
 
-    if(!file) return;
+    document.getElementById("logoPreview").src =
+        URL.createObjectURL(file);
 
-    const reader=new FileReader();
+    document.getElementById("logoPreview").style.display="block";
 
-    reader.onload=function(e){
+    try{
 
-        const img=document.getElementById("logoPreview");
+        const url=await uploadFile(file);
 
-        img.src=e.target.result;
+        document.getElementById("logo").value=url;
 
-        img.style.display="block";
+    }catch(err){
 
-    };
+        alert("Upload logo gagal");
 
-    reader.readAsDataURL(file);
+        console.log(err);
+
+    }
 
 });
 
-// ================= PREVIEW BACKGROUND =================
+
+// ================= BACKGROUND =================
 
 document
 .getElementById("bgFile")
-.addEventListener("change",function(){
+.addEventListener("change",async function(){
+
+    if(this.files.length===0) return;
 
     const file=this.files[0];
 
-    if(!file) return;
+    document.getElementById("bgPreview").src =
+        URL.createObjectURL(file);
 
-    const reader=new FileReader();
+    document.getElementById("bgPreview").style.display="block";
 
-    reader.onload=function(e){
+    try{
 
-        const img=document.getElementById("bgPreview");
+        const url=await uploadFile(file);
 
-        img.src=e.target.result;
+        document.getElementById("background").value=url;
 
-        img.style.display="block";
+    }catch(err){
 
-    };
+        alert("Upload background gagal");
 
-    reader.readAsDataURL(file);
+        console.log(err);
+
+    }
 
 });
+
+
+// ================= INIT =================
+
+loadSettings();
