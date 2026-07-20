@@ -69,14 +69,33 @@ async function loadLatestGuest(){
 
             lastGuestTime = data.time;
 
+            const jam = data.time
+                ? new Date(Number(data.time)).toLocaleTimeString("id-ID",{
+                    hour:"2-digit",
+                    minute:"2-digit"
+                })
+                : "-";
+
             document.getElementById("latestGuest").innerHTML = `
                 <div class="latest-card">
 
-                    <h3>🎉 Check-in Terbaru</h3>
+                    <div class="latest-icon">
+                        🎉
+                    </div>
 
-                    <h2>${data.nama || "-"}</h2>
+                    <div class="latest-info">
 
-                    <p>${formatJam(data.time)}</p>
+                        <h3>${data.nama || "-"}</h3>
+
+                        <p>Berhasil Check-in</p>
+
+                    </div>
+
+                    <div class="latest-time">
+
+                        ${jam}
+
+                    </div>
 
                 </div>
             `;
@@ -90,7 +109,6 @@ async function loadLatestGuest(){
     }
 
 }
-
 // ================= ANIMATION =================
 
 function animateNumber(id,target){

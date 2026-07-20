@@ -310,3 +310,81 @@ button:hover{
 .hero p{
     font-size:18px;
 }
+
+/* ================= LATEST GUEST ================= */
+
+.latest-card{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:18px;
+
+    border-radius:15px;
+
+    background:#f7faf9;
+
+    border-left:6px solid #214E43;
+
+    animation:fadeLatest .4s ease;
+
+}
+
+.latest-icon{
+
+    font-size:34px;
+
+    margin-right:15px;
+
+}
+
+.latest-info{
+
+    flex:1;
+
+}
+
+.latest-info h3{
+
+    color:#214E43;
+
+    margin-bottom:4px;
+
+}
+
+.latest-info p{
+
+    color:#777;
+
+}
+
+.latest-time{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#214E43;
+
+}
+
+@keyframes fadeLatest{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
