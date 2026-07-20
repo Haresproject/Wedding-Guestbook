@@ -2,11 +2,12 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6f
 
 let guests = [];
 
+// ================= LOAD DATA =================
 async function loadGuests() {
 
     try {
 
-        const response = await fetch(API_URL + "?action=guests");
+        const response = await fetch(API_URL + "?action=guests&t=" + Date.now());
 
         guests = await response.json();
 
@@ -20,6 +21,7 @@ async function loadGuests() {
 
 }
 
+// ================= TAMPILKAN TABEL =================
 function renderGuests(data){
 
     const tbody = document.getElementById("guestTable");
@@ -27,6 +29,21 @@ function renderGuests(data){
     tbody.innerHTML = "";
 
     data.forEach(guest => {
+
+        const statusClass =
+            guest.status === "HADIR"
+            ? "hadir"
+            : "belum";
+
+        const tombol =
+            guest.status === "HADIR"
+
+            ? `<button class="btn-disabled" disabled>✔ Sudah Hadir</button>`
+
+            : `<button class="btn-checkin"
+                onclick="manualCheckin('${guest.id}')">
+                ✅ Check-in
+               </button>`;
 
         tbody.innerHTML += `
         <tr>
@@ -36,14 +53,16 @@ function renderGuests(data){
             <td>${guest.nama}</td>
 
             <td>
-    <span class="${guest.status === "HADIR" ? "hadir" : "belum"}">
-        ${guest.status}
-    </span>
-</td>
+                <span class="${statusClass}">
+                    ${guest.status}
+                </span>
+            </td>
 
-            <td>${guest.tipe}</td>
+            <td>${guest.tipe || "-"}</td>
 
             <td>${formatJam(guest.jam)}</td>
+
+            <td>${tombol}</td>
 
         </tr>
         `;
@@ -52,22 +71,61 @@ function renderGuests(data){
 
 }
 
-document.getElementById("search").addEventListener("keyup", function(){
+// ================= CHECK-IN MANUAL =================
+async function manualCheckin(id){
+
+    if(!confirm("Check-in tamu ini?")) return;
+
+    try{
+
+        const res = await fetch(API_URL,{
+
+            method:"POST",
+
+            body:JSON.stringify({
+
+                action:"manualCheckin",
+
+                id:id
+
+            })
+
+        });
+
+        const data = await res.json();
+
+        alert(data.message);
+
+        loadGuests();
+
+    }catch(err){
+
+        console.log(err);
+
+        alert("Terjadi kesalahan.");
+
+    }
+
+}
+
+// ================= SEARCH =================
+document.getElementById("search").addEventListener("keyup",function(){
 
     const keyword = this.value.toLowerCase();
 
     const hasil = guests.filter(g =>
-        (g.nama || "").toLowerCase().includes(keyword)
+
+        (g.nama || "")
+        .toLowerCase()
+        .includes(keyword)
+
     );
 
     renderGuests(hasil);
 
 });
 
-loadGuests();
-
-setInterval(loadGuests,3000);
-
+// ================= FORMAT JAM =================
 function formatJam(jam){
 
     if(!jam) return "-";
@@ -75,8 +133,16 @@ function formatJam(jam){
     const d = new Date(jam);
 
     return d.toLocaleTimeString("id-ID",{
+
         hour:"2-digit",
+
         minute:"2-digit"
+
     });
 
 }
+
+// ================= AUTO LOAD =================
+loadGuests();
+
+setInterval(loadGuests,3000);

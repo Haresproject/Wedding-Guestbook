@@ -9,41 +9,99 @@
 
 <link rel="stylesheet" href="css/style.css">
 
+<style>
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    font-size:16px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+
+.hadir{
+    color:#2e7d32;
+    font-weight:bold;
+}
+
+.belum{
+    color:#c62828;
+    font-weight:bold;
+}
+
+button{
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    color:white;
+}
+
+.btn-checkin{
+    background:#4CAF50;
+}
+
+.btn-checkin:hover{
+    background:#388E3C;
+}
+
+.btn-disabled{
+    background:#9E9E9E;
+    cursor:not-allowed;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>👥 Daftar Tamu</h1>
+<h1>👥 Daftar Tamu</h1>
 
-    <input
-        type="text"
-        id="search"
-        placeholder="Cari nama tamu..."
-    >
+<input
+id="search"
+type="text"
+placeholder="Cari nama tamu..."
+>
 
-    <table>
+<table>
 
-        <thead>
+<thead>
 
-            <tr>
+<tr>
 
-                <th>ID</th>
-                <th>Nama</th>
-                <th>Status</th>
-                <th>Tipe</th>
-                <th>Jam Hadir</th>
+<th>ID</th>
+<th>Nama</th>
+<th>Status</th>
+<th>Tipe</th>
+<th>Jam Hadir</th>
+<th>Aksi</th>
 
-            </tr>
+</tr>
 
-        </thead>
+</thead>
 
-        <tbody id="guestTable">
+<tbody id="guestTable"></tbody>
 
-        </tbody>
-
-    </table>
+</table>
 
 </div>
 
