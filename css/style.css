@@ -437,3 +437,10 @@ button:hover{
     font-weight:bold;
     color:#214E43;
 }
+.latest-card{
+    margin-bottom:12px;
+}
+
+.latest-card:last-child{
+    margin-bottom:0;
+}

@@ -67,37 +67,43 @@ async function loadLatestGuest(){
 
     try{
 
-        const res = await fetch(API_URL + "?action=latest&t=" + Date.now());
+        const res = await fetch(API_URL + "?action=latestGuests&t=" + Date.now());
 
         const data = await res.json();
 
-        if(data.time != lastGuestTime){
+        if(data.length === 0){
 
-            lastGuestTime = data.time;
+            document.getElementById("latestGuest").innerHTML =
+                "Belum ada tamu yang check-in.";
 
-            const jam = data.time
-                ? new Date(Number(data.time)).toLocaleTimeString("id-ID",{
-                    hour:"2-digit",
-                    minute:"2-digit"
-                })
-                : "-";
+            return;
 
-            document.getElementById("latestGuest").innerHTML = `
+        }
+
+        let html = "";
+
+        data.forEach(tamu => {
+
+            html += `
                 <div class="latest-card">
+
                     <div class="latest-icon">🎉</div>
 
                     <div class="latest-info">
-                        <h3>${data.nama || "-"}</h3>
+                        <h3>${tamu.nama}</h3>
                         <p>Berhasil Check-in</p>
                     </div>
 
                     <div class="latest-time">
-                        ${jam}
+                        ${tamu.jam}
                     </div>
+
                 </div>
             `;
 
-        }
+        });
+
+        document.getElementById("latestGuest").innerHTML = html;
 
     }catch(err){
 
