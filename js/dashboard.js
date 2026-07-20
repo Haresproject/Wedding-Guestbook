@@ -23,6 +23,27 @@ async function loadSettings(){
         if(data.logo){
             document.getElementById("weddingLogo").src = data.logo;
         }
+        // Dynamic Theme
+if(data.primaryColor){
+    document.documentElement.style.setProperty(
+        "--primary",
+        data.primaryColor
+    );
+}
+
+if(data.secondaryColor){
+    document.documentElement.style.setProperty(
+        "--secondary",
+        data.secondaryColor
+    );
+}
+
+if(data.accentColor){
+    document.documentElement.style.setProperty(
+        "--accent",
+        data.accentColor
+    );
+}
 
     }catch(err){
         console.log(err);
