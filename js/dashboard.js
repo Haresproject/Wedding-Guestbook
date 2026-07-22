@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec";
+const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
 let lastGuestTime = "";
 
