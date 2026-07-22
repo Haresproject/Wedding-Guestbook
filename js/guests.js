@@ -224,3 +224,67 @@ async function importExcel(e){
     reader.readAsBinaryString(file);
 
 }
+function exportExcel(){
+
+    const data = guests.map(g=>({
+
+        ID:g.id,
+
+        Nama:g.nama,
+
+        Status:g.status,
+
+        Tipe:g.tipe,
+
+        Jam:g.jam,
+
+        Tanggal:g.tanggal
+
+    }));
+
+    const wb = XLSX.utils.book_new();
+
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(wb,ws,"Daftar Tamu");
+
+    XLSX.writeFile(wb,"Daftar_Tamu.xlsx");
+
+}
+async function exportPDF(){
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+
+    doc.text("Daftar Tamu Wedding",14,18);
+
+    const rows = guests.map(g=>[
+
+        g.id,
+
+        g.nama,
+
+        g.status,
+
+        g.tipe,
+
+        formatJam(g.jam)
+
+    ]);
+
+    doc.autoTable({
+
+        head:[["ID","Nama","Status","Tipe","Jam"]],
+
+        body:rows,
+
+        startY:25
+
+    });
+
+    doc.save("Daftar_Tamu.pdf");
+
+}
