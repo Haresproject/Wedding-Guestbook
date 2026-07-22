@@ -6,10 +6,14 @@
     --accent:#E8C547;
 
 }
+
+*{
+
     margin:0;
     padding:0;
     box-sizing:border-box;
     font-family:'Segoe UI',sans-serif;
+
 }
 
 body{
@@ -24,10 +28,18 @@ body{
 
 /* ================= SIDEBAR ================= */
 .sidebar{
+
     width:260px;
+    min-height:100vh;
+
     background:var(--primary);
     color:white;
+
     padding:25px;
+
+    display:flex;
+    flex-direction:column;
+
 }
 
 .logo{
@@ -48,9 +60,14 @@ body{
 }
 
 .sidebar nav{
+
     display:flex;
     flex-direction:column;
+
+    flex:1;
+
     gap:10px;
+
 }
 
 .sidebar nav a{
@@ -500,5 +517,18 @@ select{
     object-fit:cover;
 
     border-radius:18px;
+
+}
+.sidebar nav a:last-child{
+
+    margin-top:auto;
+
+    background:#b22222;
+
+}
+
+.sidebar nav a:last-child:hover{
+
+    background:#8b0000;
 
 }
