@@ -146,3 +146,81 @@ function formatJam(jam){
 loadGuests();
 
 setInterval(loadGuests,3000);
+
+// ================= IMPORT EXCEL =================
+
+document
+.getElementById("excelFile")
+.addEventListener("change", importExcel);
+
+async function importExcel(e){
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async function(evt){
+
+        const workbook = XLSX.read(evt.target.result,{
+            type:"binary"
+        });
+
+        const sheet = workbook.Sheets[
+            workbook.SheetNames[0]
+        ];
+
+        const rows = XLSX.utils.sheet_to_json(sheet);
+
+        if(rows.length==0){
+
+            alert("File Excel kosong.");
+
+            return;
+
+        }
+
+        if(!confirm(
+            "Import "+rows.length+" tamu?"
+        )) return;
+
+        try{
+
+            const res = await fetch(API_URL,{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    action:"importGuests",
+
+                    guests:rows
+
+                })
+
+            });
+
+            const result = await res.json();
+
+            alert(result.message);
+
+            loadGuests();
+
+        }catch(err){
+
+            console.log(err);
+
+            alert("Import gagal.");
+
+        }
+
+    };
+
+    reader.readAsBinaryString(file);
+
+}

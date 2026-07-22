@@ -19,6 +19,12 @@ async function loadSettings(){
 
         document.getElementById("weddingVenue").innerHTML =
             "📍 " + data.venue;
+        if(data.appName){
+
+        document.getElementById("appName").innerHTML =
+        data.appName;
+
+}    
 
         if(data.logo){
             document.getElementById("weddingLogo").src = data.logo;

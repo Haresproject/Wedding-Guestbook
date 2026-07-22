@@ -51,13 +51,31 @@
 
     <main class="content">
 
-        <h1>👥 Daftar Tamu</h1>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:20px;gap:15px;">
+
+    <h1>👥 Daftar Tamu</h1>
+
+    <div>
 
         <input
-            type="text"
-            id="search"
-            placeholder="Cari nama tamu..."
-        >
+            type="file"
+            id="excelFile"
+            accept=".xlsx,.xls"
+            style="display:none;">
+
+        <button onclick="document.getElementById('excelFile').click()">
+            📥 Import Excel
+        </button>
+
+    </div>
+
+</div>
+
+<input
+    type="text"
+    id="search"
+    placeholder="Cari nama tamu..."
+>
 
         <table>
 
@@ -86,6 +104,7 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="js/guests.js"></script>
 
 <script>
