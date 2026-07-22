@@ -13,42 +13,98 @@
 
 <body>
 
-<div class="container">
+<div class="layout">
 
-<h1>👥 Daftar Tamu</h1>
+    <!-- SIDEBAR -->
 
-<input
-type="text"
-id="search"
-placeholder="Cari nama tamu..."
->
+    <aside class="sidebar">
 
-<table>
+        <div class="logo">
 
-<thead>
+            <img src="assets/logo.png">
 
-<tr>
+            <h2>Wedding Guestbook</h2>
 
-<th>ID</th>
-<th>Nama</th>
-<th>Status</th>
-<th>Tipe</th>
-<th>Jam Hadir</th>
-<th>Aksi</th>
+        </div>
 
-</tr>
+        <nav>
 
-</thead>
+            <a href="dashboard.html">🏠 Dashboard</a>
 
-<tbody id="guestTable">
+            <a href="guests.html" class="active">👥 Daftar Tamu</a>
 
-</tbody>
+            <a href="scanner.html">📷 Scanner</a>
 
-</table>
+            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
+                📺 Display
+            </a>
+
+            <a href="settings.html">⚙ Pengaturan</a>
+
+            <a href="#" onclick="logout()">🚪 Logout</a>
+
+        </nav>
+
+    </aside>
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+        <h1>👥 Daftar Tamu</h1>
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Cari nama tamu..."
+        >
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Status</th>
+                    <th>Tipe</th>
+                    <th>Jam Hadir</th>
+                    <th>Aksi</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="guestTable">
+
+            </tbody>
+
+        </table>
+
+    </main>
 
 </div>
 
 <script src="js/guests.js"></script>
+
+<script>
+
+if(localStorage.getItem("login")!="true"){
+
+    location.href="index.html";
+
+}
+
+function logout(){
+
+    localStorage.removeItem("login");
+
+    location.href="index.html";
+
+}
+
+</script>
 
 </body>
 </html>

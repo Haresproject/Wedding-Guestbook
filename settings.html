@@ -20,11 +20,22 @@
         </div>
 
         <nav>
-            <a href="dashboard.html">🏠 Dashboard</a>
-            <a href="guests.html">👥 Daftar Tamu</a>
-            <a href="scanner.html">📷 Scanner</a>
-            <a href="settings.html" class="active">⚙ Pengaturan</a>
-        </nav>
+
+    <a href="dashboard.html">🏠 Dashboard</a>
+
+    <a href="guests.html">👥 Daftar Tamu</a>
+
+    <a href="scanner.html">📷 Scanner</a>
+
+    <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
+        📺 Display
+    </a>
+
+    <a href="settings.html" class="active">⚙ Pengaturan</a>
+
+    <a href="#" onclick="logout()">🚪 Logout</a>
+
+</nav>
 
     </aside>
 
@@ -76,7 +87,7 @@
         border:1px solid #ddd;
     ">
 
-<<label>Background Wedding</label>
+<label>Background Wedding</label>
 
 <input
     type="file"
@@ -107,18 +118,32 @@
 <select id="theme">
 
     <option value="emerald">🌿 Emerald</option>
-
     <option value="gold">🥇 Gold</option>
-
     <option value="rosegold">🌸 Rose Gold</option>
-
     <option value="royalblue">🔵 Royal Blue</option>
-
     <option value="black">⚫ Black Luxury</option>
 
 </select>
 
-            <button id="saveBtn">💾 Simpan</button>
+<br><br>
+
+<label>Username Admin</label>
+
+<input
+    id="username"
+    type="text">
+
+<br><br>
+
+<label>Password Admin</label>
+
+<input
+    id="password"
+    type="password">
+
+<br><br>
+
+<button id="saveBtn">💾 Simpan</button>
 
         </div>
 
@@ -127,6 +152,24 @@
 </div>
 
 <script src="js/settings.js"></script>
+
+<script>
+
+if(localStorage.getItem("login")!="true"){
+
+    location.href="index.html";
+
+}
+
+function logout(){
+
+    localStorage.removeItem("login");
+
+    location.href="index.html";
+
+}
+
+</script>
 
 </body>
 </html>

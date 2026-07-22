@@ -44,6 +44,12 @@ async function loadSettings(){
 
         applyTheme(data.theme || "emerald");
 
+        document.getElementById("username").value =
+    data.username || "admin";
+
+document.getElementById("password").value =
+    data.password || "admin123";
+
     }catch(err){
 
         console.log(err);
@@ -60,21 +66,25 @@ async function saveSettings(){
 
         action:"saveSettings",
 
-        bride:document.getElementById("bride").value,
+    bride:document.getElementById("bride").value,
 
-        groom:document.getElementById("groom").value,
+    groom:document.getElementById("groom").value,
 
-        date:document.getElementById("date").value,
+    date:document.getElementById("date").value,
 
-        venue:document.getElementById("venue").value,
+    venue:document.getElementById("venue").value,
 
-        logo:document.getElementById("logo").value,
+    logo:document.getElementById("logo").value,
 
-        background:document.getElementById("background").value,
+    background:document.getElementById("background").value,
 
-        theme:document.getElementById("theme").value
+    theme:document.getElementById("theme").value,
 
-    };
+    username:document.getElementById("username").value,
+
+    password:document.getElementById("password").value
+
+};
 
     try{
 

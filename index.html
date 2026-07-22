@@ -114,25 +114,60 @@ Masuk Dashboard
 
 <script>
 
-function login(){
+const API_URL="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec";
+
+async function login(){
 
     const username=document.getElementById("username").value;
 
     const password=document.getElementById("password").value;
 
-    if(username==="admin" && password==="admin123"){
+    try{
 
-        location.href="dashboard.html";
+        const res=await fetch(API_URL,{
 
-    }else{
+            method:"POST",
 
-        alert("Username atau Password salah.");
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                action:"login",
+
+                username:username,
+
+                password:password
+
+            })
+
+        });
+
+        const data=await res.json();
+
+        if(data.success){
+
+            localStorage.setItem("login","true");
+
+            location.href="dashboard.html";
+
+        }else{
+
+            alert("Username atau Password salah.");
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+        alert("Tidak dapat terhubung ke server.");
 
     }
 
 }
 
 </script>
-
 </body>
 </html>
