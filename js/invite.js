@@ -8,7 +8,11 @@ async function loadInvitation(){
     const settingsRes = await fetch(API_URL + "?action=settings");
     const settings = await settingsRes.json();
 
-        document.getElementById("venue").innerHTML =
+    // tampilkan data wedding
+    document.getElementById("couple").innerHTML =
+        settings.bride + " ❤️ " + settings.groom;
+
+    document.getElementById("venue").innerHTML =
         "📍 " + settings.venue;
 
     document.getElementById("date").innerHTML =
