@@ -1,6 +1,6 @@
 const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
-const id = localStorage.getItem("guest_id");
+const id = new URLSearchParams(window.location.search).get("id");
 
 async function loadInvitation() {
 
