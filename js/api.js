@@ -1,7 +1,7 @@
 const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 async function loadStats(){
 
-    const res = await fetch(API + "?action=stats");
+    const res = await fetch(API_URL + "?action=stats");
 
     const data = await res.json();
 
