@@ -22,8 +22,12 @@ async function loadGuests(){
                     👁️ Lihat
                 </button>
 
-                <button class="action-btn wa">
+                <button
+                    class="action-btn wa"
+                    onclick="sendWhatsapp('${g.id}','${g.nama}')">
+
                     📤 WhatsApp
+
                 </button>
 
                 <button class="action-btn print">
@@ -51,3 +55,33 @@ function previewGuest(id){
 }
 
 loadGuests();
+
+function sendWhatsapp(id, nama){
+
+    const url =
+        location.origin +
+        "/open.html?id=" +
+        id;
+
+    const text =
+`Assalamu'alaikum Wr. Wb.
+
+Kepada Yth.
+
+${nama}
+
+Dengan segala hormat kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.
+
+Silakan buka undangan melalui tautan berikut:
+
+${url}
+
+Terima kasih.`;
+
+    window.open(
+        "https://wa.me/?text=" +
+        encodeURIComponent(text),
+        "_blank"
+    );
+
+}
