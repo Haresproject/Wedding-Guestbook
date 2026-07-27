@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Undangan - Wedding Guestbook</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+}
+
+.action-btn{
+    padding:6px 10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-right:5px;
+}
+
+.preview{
+    background:#214E43;
+    color:white;
+}
+
+.wa{
+    background:#25D366;
+    color:white;
+}
+
+.print{
+    background:#E8C547;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <img src="assets/logo.png">
+            <h2>Wedding Guestbook</h2>
+        </div>
+
+        <nav>
+
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <a href="guests.html">👥 Daftar Tamu</a>
+            <a href="scanner.html">📷 Scanner</a>
+
+            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
+                📺 Display
+            </a>
+
+            <a href="invitation.html" class="active">
+                💌 Undangan
+            </a>
+
+            <a href="settings.html">⚙ Pengaturan</a>
+
+            <a href="#" onclick="logout()">
+                🚪 Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="topbar">
+            <h1>💌 Undangan</h1>
+        </header>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Aksi</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="guestTable">
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+</div>
+
+<script src="js/api.js"></script>
+
+<script>
+
+if(localStorage.getItem("login")!="true"){
+    location.href="index.html";
+}
+
+function logout(){
+
+    localStorage.removeItem("login");
+    location.href="index.html";
+
+}
+
+</script>
+
+<script src="js/invitation.js"></script>
+
+</body>
+</html>
