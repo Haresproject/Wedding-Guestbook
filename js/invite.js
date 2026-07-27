@@ -2,9 +2,9 @@ const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
 const id = new URLSearchParams(location.search).get("id");
 
-async function loadInvitation(){
+async function loadInvitation() {
 
-    try{
+    try {
 
         // ==========================
         // SETTINGS
@@ -19,18 +19,18 @@ async function loadInvitation(){
             "📍 " + settings.venue;
 
         document.getElementById("date").innerHTML =
-            "📅 " + new Date(settings.date).toLocaleDateString("id-ID",{
-                day:"numeric",
-                month:"long",
-                year:"numeric"
+            "📅 " + new Date(settings.date).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
             });
 
-        if(settings.logo){
+        if (settings.logo) {
             document.getElementById("logo").src = settings.logo;
         }
 
         // ==========================
-        // GUEST
+        // AMBIL DATA TAMU
         // ==========================
         const guestRes = await fetch(API_URL + "?action=guests");
         const guests = await guestRes.json();
@@ -39,7 +39,7 @@ async function loadInvitation(){
             String(g.id).trim() === String(id).trim()
         );
 
-        if(!guest){
+        if (!guest) {
 
             document.getElementById("guestName").innerHTML =
                 "Tamu tidak ditemukan";
@@ -51,15 +51,13 @@ async function loadInvitation(){
             guest.nama;
 
         // ==========================
-        // QR (AMBIL DARI SPREADSHEET)
+        // QR (ISI HANYA ID)
         // ==========================
-        if(guest.qrUrl){
+        document.getElementById("qr").src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data="
+            + encodeURIComponent(guest.id);
 
-            document.getElementById("qr").src = guest.qrUrl;
-
-        }
-
-    }catch(err){
+    } catch (err) {
 
         console.error(err);
 
