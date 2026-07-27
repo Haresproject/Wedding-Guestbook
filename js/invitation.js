@@ -17,7 +17,8 @@ async function loadGuests(){
 
             <td>
 
-                <button class="action-btn preview">
+                <button class="action-btn preview"
+                onclick="previewGuest('${g.id}')">
                     👁️ Lihat
                 </button>
 
@@ -37,6 +38,15 @@ async function loadGuests(){
     });
 
     document.getElementById("guestTable").innerHTML = html;
+
+}
+
+function previewGuest(id){
+
+    window.open(
+        "invite.html?id=" + id,
+        "_blank"
+    );
 
 }
 
