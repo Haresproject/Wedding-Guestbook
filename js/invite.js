@@ -2,42 +2,56 @@ const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
 const id = new URLSearchParams(location.search).get("id");
 
-async function loadGuest(){
+async function loadInvitation(){
 
-    console.log("ID =", id);
+    // ambil settings
+    const settingsRes = await fetch(API_URL + "?action=settings");
+    const settings = await settingsRes.json();
 
-    try{
+    // tampilkan data wedding
+    document.getElementById("couple").innerHTML =
+        settings.bride + " ❤️ " + settings.groom;
 
-        const res = await fetch(API_URL + "?action=guests");
+    document.getElementById("venue").innerHTML =
+        "📍 " + settings.venue;
 
-        console.log("Response =", res);
+    document.getElementById("date").innerHTML =
+        "📅 " + new Date(settings.date).toLocaleDateString("id-ID",{
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        });
 
-        const guests = await res.json();
+    if(settings.logo){
+        document.getElementById("logo").src = settings.logo;
+    }
 
-        console.log("Guests =", guests);
+    // ambil tamu
+    const guestRes = await fetch(API_URL + "?action=guests");
+    const guests = await guestRes.json();
 
-        const guest = guests.find(g => String(g.id) === String(id));
+    const guest = guests.find(g=>String(g.id).trim()==String(id).trim());
 
-        console.log("Guest =", guest);
+    if(guest){
 
-        if(guest){
+        document.getElementById("guestName").innerHTML =
+            guest.nama;
 
-            document.getElementById("guestName").innerHTML = guest.nama;
+    }else{
 
-        }else{
-
-            document.getElementById("guestName").innerHTML = "Tamu tidak ditemukan";
-
-        }
-
-    }catch(err){
-
-        console.error(err);
-
-        document.getElementById("guestName").innerHTML = "ERROR";
+        document.getElementById("guestName").innerHTML =
+            "Tamu tidak ditemukan";
 
     }
 
+    // QR
+    document.getElementById("qr").src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+        + encodeURIComponent(
+            "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?id="
+            + id
+        );
+
 }
 
-loadGuest();
+loadInvitation();
