@@ -12,7 +12,7 @@ async function loadSettings(){
         document.getElementById("bride").value = data.bride || "";
         document.getElementById("groom").value = data.groom || "";
         document.getElementById("venue").value = data.venue || "";
-
+        document.getElementById("invitationLink").value = data.invitationLink || "";
         document.getElementById("logo").value = data.logo || "";
         document.getElementById("background").value = data.background || "";
 
@@ -76,6 +76,8 @@ async function saveSettings(){
     date:document.getElementById("date").value,
 
     venue:document.getElementById("venue").value,
+
+    invitationLink: document.getElementById("invitationLink").value,
 
     logo:document.getElementById("logo").value,
 
