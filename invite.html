@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wedding Invitation</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+body{
+
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f8f5f2;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+}
+
+.card{
+
+    width:420px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:40px;
+
+    text-align:center;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+}
+
+.logo{
+
+    width:120px;
+
+    border-radius:50%;
+
+}
+
+#guestName{
+
+    font-size:28px;
+
+    margin:20px 0;
+
+}
+
+.qr{
+
+    width:220px;
+
+    margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<img
+id="logo"
+class="logo"
+src="assets/logo.png">
+
+<h2 id="couple">
+Loading...
+</h2>
+
+<p>Kepada Yth.</p>
+
+<h1 id="guestName">
+Loading...
+</h1>
+
+<p id="venue"></p>
+
+<p id="date"></p>
+
+<img
+id="qr"
+class="qr">
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/invite.js"></script>
+
+</body>
+</html>
