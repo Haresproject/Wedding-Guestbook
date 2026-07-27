@@ -50,6 +50,9 @@ async function loadSettings(){
 document.getElementById("password").value =
     data.password || "admin123";
 
+    document.getElementById("waTemplate").value =
+    data.waTemplate || "";
+
     }catch(err){
 
         console.log(err);
@@ -64,7 +67,7 @@ async function saveSettings(){
 
     const body={
 
-        action:"saveSettings",
+    action:"saveSettings",
 
     bride:document.getElementById("bride").value,
 
@@ -82,7 +85,9 @@ async function saveSettings(){
 
     username:document.getElementById("username").value,
 
-    password:document.getElementById("password").value
+    password:document.getElementById("password").value,
+
+    waTemplate:document.getElementById("waTemplate").value
 
 };
 
