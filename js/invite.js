@@ -2,23 +2,39 @@ const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
 const id = new URLSearchParams(location.search).get("id");
 
-async function loadGuest() {
+async function loadGuest(){
 
-    document.getElementById("guestName").innerHTML = "Loading...";
+    console.log("ID =", id);
 
-    const res = await fetch(API_URL + "?action=guests");
+    try{
 
-    const guests = await res.json();
+        const res = await fetch(API_URL + "?action=guests");
 
-    const guest = guests.find(g => String(g.id) === String(id));
+        console.log("Response =", res);
 
-    if (guest) {
+        const guests = await res.json();
 
-        document.getElementById("guestName").innerHTML = guest.nama;
+        console.log("Guests =", guests);
 
-    } else {
+        const guest = guests.find(g => String(g.id) === String(id));
 
-        document.getElementById("guestName").innerHTML = "Tamu tidak ditemukan";
+        console.log("Guest =", guest);
+
+        if(guest){
+
+            document.getElementById("guestName").innerHTML = guest.nama;
+
+        }else{
+
+            document.getElementById("guestName").innerHTML = "Tamu tidak ditemukan";
+
+        }
+
+    }catch(err){
+
+        console.error(err);
+
+        document.getElementById("guestName").innerHTML = "ERROR";
 
     }
 
