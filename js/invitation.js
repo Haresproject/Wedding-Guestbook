@@ -30,8 +30,12 @@ async function loadGuests(){
 
                 </button>
 
-                <button class="action-btn print">
-                    🖨️ Cetak
+                <button
+                    class="action-btn print"
+                    onclick="downloadGuest('${g.id}')">
+
+                    📥 Download
+
                 </button>
 
             </td>
@@ -117,9 +121,30 @@ Terima kasih.`;
         .replaceAll("{link}", qr)
         .replaceAll("{undangan}", invitation);
 
+    location.href =
+    "https://wa.me/?text=" +
+    encodeURIComponent(text);
+    
+
+}
+function printGuest(id){
+
+    const win = window.open(
+        "invite.html?id=" + id,
+        "_blank"
+    );
+
+    win.onload = function(){
+
+        win.print();
+
+    };
+
+}
+function downloadGuest(id){
+
     window.open(
-        "https://wa.me/?text=" +
-        encodeURIComponent(text),
+        "invite.html?id=" + id + "&download=1",
         "_blank"
     );
 
