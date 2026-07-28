@@ -72,9 +72,9 @@ async function sendWhatsapp(id, nama){
 
     // Link QR
     const qr =
-        location.origin +
-        "/open.html?id=" +
-        id;
+    location.origin +
+    "/card.html?id=" +
+    id;
 
     // Template
     let text = settings.waTemplate;
