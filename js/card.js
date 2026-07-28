@@ -10,22 +10,19 @@ async function load(){
         await fetch(API_URL + "?action=settings")
         .then(r => r.json());
 
-    const guests =
-        await fetch(API_URL + "?action=guests")
-        .then(r => r.json());
+    const result =
+    await fetch(API_URL + "?action=guest&id=" + id)
+    .then(r => r.json());
 
-    console.log(guests);
+if(!result.success){
 
-    const guest =
-        guests.find(g => String(g.id).trim() === String(id).trim());
+    alert("Guest tidak ditemukan");
 
-    if(!guest){
+    return;
 
-        alert("Guest tidak ditemukan");
+}
 
-        return;
-
-    }
+const guest = result.guest;
 
     const bg = document.getElementById("background");
 
