@@ -1,22 +1,41 @@
-const API_URL="https://wedguest.kosthandoko907.workers.dev";
+const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
-const id=new URLSearchParams(location.search).get("id");
+const id = new URLSearchParams(location.search).get("id");
 
 async function load(){
 
-const settings=await fetch(API_URL+"?action=settings").then(r=>r.json());
+    console.log("ID:", id);
 
-const guests=await fetch(API_URL+"?action=guests").then(r=>r.json());
+    const settings =
+        await fetch(API_URL + "?action=settings")
+        .then(r => r.json());
 
-const guest=guests.find(g=>String(g.id)==id);
+    const guests =
+        await fetch(API_URL + "?action=guests")
+        .then(r => r.json());
 
-document.getElementById("background").src =
-settings.cardBackground;
+    console.log(guests);
 
-document.getElementById("name").innerHTML=guest.nama;
+    const guest =
+        guests.find(g => String(g.id).trim() === String(id).trim());
 
-document.getElementById("qr").src=
-"https://api.qrserver.com/v1/create-qr-code/?size=500x500&data="+guest.id;
+    if(!guest){
+
+        alert("Guest tidak ditemukan");
+
+        return;
+
+    }
+
+    document.getElementById("background").src =
+        settings.cardBackground;
+
+    document.getElementById("name").innerHTML =
+        guest.nama;
+
+    document.getElementById("qr").src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" +
+        guest.id;
 
 }
 
