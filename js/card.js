@@ -27,8 +27,15 @@ async function load(){
 
     }
 
-    document.getElementById("background").src =
-        settings.cardBackground;
+    const bg = document.getElementById("background");
+
+console.log("Background URL:", settings.cardBackground);
+
+bg.onload = () => console.log("Background berhasil dimuat");
+
+bg.onerror = () => console.log("Background gagal dimuat");
+
+bg.src = settings.cardBackground + "&t=" + Date.now();
 
     document.getElementById("name").innerHTML =
         guest.nama;
