@@ -84,9 +84,12 @@ async function sendWhatsapp(id, nama){
 Yth.
 {nama}
 
-Dengan penuh rasa syukur kami mengundang
-Bapak/Ibu/Saudara/i untuk hadir dalam
-acara pernikahan kami.
+Dengan penuh rasa syukur 
+dan tanpa mengurangi rasa hormat melalui pesan ini
+kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam
+acara pernikahan kami:
+
+Anggia & Haidar
 
 🌸 Buka Undangan
 {undangan}
@@ -101,6 +104,8 @@ silakan simpan QR Check-in melalui tautan berikut.
 👉 {link}
 
 Mohon tunjukkan QR tersebut kepada petugas saat memasuki area acara.
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i
+berkenan untuk hadir dan memberikan doa restu
 
 Terima kasih.`;
 
