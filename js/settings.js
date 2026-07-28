@@ -15,7 +15,16 @@ async function loadSettings(){
         document.getElementById("invitationLink").value = data.invitationLink || "";
         document.getElementById("logo").value = data.logo || "";
         document.getElementById("background").value = data.background || "";
+        document.getElementById("cardBackground").value = data.cardBackground || "";
 
+        if(data.cardBackground){
+
+        document.getElementById("cardBgPreview").src =
+        data.cardBackground;
+
+        document.getElementById("cardBgPreview").style.display="block";
+
+        }
         if(data.logo){
 
             document.getElementById("logoPreview").src = data.logo;
@@ -29,6 +38,7 @@ async function loadSettings(){
             document.getElementById("bgPreview").style.display="block";
 
         }
+
 
         if(data.date){
 
@@ -89,7 +99,9 @@ async function saveSettings(){
 
     password:document.getElementById("password").value,
 
-    waTemplate:document.getElementById("waTemplate").value
+    waTemplate:document.getElementById("waTemplate").value,
+    
+    cardBackground:document.getElementById("cardBackground").value,
 
 };
 
@@ -296,6 +308,24 @@ document
 
 });
 
+document
+.getElementById("cardBgFile")
+.addEventListener("change",async function(){
+
+if(this.files.length===0)return;
+
+const file=this.files[0];
+
+document.getElementById("cardBgPreview").src=
+URL.createObjectURL(file);
+
+document.getElementById("cardBgPreview").style.display="block";
+
+const url=await uploadFile(file);
+
+document.getElementById("cardBackground").value=url;
+
+});
 
 // ================= INIT =================
 
