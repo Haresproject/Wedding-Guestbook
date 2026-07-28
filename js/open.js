@@ -4,4 +4,4 @@ const id = new URLSearchParams(location.search).get("id");
 localStorage.setItem("guest_id", id);
 
 // ganti URL ini dengan URL undangan digital yang kamu beli
-location.href = "https://UNDANGAN-KAMU.com";
+location.href = "https://story.digimo.id/haidar-anggia/";
