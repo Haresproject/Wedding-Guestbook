@@ -43,8 +43,10 @@ object-fit:cover;
 
 position:absolute;
 
-left:140px;
+left:50%;
 top:315px;
+
+transform:translateX(-50%);
 
 width:150px;
 height:150px;
