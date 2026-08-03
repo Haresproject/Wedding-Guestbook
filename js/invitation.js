@@ -138,10 +138,11 @@ Terima kasih.`;
         console.log("Invitation =", invitation);
 console.log("QR =", qr);
 console.log("Text =", text);
-   window.open(
-    "https://wa.me/?text=" + encodeURIComponent(text),
-    "_blank"
-);
+  const waUrl =
+    "https://api.whatsapp.com/send?text=" +
+    encodeURIComponent(text);
+
+location.href = waUrl;
     
 
 }
