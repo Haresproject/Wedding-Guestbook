@@ -65,18 +65,24 @@ async function sendWhatsapp(id, nama){
     // Ambil pengaturan
     const res = await fetch(API_URL + "?action=settings");
     const settings = await res.json();
+    console.log(settings);
 
    // Link undangan dari Pengaturan
-const separator =
-settings.invitationLink.includes("?")
+let invitation = settings.invitationLink;
+
+if(settings.personalizedInvitation === "TRUE"){
+
+    const separator =
+    invitation.includes("?")
     ? "&"
     : "?";
 
-const invitation =
-settings.invitationLink +
-separator +
-"ev=1&to=" +
-encodeURIComponent(nama);
+    invitation +=
+        separator +
+        "ev=1&to=" +
+        encodeURIComponent(nama);
+
+}
 
     // Link QR
     const qr =
@@ -129,6 +135,9 @@ Terima kasih.`;
         .replaceAll("{link}", qr)
         .replaceAll("{undangan}", invitation);
 
+        console.log("Invitation =", invitation);
+console.log("QR =", qr);
+console.log("Text =", text);
    window.open(
     "https://wa.me/?text=" + encodeURIComponent(text),
     "_blank"
