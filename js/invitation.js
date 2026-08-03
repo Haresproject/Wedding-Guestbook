@@ -66,9 +66,17 @@ async function sendWhatsapp(id, nama){
     const res = await fetch(API_URL + "?action=settings");
     const settings = await res.json();
 
-    // Link undangan dari Pengaturan
-    const invitation =
-        settings.invitationLink || "";
+   // Link undangan dari Pengaturan
+const separator =
+settings.invitationLink.includes("?")
+    ? "&"
+    : "?";
+
+const invitation =
+settings.invitationLink +
+separator +
+"ev=1&to=" +
+encodeURIComponent(nama);
 
     // Link QR
     const qr =
@@ -101,7 +109,7 @@ Anggia & Haidar
 📍 REGISTRASI TAMU
 
 Untuk mempercepat proses registrasi pada hari acara,
-silakan simpan QR Check-in melalui tautan berikut.
+silahkan simpan QR Check-in melalui tautan berikut.
 
 
 👉 {link}
@@ -121,9 +129,10 @@ Terima kasih.`;
         .replaceAll("{link}", qr)
         .replaceAll("{undangan}", invitation);
 
-    location.href =
-    "https://wa.me/?text=" +
-    encodeURIComponent(text);
+   window.open(
+    "https://wa.me/?text=" + encodeURIComponent(text),
+    "_blank"
+);
     
 
 }
