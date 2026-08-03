@@ -15,6 +15,8 @@ async function loadGuests(){
 
             <td>${g.nama}</td>
 
+             <td>${g.notes || "-"}</td>
+
             <td>
 
                 <button class="action-btn preview"
