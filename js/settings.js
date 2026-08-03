@@ -60,10 +60,7 @@ async function loadSettings(){
 document.getElementById("password").value =
     data.password || "admin123";
      
-    document.getElementById("personalizedInvitation").checked =
-data.personalizedInvitation === "TRUE";
-
-    document.getElementById("waTemplate").value =
+      document.getElementById("waTemplate").value =
     data.waTemplate || "";
 
     }catch(err){
@@ -104,11 +101,6 @@ async function saveSettings(){
 
     waTemplate:document.getElementById("waTemplate").value,
     
-    personalizedInvitation:
-document.getElementById("personalizedInvitation").checked
-? "TRUE"
-: "FALSE",
-
     cardBackground:document.getElementById("cardBackground").value,
 
 };
