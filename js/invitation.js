@@ -46,6 +46,8 @@ async function loadGuests(){
     });
 
     document.getElementById("guestTable").innerHTML = html;
+    document.getElementById("resultInfo").innerText =
+    `Menampilkan ${data.length} dari ${data.length} tamu`;
 
 }
 
@@ -176,6 +178,9 @@ function searchGuest(){
     const rows =
         document.querySelectorAll("#guestTable tr");
 
+    let total = rows.length;
+    let tampil = 0;
+
     rows.forEach(row=>{
 
         const nama =
@@ -184,11 +189,19 @@ function searchGuest(){
             .toLowerCase();
 
         if(nama.includes(keyword)){
+
             row.style.display = "";
+            tampil++;
+
         }else{
+
             row.style.display = "none";
+
         }
 
     });
+
+    document.getElementById("resultInfo").innerText =
+        `Menampilkan ${tampil} dari ${total} tamu`;
 
 }
