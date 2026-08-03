@@ -67,21 +67,19 @@ async function sendWhatsapp(id, nama){
     const settings = await res.json();
     console.log(settings);
 
-   // Link undangan dari Pengaturan
+  // Link undangan dari Pengaturan
 let invitation = settings.invitationLink;
 
-if(settings.personalizedInvitation){
-    const separator =
+const separator =
     invitation.includes("?")
     ? "&"
     : "?";
 
-    invitation +=
-        separator +
-        "ev=1&to=" +
-        encodeURIComponent(nama);
+invitation +=
+    separator +
+    "ev=1&to=" +
+    encodeURIComponent(nama);
 
-}
 
     // Link QR
     const qr =
@@ -165,5 +163,32 @@ function downloadGuest(id){
         "invite.html?id=" + id + "&download=1",
         "_blank"
     );
+
+}
+function searchGuest(){
+
+    const keyword =
+        document
+        .getElementById("searchGuest")
+        .value
+        .toLowerCase();
+
+    const rows =
+        document.querySelectorAll("#guestTable tr");
+
+    rows.forEach(row=>{
+
+        const nama =
+            row.children[1]
+            .innerText
+            .toLowerCase();
+
+        if(nama.includes(keyword)){
+            row.style.display = "";
+        }else{
+            row.style.display = "none";
+        }
+
+    });
 
 }
