@@ -70,8 +70,7 @@ async function sendWhatsapp(id, nama){
    // Link undangan dari Pengaturan
 let invitation = settings.invitationLink;
 
-if(settings.personalizedInvitation === "TRUE"){
-
+if(settings.personalizedInvitation){
     const separator =
     invitation.includes("?")
     ? "&"
