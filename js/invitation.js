@@ -1,12 +1,42 @@
+let guests = [];
+let filteredGuests = [];
+
+let currentPage = 1;
+const rowsPerPage = 10;
+
 async function loadGuests(){
 
     const res = await fetch(API_URL + "?action=guests");
 
-    const data = await res.json();
+    guests = await res.json();
+
+filteredGuests = guests;
+
+renderGuests(filteredGuests); 
+}
+
+function previewGuest(id){
+
+    window.open(
+        "invite.html?id=" + id,
+        "_blank"
+    );
+
+}
+
+loadGuests();
+function renderGuests(data){
+
+    const tbody = document.getElementById("guestTable");
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    const pageData = data.slice(start, end);
 
     let html = "";
 
-    data.forEach(g=>{
+    pageData.forEach(g=>{
 
         html += `
         <tr>
@@ -15,12 +45,12 @@ async function loadGuests(){
 
             <td>${g.nama}</td>
 
-             <td>${g.notes || "-"}</td>
+            <td>${g.notes || "-"}</td>
 
             <td>
 
                 <button class="action-btn preview"
-                onclick="previewGuest('${g.id}')">
+                    onclick="previewGuest('${g.id}')">
                     👁️ Lihat
                 </button>
 
@@ -28,7 +58,7 @@ async function loadGuests(){
                     class="action-btn wa"
                     onclick="sendWhatsapp('${g.id}','${g.nama}')">
 
-                    📤 WhatsApp
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
 
                 </button>
 
@@ -47,22 +77,17 @@ async function loadGuests(){
 
     });
 
-    document.getElementById("guestTable").innerHTML = html;
+    tbody.innerHTML = html;
+
+    const from = data.length === 0 ? 0 : start + 1;
+    const to = Math.min(end, data.length);
+
     document.getElementById("resultInfo").innerText =
-    `Menampilkan ${data.length} dari ${data.length} tamu`;
+        `Menampilkan ${from}-${to} dari ${data.length} tamu`;
+        
+        updatePagination(data.length);
 
 }
-
-function previewGuest(id){
-
-    window.open(
-        "invite.html?id=" + id,
-        "_blank"
-    );
-
-}
-
-loadGuests();
 
 async function sendWhatsapp(id, nama){
 
@@ -177,33 +202,60 @@ function searchGuest(){
         .value
         .toLowerCase();
 
-    const rows =
-        document.querySelectorAll("#guestTable tr");
+    currentPage = 1;
 
-    let total = rows.length;
-    let tampil = 0;
+    filteredGuests = guests.filter(g =>
 
-    rows.forEach(row=>{
+        (g.nama || "")
+        .toLowerCase()
+        .includes(keyword)
 
-        const nama =
-            row.children[1]
-            .innerText
-            .toLowerCase();
+    );
 
-        if(nama.includes(keyword)){
-
-            row.style.display = "";
-            tampil++;
-
-        }else{
-
-            row.style.display = "none";
-
-        }
-
-    });
-
-    document.getElementById("resultInfo").innerText =
-        `Menampilkan ${tampil} dari ${total} tamu`;
+    renderGuests(filteredGuests);
 
 }
+
+function updatePagination(totalData){
+
+    const totalPages = Math.ceil(totalData / rowsPerPage);
+
+    const pageInfo = document.getElementById("pageInfo");
+
+    if(pageInfo){
+        pageInfo.innerText = `Halaman ${currentPage} / ${totalPages}`;
+    }
+
+    document.getElementById("prevBtn").disabled =
+        currentPage === 1;
+
+    document.getElementById("nextBtn").disabled =
+        currentPage === totalPages || totalPages === 0;
+
+}
+
+document.getElementById("prevBtn").onclick = () => {
+
+    if(currentPage > 1){
+
+        currentPage--;
+
+        renderGuests(filteredGuests);
+
+    }
+
+};
+
+document.getElementById("nextBtn").onclick = () => {
+
+    const totalPages = Math.ceil(filteredGuests.length / rowsPerPage);
+
+    if(currentPage < totalPages){
+
+        currentPage++;
+
+        renderGuests(filteredGuests);
+
+    }
+
+};
