@@ -47,7 +47,9 @@ function renderGuests(data){
 
             <td>${g.notes || "-"}</td>
 
-            <td>
+<td>${getDeliveryStatus(g)}</td>
+
+<td>
 
                 <button class="action-btn preview"
                     onclick="previewGuest('${g.id}')">
@@ -260,3 +262,29 @@ document.getElementById("nextBtn").onclick = () => {
     }
 
 };
+function getDeliveryStatus(g){
+
+    const wa = g.wa === true || g.wa === "TRUE";
+    const fisik = g.fisik === true || g.fisik === "TRUE";
+
+    if(wa && fisik){
+
+        return `<span class="delivery both">🔵 Keduanya</span>`;
+
+    }
+
+    if(wa){
+
+        return `<span class="delivery wa">🟢 WhatsApp</span>`;
+
+    }
+
+    if(fisik){
+
+        return `<span class="delivery fisik">🟡 Fisik</span>`;
+
+    }
+
+    return `<span class="delivery none">🔴 Belum</span>`;
+
+}
