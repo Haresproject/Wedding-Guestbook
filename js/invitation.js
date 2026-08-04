@@ -55,12 +55,13 @@ function renderGuests(data){
                 </button>
 
                 <button
-                    class="action-btn wa"
-                    onclick="sendWhatsapp('${g.id}','${g.nama}')">
+    class="action-btn wa"
+    onclick="sendWhatsapp('${g.id}','${g.nama}')">
 
-                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+    <i class="fa-brands fa-whatsapp"></i>
+    WhatsApp
 
-                </button>
+</button>
 
                 <button
                     class="action-btn print"
