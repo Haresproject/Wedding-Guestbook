@@ -25,7 +25,7 @@ function renderGuests(data){
 
     const tbody = document.getElementById("guestTable");
 
-    tbody.innerHTML = "";
+    let html = "";
 
     data.forEach(guest => {
 
@@ -36,15 +36,13 @@ function renderGuests(data){
 
         const tombol =
             guest.status === "HADIR"
-
             ? `<button class="btn-disabled" disabled>✔ Sudah Hadir</button>`
-
             : `<button class="btn-checkin"
                 onclick="manualCheckin('${guest.id}')">
                 ✅ Check-in
                </button>`;
 
-        tbody.innerHTML += `
+        html += `
         <tr>
 
             <td>${guest.id}</td>
@@ -63,11 +61,10 @@ function renderGuests(data){
 
             <td>${tombol}</td>
 
-        </tr>
-        `;
-
+        </tr>`;
     });
 
+    tbody.innerHTML = html;
 }
 
 // ================= CHECK-IN MANUAL =================
