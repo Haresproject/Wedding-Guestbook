@@ -171,6 +171,34 @@ console.log("Text =", text);
     "https://api.whatsapp.com/send?text=" +
     encodeURIComponent(text);
 
+// Simpan status WA ke Google Sheet
+try{
+
+    await fetch(API_URL,{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            action:"updateWaStatus",
+
+            id:id
+
+        })
+
+    });
+
+}catch(err){
+
+    console.log(err);
+
+}
+
+// Buka WhatsApp
 location.href = waUrl;
     
 
