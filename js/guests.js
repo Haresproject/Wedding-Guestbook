@@ -344,3 +344,71 @@ document.getElementById("nextBtn").onclick = () => {
     }
 
 };
+
+async function saveGuest(){
+
+    const nama = document.getElementById("guestNama").value.trim();
+    const notes = document.getElementById("guestNotes").value.trim();
+    const tipe = document.getElementById("guestTipe").value;
+    const fisik = document.getElementById("guestFisik").checked;
+
+    if(nama === ""){
+
+        alert("Nama tamu wajib diisi.");
+
+        return;
+
+    }
+
+    try{
+
+        const res = await fetch(API_URL,{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                action:"addGuest",
+
+                nama:nama,
+                notes:notes,
+                tipe:tipe,
+                fisik:fisik
+
+            })
+
+        });
+
+        const result = await res.json();
+
+        if(result.success){
+
+            alert("Tamu berhasil ditambahkan.");
+
+            closeAddGuestModal();
+
+            document.getElementById("guestNama").value = "";
+            document.getElementById("guestNotes").value = "";
+            document.getElementById("guestFisik").checked = false;
+
+            loadGuests();
+
+        }else{
+
+            alert(result.message);
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+        alert("Gagal menambahkan tamu.");
+
+    }
+
+}
