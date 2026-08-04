@@ -58,11 +58,13 @@ const pageData = data.slice(start, end);
 
             <td>${guest.nama}</td>
 
-            <td>
-                <span class="${statusClass}">
-                    ${guest.status}
-                </span>
-            </td>
+<td>${guest.notes || "-"}</td>
+
+<td>
+    <span class="${statusClass}">
+        ${guest.status}
+    </span>
+</td>
 
             <td>${guest.tipe || "-"}</td>
 
@@ -135,7 +137,7 @@ document.getElementById("search").addEventListener("keyup",function(){
         .includes(keyword)
 
     );
-    
+
     currentPage = 1;
     renderGuests(hasil);
 
