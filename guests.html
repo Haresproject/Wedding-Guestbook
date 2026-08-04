@@ -139,6 +139,79 @@
 
 </div>
 
+<div id="addGuestModal"
+style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+justify-content:center;
+align-items:center;
+z-index:9999;">
+
+    <div style="
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    width:420px;
+    max-width:90%;">
+
+        <h2>➕ Tambah Tamu</h2>
+
+        <input
+            id="guestNama"
+            type="text"
+            placeholder="Nama Tamu"
+            style="width:100%;margin:10px 0;padding:10px;">
+
+        <input
+            id="guestNotes"
+            type="text"
+            placeholder="Notes (Teman SMA, Kantor, dll)"
+            style="width:100%;margin:10px 0;padding:10px;">
+
+        <select
+            id="guestTipe"
+            style="width:100%;margin:10px 0;padding:10px;">
+
+            <option value="REGULER">Reguler</option>
+            <option value="VIP">VIP</option>
+            <option value="KELUARGA">Keluarga</option>
+            <option value="BRIDESMAID">Bridesmaid</option>
+
+        </select>
+
+        <label>
+            <input
+                type="checkbox"
+                id="guestFisik">
+
+            Undangan Fisik
+        </label>
+
+        <div style="
+        margin-top:20px;
+        display:flex;
+        justify-content:flex-end;
+        gap:10px;">
+
+            <button onclick="closeAddGuestModal()">
+                Batal
+            </button>
+
+            <button onclick="saveGuest()">
+                💾 Simpan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
