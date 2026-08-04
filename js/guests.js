@@ -412,3 +412,14 @@ async function saveGuest(){
     }
 
 }
+function showAddGuestModal(){
+
+    document.getElementById("addGuestModal").style.display = "flex";
+
+}
+
+function closeAddGuestModal(){
+
+    document.getElementById("addGuestModal").style.display = "none";
+
+}
