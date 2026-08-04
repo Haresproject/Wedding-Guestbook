@@ -74,6 +74,7 @@ const pageData = data.slice(start, end);
     });
 
     tbody.innerHTML = html;
+    updatePagination(data.length);
     const info = document.getElementById("tableInfo");
 
 if (info) {
@@ -134,7 +135,8 @@ document.getElementById("search").addEventListener("keyup",function(){
         .includes(keyword)
 
     );
-
+    
+    currentPage = 1;
     renderGuests(hasil);
 
 });
@@ -236,6 +238,21 @@ async function importExcel(e){
     reader.readAsBinaryString(file);
 
 }
+
+function updatePagination(totalData){
+
+    const totalPages = Math.ceil(totalData / rowsPerPage);
+
+    document.getElementById("pageInfo").innerText =
+        `Halaman ${currentPage} / ${totalPages}`;
+
+    document.getElementById("prevBtn").disabled =
+        currentPage === 1;
+
+    document.getElementById("nextBtn").disabled =
+        currentPage === totalPages;
+}
+
 function exportExcel(){
 
     const data = guests.map(g=>({
@@ -300,3 +317,28 @@ async function exportPDF(){
     doc.save("Daftar_Tamu.pdf");
 
 }
+document.getElementById("prevBtn").onclick = () => {
+
+    if(currentPage > 1){
+
+        currentPage--;
+
+        renderGuests(guests);
+
+    }
+
+};
+
+document.getElementById("nextBtn").onclick = () => {
+
+    const totalPages = Math.ceil(guests.length / rowsPerPage);
+
+    if(currentPage < totalPages){
+
+        currentPage++;
+
+        renderGuests(guests);
+
+    }
+
+};
