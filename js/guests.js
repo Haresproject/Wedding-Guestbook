@@ -1,6 +1,10 @@
 const API_URL = "https://wedguest.kosthandoko907.workers.dev";
+
 let guests = [];
 
+// Pagination
+let currentPage = 1;
+const rowsPerPage = 10;
 // ================= LOAD DATA =================
 async function loadGuests() {
 
@@ -27,7 +31,12 @@ function renderGuests(data){
 
     let html = "";
 
-    data.forEach(guest => {
+    const start = (currentPage - 1) * rowsPerPage;
+const end = start + rowsPerPage;
+
+const pageData = data.slice(start, end);
+
+    pageData.forEach(guest => {
 
         const statusClass =
             guest.status === "HADIR"
@@ -65,6 +74,15 @@ function renderGuests(data){
     });
 
     tbody.innerHTML = html;
+    const info = document.getElementById("tableInfo");
+
+if (info) {
+
+    const from = data.length === 0 ? 0 : start + 1;
+    const to = Math.min(end, data.length);
+
+    info.innerText = `Menampilkan ${from}-${to} dari ${data.length} tamu`;
+}
 }
 
 // ================= CHECK-IN MANUAL =================
@@ -140,8 +158,6 @@ function formatJam(jam){
 
 // ================= AUTO LOAD =================
 loadGuests();
-
-setInterval(loadGuests,3000);
 
 // ================= IMPORT EXCEL =================
 
