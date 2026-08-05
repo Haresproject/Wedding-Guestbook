@@ -297,7 +297,7 @@ function getDeliveryStatus(g){
 
     if(wa && fisik){
 
-        return `<span class="delivery both">🔵 Keduanya</span>`;
+        return `<span class="delivery both">🟡 Keduanya</span>`;
 
     }
 
@@ -309,7 +309,7 @@ function getDeliveryStatus(g){
 
     if(fisik){
 
-        return `<span class="delivery fisik">🟡 Fisik</span>`;
+        return `<span class="delivery fisik">🔵 Fisik</span>`;
 
     }
 
