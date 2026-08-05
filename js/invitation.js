@@ -149,7 +149,7 @@ silahkan simpan QR Check-in melalui tautan berikut.
 
 👉 {link}
 
-Mohon tunjukkan QR tersebut kepada petugas saat memasuki area acara.
+Mohon tunjukkan QR tersebut kepada penerima tamu saat memasuki area acara.
 
 Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i
 berkenan untuk hadir dan memberikan doa restu
