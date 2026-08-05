@@ -8,12 +8,60 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
 
+
 :root{
 
     --primary:#214E43;
     --secondary:#2f6a5c;
     --accent:#E8C547;
 
+}
+
+.delivery-stats{
+
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-top:15px;
+
+}
+
+.delivery-item{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:12px 16px;
+
+    border-radius:12px;
+
+    font-weight:600;
+    color:white;
+
+}
+
+.delivery-item strong{
+
+    font-size:22px;
+
+}
+
+.delivery-item.wa{
+    background:#28a745;
+}
+
+.delivery-item.fisik{
+    background:#4ac3f3;
+}
+
+.delivery-item.both{
+    background:#ffc107;
+    color:#333;
+}
+
+.delivery-item.none{
+    background:#dc3545;
 }
 
 </style>
@@ -107,35 +155,7 @@ Wedding Guestbook
             </div>
 
         </section>
-        <section class="activity">
-
-    <h2>📦 Statistik Pengiriman</h2>
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>🟢 WhatsApp</h3>
-            <h2 id="waCount">0</h2>
-        </div>
-
-        <div class="card">
-            <h3>🟡 Fisik</h3>
-            <h2 id="fisikCount">0</h2>
-        </div>
-
-        <div class="card">
-            <h3>🔵 Keduanya</h3>
-            <h2 id="bothCount">0</h2>
-        </div>
-
-        <div class="card">
-            <h3>🔴 Belum</h3>
-            <h2 id="noneCount">0</h2>
-        </div>
-
-    </div>
-
-</section>
+       
         <section class="activity">
 
     <h2>📈 Progress Kehadiran</h2>
@@ -163,6 +183,37 @@ Wedding Guestbook
             <div id="latestGuest">
                 Belum ada tamu yang check-in.
             </div>
+</section>
+
+<section class="activity">
+
+    <h2>📦 Status Pengiriman</h2>
+
+    <div class="delivery-stats">
+
+        <div class="delivery-item wa">
+            <span>🟢 WhatsApp</span>
+            <strong id="waCount">0</strong>
+        </div>
+
+        <div class="delivery-item fisik">
+            <span>🔵 Fisik</span>
+            <strong id="fisikCount">0</strong>
+        </div>
+
+        <div class="delivery-item both">
+            <span>🟡 Keduanya</span>
+            <strong id="bothCount">0</strong>
+        </div>
+
+        <div class="delivery-item none">
+            <span>🔴 Belum</span>
+            <strong id="noneCount">0</strong>
+        </div>
+
+    </div>
+
+</section>
 
     </main>
 
