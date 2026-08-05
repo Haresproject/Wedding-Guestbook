@@ -73,6 +73,33 @@ th,td{
 .delivery.none{
     background:#dc3545;
 }
+.filter-bar{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:15px 0;
+
+}
+
+.filter-bar button{
+
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f2f2f2;
+    font-weight:600;
+    transition:.2s;
+
+}
+
+.filter-bar button:hover{
+
+    background:#214E43;
+    color:white;
+
+}
 </style>
 
 </head>
@@ -130,6 +157,29 @@ th,td{
             border-radius:10px;
             font-size:15px;
         ">
+
+</div>
+<div class="filter-bar">
+
+    <button onclick="filterDelivery('all')">
+        Semua
+    </button>
+
+    <button onclick="filterDelivery('wa')">
+        🟢 WhatsApp
+    </button>
+
+    <button onclick="filterDelivery('fisik')">
+        🔵 Fisik
+    </button>
+
+    <button onclick="filterDelivery('both')">
+        🟡 Keduanya
+    </button>
+
+    <button onclick="filterDelivery('none')">
+        🔴 Belum
+    </button>
 
 </div>
 <p

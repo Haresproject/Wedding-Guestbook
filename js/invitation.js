@@ -1,5 +1,6 @@
 let guests = [];
 let filteredGuests = [];
+let currentFilter = "all";
 
 let currentPage = 1;
 const rowsPerPage = 10;
@@ -235,13 +236,45 @@ function searchGuest(){
 
     currentPage = 1;
 
-    filteredGuests = guests.filter(g =>
+    filteredGuests = guests.filter(g=>{
 
-        (g.nama || "")
-        .toLowerCase()
-        .includes(keyword)
+        const nama =
+            (g.nama || "")
+            .toLowerCase();
 
-    );
+        const wa =
+            g.wa === true ||
+            g.wa === "TRUE";
+
+        const fisik =
+            g.fisik === true ||
+            g.fisik === "TRUE";
+
+        let cocokFilter = true;
+
+        switch(currentFilter){
+
+            case "wa":
+                cocokFilter = wa && !fisik;
+                break;
+
+            case "fisik":
+                cocokFilter = fisik && !wa;
+                break;
+
+            case "both":
+                cocokFilter = wa && fisik;
+                break;
+
+            case "none":
+                cocokFilter = !wa && !fisik;
+                break;
+
+        }
+
+        return nama.includes(keyword) && cocokFilter;
+
+    });
 
     renderGuests(filteredGuests);
 
@@ -314,5 +347,45 @@ function getDeliveryStatus(g){
     }
 
     return `<span class="delivery none">🔴 Belum</span>`;
+
+}
+function filterDelivery(type){
+
+    currentFilter = type;
+
+    currentPage = 1;
+
+    filteredGuests = guests.filter(g=>{
+
+        const wa =
+            g.wa === true ||
+            g.wa === "TRUE";
+
+        const fisik =
+            g.fisik === true ||
+            g.fisik === "TRUE";
+
+        switch(type){
+
+            case "wa":
+                return wa && !fisik;
+
+            case "fisik":
+                return fisik && !wa;
+
+            case "both":
+                return wa && fisik;
+
+            case "none":
+                return !wa && !fisik;
+
+            default:
+                return true;
+
+        }
+
+    });
+
+    renderGuests(filteredGuests);
 
 }
