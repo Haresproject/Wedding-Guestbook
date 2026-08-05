@@ -82,6 +82,11 @@ async function loadStats(){
         document.getElementById("hadir").innerText = data.hadir;
         document.getElementById("belum").innerText = data.belum;
 
+        document.getElementById("waCount").innerText = data.wa;
+        document.getElementById("fisikCount").innerText = data.fisik;
+        document.getElementById("bothCount").innerText = data.both;
+        document.getElementById("noneCount").innerText = data.none;
+
         const persen = data.total > 0
             ? ((data.hadir / data.total) * 100).toFixed(1)
             : 0;
