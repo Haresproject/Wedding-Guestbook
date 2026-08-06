@@ -1,4 +1,4 @@
-const API_URL = "https://wedguest.kosthandoko907.workers.dev";
+const API_URL = CONFIG.API_URL;
 
 // ================= LOAD SETTINGS =================
 
