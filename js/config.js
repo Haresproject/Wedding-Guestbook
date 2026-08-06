@@ -2,6 +2,14 @@ const CONFIG = {
 
     API_URL: "https://wedguest.kosthandoko907.workers.dev",
 
-    EVENT: "default"
+    APP_NAME: "Wedding Guestbook",
+
+    COMPANY: "HaresLens",
+
+    VERSION: "1.0.0",
+
+    LICENSE: "PERSONAL",
+
+    DEMO: false
 
 };

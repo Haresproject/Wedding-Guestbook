@@ -22,7 +22,7 @@ async function loadSettings(){
         if(data.appName){
 
         document.getElementById("appName").innerHTML =
-        data.appName;
+    CONFIG.APP_NAME;
 
 }    
 
@@ -176,6 +176,15 @@ function formatTanggal(tanggal){
 loadSettings();
 loadStats();
 loadLatestGuest();
+
+const user = getUser();
+
+if(user){
+
+    document.getElementById("adminName").innerHTML =
+        "👤 " + user.name;
+
+}
 
 setInterval(loadStats,5000);
 setInterval(loadLatestGuest,2000);
