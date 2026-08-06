@@ -1,4 +1,4 @@
-const API_URL = "https://wedguest.kosthandoko907.workers.dev";
+const API_URL = CONFIG.API_URL;
 
 let lastGuestTime = "";
 
@@ -8,7 +8,7 @@ async function loadSettings(){
 
     try{
 
-        const res = await fetch(API_URL + "?action=settings");
+        const res = await fetch(CONFIG.API_URL + "?action=settings");
         const data = await res.json();
 
         document.getElementById("coupleName").innerHTML =
@@ -75,7 +75,7 @@ async function loadStats(){
 
     try{
 
-        const res = await fetch(API_URL + "?action=stats&t=" + Date.now());
+        const res = await fetch(CONFIG.API_URL + "?action=latestGuests&t=" + Date.now());
         const data = await res.json();
 
         document.getElementById("total").innerText = data.total;

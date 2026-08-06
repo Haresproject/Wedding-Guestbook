@@ -1,3 +1,5 @@
+const API_URL = CONFIG.API_URL;
+
 let guests = [];
 let filteredGuests = [];
 let currentFilter = "all";
