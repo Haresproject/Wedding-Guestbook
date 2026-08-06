@@ -75,7 +75,7 @@ async function loadStats(){
 
     try{
 
-        const res = await fetch(CONFIG.API_URL + "?action=latestGuests&t=" + Date.now());
+        const res = await fetch(CONFIG.API_URL + "?action=stats&t=" + Date.now());
         const data = await res.json();
 
         document.getElementById("total").innerText = data.total;
@@ -87,7 +87,8 @@ async function loadStats(){
         document.getElementById("bothCount").innerText = data.both;
         document.getElementById("noneCount").innerText = data.none;
 
-        const persen = data.total > 0
+        const persen =
+            data.total > 0
             ? ((data.hadir / data.total) * 100).toFixed(1)
             : 0;
 
@@ -177,14 +178,12 @@ loadSettings();
 loadStats();
 loadLatestGuest();
 
-const user = getUser();
+// const user = getUser();
 
-if(user){
-
-    document.getElementById("adminName").innerHTML =
-        "👤 " + user.name;
-
-}
+// if(user){
+//     document.getElementById("adminName").innerHTML =
+//         "👤 " + user.name;
+// }
 
 setInterval(loadStats,5000);
 setInterval(loadLatestGuest,2000);
