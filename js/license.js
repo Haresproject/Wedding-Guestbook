@@ -10,6 +10,9 @@ async function checkLicense(){
     console.log("License : " + CONFIG.LICENSE);
 
     try{
+        
+console.log("License =", CONFIG.LICENSE);
+console.log("Domain =", location.hostname);
 
         const res = await fetch(
             CONFIG.API_URL +
