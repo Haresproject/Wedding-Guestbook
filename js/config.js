@@ -8,8 +8,8 @@ const CONFIG = {
 
     VERSION: "1.0.0",
 
-    LICENSE: "",
+    LICENSE: "HL-NCZFXY2ARWT6",
 
-    DEMO: true
+    DEMO: false
 
 };
