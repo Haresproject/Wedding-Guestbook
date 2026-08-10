@@ -1,13 +1,13 @@
 async function checkLicense(){
 
-    // ================= DEMO =================
+// ================= SUPER ADMIN =================
 
-    if(CONFIG.DEMO){
+    if(CONFIG.SUPER_ADMIN){
 
-        console.warn("Running Demo Version");
+    console.warn("Running Super Admin");
 
-        return true;
-    }
+    return true;
+}
 
 
     // ================= INFO =================
