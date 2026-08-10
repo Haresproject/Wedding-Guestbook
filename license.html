@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>License Management</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .license-header h2 {
+            margin: 0;
+        }
+
+        .license-btn {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 10px;
+            background: #214E43;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .license-btn:hover {
+            opacity: .9;
+        }
+
+        .license-table-box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .license-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        .license-table th,
+        .license-table td {
+            padding: 13px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .license-table th {
+            background: #f5f7f6;
+            font-weight: 700;
+        }
+
+        .status-active {
+            color: #198754;
+            font-weight: 700;
+        }
+
+        .status-inactive {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .empty-license {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <img src="assets/logo.png" alt="Logo">
+
+        <h2 id="appName"></h2>
+
+    </div>
+
+
+    <nav>
+
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
+
+        <a href="guests.html">
+            👥 Daftar Tamu
+        </a>
+
+        <a href="scanner.html">
+            📷 Scanner
+        </a>
+
+        <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display"
+           target="_blank">
+            📺 Display
+        </a>
+
+        <a href="invitation.html">
+            💌 Undangan
+        </a>
+
+        <a href="settings.html">
+            ⚙ Pengaturan
+        </a>
+
+        <a href="license.html" class="active">
+            🔑 License
+        </a>
+
+        <a href="#" onclick="logout()">
+            🚪 Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- ================= CONTENT ================= -->
+
+<main class="content">
+
+
+    <header class="topbar">
+
+        <div>
+
+            <h1>License Management</h1>
+
+            <p>
+                Kelola license customer
+            </p>
+
+        </div>
+
+
+        <div class="admin" id="adminName">
+            👤 Super Admin
+        </div>
+
+    </header>
+
+
+    <!-- ================= LICENSE ================= -->
+
+    <section class="activity">
+
+
+        <div class="license-header">
+
+            <div>
+
+                <h2>🔑 Daftar License</h2>
+
+            </div>
+
+
+            <button
+                class="license-btn"
+                onclick="buatLicense()">
+
+                + Buat License
+
+            </button>
+
+        </div>
+
+
+        <div class="license-table-box">
+
+            <table class="license-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>License</th>
+
+                        <th>Owner</th>
+
+                        <th>Domain</th>
+
+                        <th>Status</th>
+
+                        <th>Activated</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="licenseTable">
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="empty-license">
+
+                            Memuat data license...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script src="js/config.js"></script>
+
+<script src="js/license.js"></script>
+
+<script src="js/session.js"></script>
+
+<script src="js/license-page.js"></script>
+
+
+</body>
+
+</html>
