@@ -64,6 +64,58 @@
     background:#dc3545;
 }
 
+/* ================= ADMIN DROPDOWN ================= */
+
+.admin-wrapper {
+    position: relative;
+}
+
+.admin {
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.admin-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+
+    min-width: 190px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 8px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+
+    z-index: 1000;
+}
+
+.admin-menu.show {
+    display: block;
+}
+
+.admin-menu a {
+    display: block;
+
+    padding: 11px 14px;
+
+    border-radius: 10px;
+
+    color: #333;
+
+    text-decoration: none;
+
+    font-size: 14px;
+}
+
+.admin-menu a:hover {
+    background: #f2f5f4;
+}
 </style>
 </head>
 <body>
@@ -115,9 +167,25 @@
                 <p>Selamat datang di Wedding Guestbook</p>
             </div>
 
-            <div class="admin" id="adminName">
-             👤 Admin
-            </div>
+            <div class="admin-wrapper">
+
+    <button class="admin" id="adminName" type="button">
+        👤 Admin ▾
+    </button>
+
+    <div class="admin-menu" id="adminMenu">
+
+        <a href="license.html" id="adminLicenseMenu">
+            🔑 Kelola License
+        </a>
+
+        <a href="#" onclick="logout()">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
 
         </header>
         <section id="hero" class="hero">
@@ -273,6 +341,84 @@ function logout(){
 }
 
 </script>
+<script>
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const adminName = document.getElementById("adminName");
+
+    if (!adminName) return;
+
+    if (CONFIG.SUPER_ADMIN === true) {
+
+        adminName.innerHTML = "👑 Super Admin ▾";
+
+    } else {
+
+        adminName.innerHTML = "👤 Admin ▾";
+
+    }
+
+});
+
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const adminName = document.getElementById("adminName");
+    const adminMenu = document.getElementById("adminMenu");
+    const adminLicenseMenu =
+        document.getElementById("adminLicenseMenu");
+
+
+    if (!adminName || !adminMenu) return;
+
+
+    // ================= NAMA ADMIN =================
+
+    if (CONFIG.SUPER_ADMIN === true) {
+
+        adminName.innerHTML = "👑 Super Admin ▾";
+
+        // License hanya untuk Super Admin
+        if (adminLicenseMenu) {
+            adminLicenseMenu.style.display = "block";
+        }
+
+    } else {
+
+        adminName.innerHTML = "👤 Admin ▾";
+
+        // Customer tidak boleh melihat License
+        if (adminLicenseMenu) {
+            adminLicenseMenu.style.display = "none";
+        }
+
+    }
+
+
+    // ================= BUKA DROPDOWN =================
+
+    adminName.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        adminMenu.classList.toggle("show");
+
+    });
+
+
+    // ================= KLIK DI LUAR =================
+
+    document.addEventListener("click", function () {
+
+        adminMenu.classList.remove("show");
+
+    });
+
+});
+
+</script>
 </body>
 </html>
