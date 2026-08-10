@@ -187,3 +187,19 @@ loadLatestGuest();
 
 setInterval(loadStats,5000);
 setInterval(loadLatestGuest,2000);
+
+// ================= SUPER ADMIN MENU =================
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const licenseMenu = document.getElementById("licenseMenu");
+
+    if(!licenseMenu) return;
+
+    if(CONFIG.SUPER_ADMIN === true){
+
+        licenseMenu.style.display = "block";
+
+    }
+
+});
