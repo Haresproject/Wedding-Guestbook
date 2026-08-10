@@ -8,8 +8,8 @@ const CONFIG = {
 
     VERSION: "1.0.0",
 
-    LICENSE: "PERSONAL",
+    LICENSE: "",
 
-    DEMO: false
+    DEMO: true
 
 };
