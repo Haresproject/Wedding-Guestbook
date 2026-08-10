@@ -27,27 +27,26 @@ console.log("Domain =", location.hostname);
 
         if(!data.success){
 
-            document.body.innerHTML = `
-                <div style="
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    height:100vh;
-                    font-family:Arial,sans-serif;
-                    background:#f8f8f8;
-                    text-align:center;
-                ">
-                    <div>
-                        <h1>🔒 Website Belum Diaktivasi</h1>
-                        <p>${data.message}</p>
-                        <small>Hubungi HaresLens</small>
-                    </div>
-                </div>
-            `;
+    document.body.innerHTML = `
+        <div style="
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            font-family:Arial,sans-serif;
+            background:#f8f8f8;
+            text-align:center;
+        ">
+            <div>
+                <h1>🔒 Website Belum Diaktivasi</h1>
+                <p>${data.message}</p>
+                <small>Hubungi HaresLens</small>
+            </div>
+        </div>
+    `;
 
-            throw new Error("License Invalid");
-
-        }
+    return false;
+}
 
         console.log("✅ License Valid");
 
