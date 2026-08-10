@@ -203,3 +203,27 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
 });
+// ================= ADMIN DROPDOWN =================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const adminButton = document.getElementById("adminName");
+    const adminMenu = document.getElementById("adminMenu");
+
+    if (!adminButton || !adminMenu) return;
+
+    adminButton.addEventListener("click", function (e) {
+
+        e.stopPropagation();
+
+        adminMenu.classList.toggle("show");
+
+    });
+
+    document.addEventListener("click", function () {
+
+        adminMenu.classList.remove("show");
+
+    });
+
+});
