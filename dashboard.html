@@ -19,7 +19,6 @@
             --accent: #E8C547;
         }
 
-
         /* ================= DELIVERY ================= */
 
         .delivery-stats {
@@ -63,7 +62,6 @@
             background: #dc3545;
         }
 
-
         /* ================= ADMIN DROPDOWN ================= */
 
         .admin-wrapper {
@@ -73,9 +71,18 @@
         .admin {
             border: none;
             cursor: pointer;
+
+            background: white;
+            color: #333;
+
+            padding: 12px 20px;
+
+            border-radius: 50px;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+
             font-size: 15px;
-            background: transparent;
-            padding: 8px 12px;
+            font-weight: 600;
         }
 
         .admin-menu {
@@ -86,7 +93,7 @@
             right: 0;
             top: calc(100% + 10px);
 
-            min-width: 190px;
+            min-width: 200px;
 
             background: white;
 
@@ -94,9 +101,9 @@
 
             padding: 8px;
 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
 
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .admin-menu.show {
@@ -106,7 +113,7 @@
         .admin-menu a {
             display: block;
 
-            padding: 11px 14px;
+            padding: 12px 14px;
 
             border-radius: 10px;
 
@@ -119,6 +126,11 @@
 
         .admin-menu a:hover {
             background: #f2f5f4;
+        }
+
+        /* License disembunyikan default */
+        #adminLicenseMenu {
+            display: none;
         }
 
     </style>
@@ -175,203 +187,6 @@
 
 </aside>
 
-<body>
-
-<div class="layout">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-
-        <div class="logo">
-            <img src="assets/logo.png" alt="Logo">
-            <h2 id="appName"></h2>
-        </div>
-
-        <nav>
-
-            <a href="dashboard.html" class="active">
-                🏠 Dashboard
-            </a>
-
-            <a href="guests.html">
-                👥 Daftar Tamu
-            </a>
-
-            <a href="scanner.html">
-                📷 Scanner
-            </a>
-
-            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display"
-               target="_blank">
-                📺 Display
-            </a>
-
-            <a href="invitation.html">
-                💌 Undangan
-            </a>
-
-            <a href="settings.html">
-                ⚙ Pengaturan
-            </a>
-
-        </nav>
-
-    </aside>
-
-
-    <!-- CONTENT -->
-    <main class="content">
-
-        <header class="topbar">
-
-            <div>
-                <h1>Dashboard</h1>
-                <p>Selamat datang di Wedding Guestbook</p>
-            </div>
-
-            <div class="admin-wrapper">
-
-                <button class="admin" id="adminName" type="button">
-                    👤 Admin ▾
-                </button>
-
-                <div class="admin-menu" id="adminMenu">
-
-                    <a href="license.html" id="adminLicenseMenu">
-                        🔑 Kelola License
-                    </a>
-
-                    <a href="#" onclick="logout()">
-                        🚪 Logout
-                    </a>
-
-                </div>
-
-            </div>
-
-        </header>
-
-
-        <!-- HERO -->
-        <section id="hero" class="hero">
-
-            <div class="hero-overlay"></div>
-
-            <div class="hero-content">
-
-                <img
-                    id="weddingLogo"
-                    class="hero-logo"
-                    src="assets/logo.png"
-                    alt="Wedding Logo">
-
-                <h1 id="coupleName">
-                    Loading...
-                </h1>
-
-                <p id="weddingDate"></p>
-
-                <p id="weddingVenue"></p>
-
-            </div>
-
-        </section>
-
-
-        <!-- STATISTICS -->
-        <section class="cards">
-
-            <div class="card">
-                <h3>Total Tamu</h3>
-                <h2 id="total">0</h2>
-            </div>
-
-            <div class="card">
-                <h3>Sudah Hadir</h3>
-                <h2 id="hadir">0</h2>
-            </div>
-
-            <div class="card">
-                <h3>Belum Hadir</h3>
-                <h2 id="belum">0</h2>
-            </div>
-
-        </section>
-
-
-        <!-- PROGRESS -->
-        <section class="activity">
-
-            <h2>📈 Progress Kehadiran</h2>
-
-            <div class="progress-box">
-
-                <div class="progress-bar">
-                    <div
-                        id="progressFill"
-                        class="progress-fill">
-                    </div>
-                </div>
-
-                <div
-                    id="progressText"
-                    class="progress-text">
-                    0%
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- AKTIVITAS -->
-        <section class="activity">
-
-            <h2>Aktivitas Terbaru</h2>
-
-            <div id="latestGuest">
-                Belum ada tamu yang check-in.
-            </div>
-
-        </section>
-
-
-        <!-- PENGIRIMAN -->
-        <section class="activity">
-
-            <h2>📦 Status Pengiriman</h2>
-
-            <div class="delivery-stats">
-
-                <div class="delivery-item wa">
-                    <span>🟢 WhatsApp</span>
-                    <strong id="waCount">0</strong>
-                </div>
-
-                <div class="delivery-item fisik">
-                    <span>🔵 Fisik</span>
-                    <strong id="fisikCount">0</strong>
-                </div>
-
-                <div class="delivery-item both">
-                    <span>🟡 Keduanya</span>
-                    <strong id="bothCount">0</strong>
-                </div>
-
-                <div class="delivery-item none">
-                    <span>🔴 Belum</span>
-                    <strong id="noneCount">0</strong>
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-</body>
 
 <!-- ================= CONTENT ================= -->
 
@@ -384,9 +199,7 @@
 
         <div>
 
-            <h1>
-                Dashboard
-            </h1>
+            <h1>Dashboard</h1>
 
             <p>
                 Selamat datang di Wedding Guestbook
@@ -394,8 +207,6 @@
 
         </div>
 
-
-        <!-- ADMIN -->
 
         <div class="admin-wrapper">
 
@@ -423,7 +234,7 @@
 
                 <a
                     href="#"
-                    onclick="logout()"
+                    id="logoutMenu"
                 >
                     🚪 Logout
                 </a>
@@ -433,7 +244,6 @@
         </div>
 
     </header>
-
 
 
     <!-- ================= HERO ================= -->
@@ -470,8 +280,7 @@
     </section>
 
 
-
-    <!-- ================= CARDS ================= -->
+    <!-- ================= STATISTICS ================= -->
 
     <section class="cards">
 
@@ -518,7 +327,6 @@
     </section>
 
 
-
     <!-- ================= PROGRESS ================= -->
 
     <section class="activity">
@@ -552,7 +360,6 @@
     </section>
 
 
-
     <!-- ================= AKTIVITAS ================= -->
 
     <section class="activity">
@@ -569,7 +376,6 @@
         </div>
 
     </section>
-
 
 
     <!-- ================= DELIVERY ================= -->
@@ -644,7 +450,6 @@
 </main>
 
 
-
 <!-- ================= JAVASCRIPT ================= -->
 
 <script src="js/config.js"></script>
@@ -666,47 +471,61 @@ document.addEventListener("DOMContentLoaded", function () {
     const adminMenu =
         document.getElementById("adminMenu");
 
-    const adminLicenseMenu =
+    const licenseMenu =
         document.getElementById("adminLicenseMenu");
 
+    const logoutMenu =
+        document.getElementById("logoutMenu");
+
+
+    /* =========================
+       CEK ELEMENT
+    ========================= */
 
     if (!adminName || !adminMenu) {
+
+        console.error(
+            "Admin dropdown element tidak ditemukan"
+        );
+
         return;
+
     }
 
 
-    /* ================= SUPER ADMIN ================= */
+    /* =========================
+       SUPER ADMIN / CUSTOMER
+    ========================= */
 
     if (
         typeof CONFIG !== "undefined" &&
         CONFIG.SUPER_ADMIN === true
     ) {
 
+        /* SUPER ADMIN */
+
         adminName.innerHTML =
             "👑 Super Admin ▾";
 
 
-        if (adminLicenseMenu) {
+        if (licenseMenu) {
 
-            adminLicenseMenu.style.display =
+            licenseMenu.style.display =
                 "block";
 
         }
 
-    }
+    } else {
 
-
-    /* ================= CUSTOMER ================= */
-
-    else {
+        /* CUSTOMER */
 
         adminName.innerHTML =
             "👤 Admin ▾";
 
 
-        if (adminLicenseMenu) {
+        if (licenseMenu) {
 
-            adminLicenseMenu.style.display =
+            licenseMenu.style.display =
                 "none";
 
         }
@@ -714,7 +533,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* ================= DROPDOWN ================= */
+    /* =========================
+       OPEN / CLOSE DROPDOWN
+    ========================= */
 
     adminName.addEventListener(
         "click",
@@ -728,7 +549,23 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* ================= CLICK OUTSIDE ================= */
+    /* =========================
+       CLICK MENU
+    ========================= */
+
+    adminMenu.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    /* =========================
+       CLICK OUTSIDE
+    ========================= */
 
     document.addEventListener(
         "click",
@@ -738,6 +575,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     );
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    if (logoutMenu) {
+
+        logoutMenu.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                if (
+                    typeof logout === "function"
+                ) {
+
+                    logout();
+
+                } else {
+
+                    localStorage.clear();
+
+                    sessionStorage.clear();
+
+                    window.location.href =
+                        "index.html";
+
+                }
+
+            }
+        );
+
+    }
 
 });
 

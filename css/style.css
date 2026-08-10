@@ -1144,3 +1144,84 @@ body {
 
     box-sizing: border-box;
 }
+/* ==========================================
+   ADMIN DROPDOWN
+========================================== */
+
+.admin-wrapper {
+    position: relative;
+}
+
+.admin {
+    border: none;
+    cursor: pointer;
+
+    background: white;
+    color: #333;
+
+    padding: 12px 20px;
+    border-radius: 50px;
+
+    box-shadow: var(--shadow);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin:hover {
+    transform: translateY(-2px);
+}
+
+.admin-menu {
+    display: none;
+
+    position: absolute;
+
+    right: 0;
+    top: calc(100% + 10px);
+
+    width: 200px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 8px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+
+    z-index: 9999;
+}
+
+.admin-menu.show {
+    display: block;
+}
+
+.admin-menu a {
+    display: block;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    color: #333;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition: .2s;
+}
+
+.admin-menu a:hover {
+    background: #f2f5f4;
+}
+
+/* License hanya untuk super admin */
+#adminLicenseMenu {
+    display: none;
+}
