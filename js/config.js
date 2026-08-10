@@ -8,7 +8,7 @@ const CONFIG = {
 
     VERSION: "1.0.0",
 
-    LICENSE: "SALAH",
+    LICENSE: "HL-CVTEN2Z6KVYF",
 
     DEMO: false
 
