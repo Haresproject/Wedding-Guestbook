@@ -1,479 +1,553 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dashboard - Wedding Guestbook</title>
 
     <link rel="stylesheet" href="css/style.css">
+
     <style>
 
+        :root {
+            --primary: #214E43;
+            --secondary: #2f6a5c;
+            --accent: #E8C547;
+        }
 
-:root{
 
-    --primary:#214E43;
-    --secondary:#2f6a5c;
-    --accent:#E8C547;
+        /* ================= DELIVERY ================= */
 
-}
+        .delivery-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
 
-.delivery-stats{
+        .delivery-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-    margin-top:15px;
+            padding: 12px 16px;
 
-}
+            border-radius: 12px;
 
-.delivery-item{
+            font-weight: 600;
+            color: white;
+        }
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+        .delivery-item strong {
+            font-size: 22px;
+        }
 
-    padding:12px 16px;
+        .delivery-item.wa {
+            background: #28a745;
+        }
 
-    border-radius:12px;
+        .delivery-item.fisik {
+            background: #4ac3f3;
+        }
 
-    font-weight:600;
-    color:white;
+        .delivery-item.both {
+            background: #ffc107;
+            color: #333;
+        }
 
-}
+        .delivery-item.none {
+            background: #dc3545;
+        }
 
-.delivery-item strong{
 
-    font-size:22px;
+        /* ================= ADMIN DROPDOWN ================= */
 
-}
+        .admin-wrapper {
+            position: relative;
+        }
 
-.delivery-item.wa{
-    background:#28a745;
-}
+        .admin {
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            background: transparent;
+            padding: 8px 12px;
+        }
 
-.delivery-item.fisik{
-    background:#4ac3f3;
-}
+        .admin-menu {
+            display: none;
 
-.delivery-item.both{
-    background:#ffc107;
-    color:#333;
-}
+            position: absolute;
 
-.delivery-item.none{
-    background:#dc3545;
-}
+            right: 0;
+            top: calc(100% + 10px);
 
-/* ================= ADMIN DROPDOWN ================= */
+            min-width: 190px;
 
-.admin-wrapper {
-    position: relative;
-}
+            background: white;
 
-.admin {
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-}
+            border-radius: 14px;
 
-.admin-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: calc(100% + 10px);
+            padding: 8px;
 
-    min-width: 190px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 
-    background: white;
+            z-index: 1000;
+        }
 
-    border-radius: 14px;
+        .admin-menu.show {
+            display: block;
+        }
 
-    padding: 8px;
+        .admin-menu a {
+            display: block;
 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            padding: 11px 14px;
 
-    z-index: 1000;
-}
+            border-radius: 10px;
 
-.admin-menu.show {
-    display: block;
-}
+            color: #333;
 
-.admin-menu a {
-    display: block;
+            text-decoration: none;
 
-    padding: 11px 14px;
+            font-size: 14px;
+        }
 
-    border-radius: 10px;
+        .admin-menu a:hover {
+            background: #f2f5f4;
+        }
 
-    color: #333;
+    </style>
 
-    text-decoration: none;
-
-    font-size: 14px;
-}
-
-.admin-menu a:hover {
-    background: #f2f5f4;
-}
-</style>
 </head>
+
+
 <body>
 
-<div class="layout">
-</style>
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
 
-        <div class="logo">
-            <img src="assets/logo.png" alt="Logo">
-            <h2 id="appName"></h2>
-            
-        </div>
+<!-- ================= SIDEBAR ================= -->
 
-        <nav>
+<aside class="sidebar">
 
-            <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <div class="logo">
 
-            <a href="guests.html">👥 Daftar Tamu</a>
+        <img src="assets/logo.png" alt="Logo">
 
-            <a href="scanner.html">📷 Scanner</a>
+        <h2 id="appName"></h2>
 
-            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
-                📺 Display
-            </a>
-            <a href="invitation.html">💌 Undangan</a>
-            <a href="settings.html">⚙ Pengaturan</a>
-               
-</script>
-            <a href="#" onclick="logout()">🚪 Logout</a>
+    </div>
 
-        </nav>
 
-    </aside>
+    <nav>
 
-    <!-- CONTENT -->
-    <main class="content">
-
-        <header class="topbar">
-
-            <div>
-                <h1>Dashboard</h1>
-                <p>Selamat datang di Wedding Guestbook</p>
-            </div>
-
-            <div class="admin-wrapper">
-
-    <button class="admin" id="adminName" type="button">
-        👤 Admin ▾
-    </button>
-
-    <div class="admin-menu" id="adminMenu">
-
-        <a href="license.html" id="adminLicenseMenu">
-            🔑 Kelola License
+        <a href="dashboard.html" class="active">
+            🏠 Dashboard
         </a>
 
-        <a href="#" onclick="logout()">
-            🚪 Logout
+        <a href="guests.html">
+            👥 Daftar Tamu
         </a>
 
-    </div>
-    </div>
+        <a href="scanner.html">
+            📷 Scanner
+        </a>
 
-</div>
+        <a
+            href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display"
+            target="_blank"
+        >
+            📺 Display
+        </a>
 
-        </header>
-        <section id="hero" class="hero">
+        <a href="invitation.html">
+            💌 Undangan
+        </a>
 
-    <div class="hero-overlay"></div>
+        <a href="settings.html">
+            ⚙ Pengaturan
+        </a>
 
-    <div class="hero-content">
+    </nav>
 
-        <img
-            id="weddingLogo"
-            class="hero-logo"
-            src="assets/logo.png">
+</aside>
 
-        <h1 id="coupleName">
-            Loading...
-        </h1>
 
-        <p id="weddingDate"></p>
 
-        <p id="weddingVenue"></p>
+<!-- ================= CONTENT ================= -->
 
-    </div>
+<main class="content">
 
-</section>
 
-        <section class="cards">
+    <!-- ================= TOPBAR ================= -->
 
-            <div class="card">
-                <h3>Total Tamu</h3>
-                <h2 id="total">0</h2>
+    <header class="topbar">
+
+        <div>
+
+            <h1>
+                Dashboard
+            </h1>
+
+            <p>
+                Selamat datang di Wedding Guestbook
+            </p>
+
+        </div>
+
+
+        <!-- ADMIN -->
+
+        <div class="admin-wrapper">
+
+            <button
+                class="admin"
+                id="adminName"
+                type="button"
+            >
+                👤 Admin ▾
+            </button>
+
+
+            <div
+                class="admin-menu"
+                id="adminMenu"
+            >
+
+                <a
+                    href="license.html"
+                    id="adminLicenseMenu"
+                >
+                    🔑 Kelola License
+                </a>
+
+
+                <a
+                    href="#"
+                    onclick="logout()"
+                >
+                    🚪 Logout
+                </a>
+
             </div>
 
-            <div class="card">
-                <h3>Sudah Hadir</h3>
-                <h2 id="hadir">0</h2>
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= HERO ================= -->
+
+    <section
+        id="hero"
+        class="hero"
+    >
+
+        <div class="hero-overlay"></div>
+
+
+        <div class="hero-content">
+
+            <img
+                id="weddingLogo"
+                class="hero-logo"
+                src="assets/logo.png"
+                alt="Wedding Logo"
+            >
+
+
+            <h1 id="coupleName">
+                Loading...
+            </h1>
+
+
+            <p id="weddingDate"></p>
+
+            <p id="weddingVenue"></p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= CARDS ================= -->
+
+    <section class="cards">
+
+
+        <div class="card">
+
+            <h3>
+                Total Tamu
+            </h3>
+
+            <h2 id="total">
+                0
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Sudah Hadir
+            </h3>
+
+            <h2 id="hadir">
+                0
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Belum Hadir
+            </h3>
+
+            <h2 id="belum">
+                0
+            </h2>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= PROGRESS ================= -->
+
+    <section class="activity">
+
+        <h2>
+            📈 Progress Kehadiran
+        </h2>
+
+
+        <div class="progress-box">
+
+            <div class="progress-bar">
+
+                <div
+                    id="progressFill"
+                    class="progress-fill"
+                ></div>
+
             </div>
 
-            <div class="card">
-                <h3>Belum Hadir</h3>
-                <h2 id="belum">0</h2>
+
+            <div
+                id="progressText"
+                class="progress-text"
+            >
+                0%
             </div>
 
-        </section>
-       
-        <section class="activity">
+        </div>
 
-    <h2>📈 Progress Kehadiran</h2>
+    </section>
 
-    <div class="progress-box">
 
-        <div class="progress-bar">
 
-            <div id="progressFill" class="progress-fill"></div>
+    <!-- ================= AKTIVITAS ================= -->
+
+    <section class="activity">
+
+        <h2>
+            Aktivitas Terbaru
+        </h2>
+
+
+        <div id="latestGuest">
+
+            Belum ada tamu yang check-in.
 
         </div>
 
-        <div id="progressText" class="progress-text">
-            0%
-        </div>
+    </section>
 
-    </div>
 
-</section>
 
-        <section class="activity">
+    <!-- ================= DELIVERY ================= -->
 
-            <h2>Aktivitas Terbaru</h2>
+    <section class="activity">
 
-            <div id="latestGuest">
-                Belum ada tamu yang check-in.
+        <h2>
+            📦 Status Pengiriman
+        </h2>
+
+
+        <div class="delivery-stats">
+
+
+            <div class="delivery-item wa">
+
+                <span>
+                    🟢 WhatsApp
+                </span>
+
+                <strong id="waCount">
+                    0
+                </strong>
+
             </div>
-</section>
 
-<section class="activity">
 
-    <h2>📦 Status Pengiriman</h2>
+            <div class="delivery-item fisik">
 
-    <div class="delivery-stats">
+                <span>
+                    🔵 Fisik
+                </span>
 
-        <div class="delivery-item wa">
-            <span>🟢 WhatsApp</span>
-            <strong id="waCount">0</strong>
+                <strong id="fisikCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="delivery-item both">
+
+                <span>
+                    🟡 Keduanya
+                </span>
+
+                <strong id="bothCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="delivery-item none">
+
+                <span>
+                    🔴 Belum
+                </span>
+
+                <strong id="noneCount">
+                    0
+                </strong>
+
+            </div>
+
+
         </div>
 
-        <div class="delivery-item fisik">
-            <span>🔵 Fisik</span>
-            <strong id="fisikCount">0</strong>
-        </div>
+    </section>
 
-        <div class="delivery-item both">
-            <span>🟡 Keduanya</span>
-            <strong id="bothCount">0</strong>
-        </div>
 
-        <div class="delivery-item none">
-            <span>🔴 Belum</span>
-            <strong id="noneCount">0</strong>
-        </div>
+</main>
 
-    </div>
 
-</section>
 
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- ================= JAVASCRIPT ================= -->
 
 <script src="js/config.js"></script>
+
 <script src="js/license.js"></script>
+
 <script src="js/session.js"></script>
 
-<script>
-(async function(){
+<script src="js/dashboard.js"></script>
 
-    const valid = await checkLicense();
 
-    if(!valid){
-        return;
-    }
-
-    const script = document.createElement("script");
-
-    script.src = "js/dashboard.js";
-
-    document.body.appendChild(script);
-
-})();
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const menu = document.getElementById("licenseMenu");
-
-    if (menu && CONFIG.SUPER_ADMIN === true) {
-        menu.style.display = "block";
-    }
-
-});
-</script>
-<script>
-if(localStorage.getItem("login")!="true"){
-    location.href="index.html";
-}
-
-function logout(){
-
-    localStorage.removeItem("login");
-
-    location.href="index.html";
-
-}
-
-</script>
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const adminName = document.getElementById("adminName");
+    const adminName =
+        document.getElementById("adminName");
 
-    if (!adminName) return;
+    const adminMenu =
+        document.getElementById("adminMenu");
 
-    if (CONFIG.SUPER_ADMIN === true) {
-
-        adminName.innerHTML = "👑 Super Admin ▾";
-
-    } else {
-
-        adminName.innerHTML = "👤 Admin ▾";
-
-    }
-
-});
-
-</script>
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const adminName = document.getElementById("adminName");
-    const adminMenu = document.getElementById("adminMenu");
     const adminLicenseMenu =
         document.getElementById("adminLicenseMenu");
 
 
-    if (!adminName || !adminMenu) return;
+    if (!adminName || !adminMenu) {
+        return;
+    }
 
 
-    // ================= NAMA ADMIN =================
+    /* ================= SUPER ADMIN ================= */
 
-    if (CONFIG.SUPER_ADMIN === true) {
+    if (
+        typeof CONFIG !== "undefined" &&
+        CONFIG.SUPER_ADMIN === true
+    ) {
 
-        adminName.innerHTML = "👑 Super Admin ▾";
+        adminName.innerHTML =
+            "👑 Super Admin ▾";
 
-        // License hanya untuk Super Admin
+
         if (adminLicenseMenu) {
-            adminLicenseMenu.style.display = "block";
-        }
 
-    } else {
+            adminLicenseMenu.style.display =
+                "block";
 
-        adminName.innerHTML = "👤 Admin ▾";
-
-        // Customer tidak boleh melihat License
-        if (adminLicenseMenu) {
-            adminLicenseMenu.style.display = "none";
         }
 
     }
 
 
-    // ================= BUKA DROPDOWN =================
-
-    adminName.addEventListener("click", function (event) {
-
-        event.stopPropagation();
-
-        adminMenu.classList.toggle("show");
-
-    });
-
-
-    // ================= KLIK DI LUAR =================
-
-    document.addEventListener("click", function () {
-
-        adminMenu.classList.remove("show");
-
-    });
-
-});
-
-</script>
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const adminName = document.getElementById("adminName");
-    const adminMenu = document.getElementById("adminMenu");
-    const adminLicenseMenu = document.getElementById("adminLicenseMenu");
-
-    if (!adminName || !adminMenu) return;
-
-
-    // ================= SUPER ADMIN =================
-
-    if (typeof CONFIG !== "undefined" && CONFIG.SUPER_ADMIN === true) {
-
-        adminName.innerHTML = "👑 Super Admin ▾";
-
-        if (adminLicenseMenu) {
-            adminLicenseMenu.style.display = "block";
-        }
-
-    }
-
-
-    // ================= CUSTOMER =================
+    /* ================= CUSTOMER ================= */
 
     else {
 
-        adminName.innerHTML = "👤 Admin ▾";
+        adminName.innerHTML =
+            "👤 Admin ▾";
+
 
         if (adminLicenseMenu) {
-            adminLicenseMenu.style.display = "none";
+
+            adminLicenseMenu.style.display =
+                "none";
+
         }
 
     }
 
 
-    // ================= DROPDOWN =================
+    /* ================= DROPDOWN ================= */
 
-    adminName.addEventListener("click", function (event) {
+    adminName.addEventListener(
+        "click",
+        function (event) {
 
-        event.stopPropagation();
+            event.stopPropagation();
 
-        adminMenu.classList.toggle("show");
+            adminMenu.classList.toggle("show");
 
-    });
+        }
+    );
 
 
-    // ================= KLIK DI LUAR =================
+    /* ================= CLICK OUTSIDE ================= */
 
-    document.addEventListener("click", function () {
+    document.addEventListener(
+        "click",
+        function () {
 
-        adminMenu.classList.remove("show");
+            adminMenu.classList.remove("show");
 
-    });
+        }
+    );
 
 });
 
 </script>
+
+
 </body>
+
 </html>
