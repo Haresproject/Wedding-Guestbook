@@ -416,5 +416,64 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const adminName = document.getElementById("adminName");
+    const adminMenu = document.getElementById("adminMenu");
+    const adminLicenseMenu = document.getElementById("adminLicenseMenu");
+
+    if (!adminName || !adminMenu) return;
+
+
+    // ================= SUPER ADMIN =================
+
+    if (typeof CONFIG !== "undefined" && CONFIG.SUPER_ADMIN === true) {
+
+        adminName.innerHTML = "👑 Super Admin ▾";
+
+        if (adminLicenseMenu) {
+            adminLicenseMenu.style.display = "block";
+        }
+
+    }
+
+
+    // ================= CUSTOMER =================
+
+    else {
+
+        adminName.innerHTML = "👤 Admin ▾";
+
+        if (adminLicenseMenu) {
+            adminLicenseMenu.style.display = "none";
+        }
+
+    }
+
+
+    // ================= DROPDOWN =================
+
+    adminName.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        adminMenu.classList.toggle("show");
+
+    });
+
+
+    // ================= KLIK DI LUAR =================
+
+    document.addEventListener("click", function () {
+
+        adminMenu.classList.remove("show");
+
+    });
+
+});
+
+</script>
 </body>
 </html>
