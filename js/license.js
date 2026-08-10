@@ -23,6 +23,8 @@ console.log("Domain =", location.hostname);
 
         const data = await res.json();
 
+        console.log("License response:", data);
+
         if(!data.success){
 
             document.body.innerHTML = `
