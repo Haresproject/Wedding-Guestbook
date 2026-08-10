@@ -1,15 +1,15 @@
 const CONFIG = {
 
-    API_URL: "https://wedguest.kosthandoko907.workers.dev",
+  API_URL: "https://wedguest.kosthandoko907.workers.dev",
 
-    APP_NAME: "Wedding Guestbook",
+  APP_NAME: "Wedding Guestbook",
 
-    COMPANY: "HaresLens",
+  COMPANY: "HaresLens",
 
-    VERSION: "1.0.0",
+  VERSION: "1.0.0",
 
-    LICENSE: "HL-NCZFXY2ARWT6",
+  LICENSE: "",
 
-    DEMO: false
+  SUPER_ADMIN: true
 
 };
