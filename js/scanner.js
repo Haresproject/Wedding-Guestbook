@@ -244,20 +244,34 @@ async function onScanSuccess(decodedText) {
 
             }
 
-            // Beep
-            const beep =
-                new Audio("assets/beep.mp3");
+            // =======================
+// SUARA CHECK-IN BERHASIL
+// =======================
 
-            beep.volume = 1;
+const beep = new Audio("assets/beep.mp3");
 
-            beep.play().catch(err => {
+beep.volume = 1;
+beep.currentTime = 0;
 
-                console.log(
-                    "Gagal memutar beep:",
-                    err
-                );
+// Mainkan suara
+beep.play().then(() => {
 
-            });
+    // Maksimal 3 detik
+    setTimeout(() => {
+
+        beep.pause();
+        beep.currentTime = 0;
+
+    }, 3000);
+
+}).catch(err => {
+
+    console.log(
+        "Gagal memutar suara:",
+        err
+    );
+
+});
 
         } else {
 
