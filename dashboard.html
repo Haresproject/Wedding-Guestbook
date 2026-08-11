@@ -83,6 +83,14 @@
 
             font-size: 15px;
             font-weight: 600;
+
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin:hover {
+            transform: translateY(-2px);
         }
 
         .admin-menu {
@@ -128,7 +136,7 @@
             background: #f2f5f4;
         }
 
-        /* License disembunyikan default */
+        /* License hanya untuk Super Admin */
         #adminLicenseMenu {
             display: none;
         }
@@ -147,7 +155,10 @@
 
     <div class="logo">
 
-        <img src="assets/logo.png" alt="Logo">
+        <img
+            src="assets/logo.png"
+            alt="Logo"
+        >
 
         <h2 id="appName"></h2>
 
@@ -199,7 +210,9 @@
 
         <div>
 
-            <h1>Dashboard</h1>
+            <h1>
+                Dashboard
+            </h1>
 
             <p>
                 Selamat datang di Wedding Guestbook
@@ -230,7 +243,6 @@
                 >
                     🔑 Kelola License
                 </a>
-
 
                 <a
                     href="#"
@@ -453,11 +465,8 @@
 <!-- ================= JAVASCRIPT ================= -->
 
 <script src="js/config.js"></script>
-
 <script src="js/license.js"></script>
-
 <script src="js/session.js"></script>
-
 <script src="js/dashboard.js"></script>
 
 
@@ -485,7 +494,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!adminName || !adminMenu) {
 
         console.error(
-            "Admin dropdown element tidak ditemukan"
+            "Admin dropdown tidak ditemukan"
         );
 
         return;
@@ -494,7 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================
-       SUPER ADMIN / CUSTOMER
+       ADMIN / SUPER ADMIN
     ========================= */
 
     if (
@@ -502,9 +511,7 @@ document.addEventListener("DOMContentLoaded", function () {
         CONFIG.SUPER_ADMIN === true
     ) {
 
-        /* SUPER ADMIN */
-
-        adminName.innerHTML =
+        adminName.textContent =
             "👑 Super Admin ▾";
 
 
@@ -517,9 +524,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     } else {
 
-        /* CUSTOMER */
-
-        adminName.innerHTML =
+        adminName.textContent =
             "👤 Admin ▾";
 
 
@@ -534,13 +539,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================
-       OPEN / CLOSE DROPDOWN
+       BUKA / TUTUP DROPDOWN
     ========================= */
 
     adminName.addEventListener(
         "click",
         function (event) {
 
+            event.preventDefault();
             event.stopPropagation();
 
             adminMenu.classList.toggle("show");
@@ -550,7 +556,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================
-       CLICK MENU
+       JANGAN TUTUP SAAT KLIK MENU
     ========================= */
 
     adminMenu.addEventListener(
@@ -564,7 +570,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================
-       CLICK OUTSIDE
+       KLIK DI LUAR
     ========================= */
 
     document.addEventListener(
@@ -598,7 +604,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
 
                     localStorage.clear();
-
                     sessionStorage.clear();
 
                     window.location.href =
@@ -615,113 +620,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
-<script src="js/config.js"></script>
-<script src="js/license.js"></script>
-<script src="js/session.js"></script>
-<script src="js/dashboard.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const adminName = document.getElementById("adminName");
-    const adminMenu = document.getElementById("adminMenu");
-    const licenseMenu = document.getElementById("adminLicenseMenu");
-    const logoutMenu = document.getElementById("logoutMenu");
-
-    if (!adminName || !adminMenu) {
-        console.error("Admin dropdown tidak ditemukan");
-        return;
-    }
-
-    // =========================
-    // TENTUKAN ADMIN / SUPER ADMIN
-    // =========================
-
-    if (
-        typeof CONFIG !== "undefined" &&
-        CONFIG.SUPER_ADMIN === true
-    ) {
-
-        adminName.textContent = "👑 Super Admin ▾";
-
-        if (licenseMenu) {
-            licenseMenu.style.display = "block";
-        }
-
-    } else {
-
-        adminName.textContent = "👤 Admin ▾";
-
-        if (licenseMenu) {
-            licenseMenu.style.display = "none";
-        }
-    }
-
-
-    // =========================
-    // BUKA / TUTUP DROPDOWN
-    // =========================
-
-    adminName.addEventListener("click", function (e) {
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        adminMenu.classList.toggle("show");
-
-    });
-
-
-    // =========================
-    // KLIK DI LUAR
-    // =========================
-
-    document.addEventListener("click", function (e) {
-
-        if (
-            !adminMenu.contains(e.target) &&
-            !adminName.contains(e.target)
-        ) {
-
-            adminMenu.classList.remove("show");
-
-        }
-
-    });
-
-
-    // =========================
-    // LOGOUT
-    // =========================
-
-    if (logoutMenu) {
-
-        logoutMenu.addEventListener("click", function (e) {
-
-            e.preventDefault();
-
-            if (typeof logout === "function") {
-
-                logout();
-
-            } else {
-
-                localStorage.clear();
-                sessionStorage.clear();
-
-                window.location.href = "index.html";
-
-            }
-
-        });
-
-    }
-
-});
-</script>
-
-</body>
-</html>
 </body>
 
 </html>
