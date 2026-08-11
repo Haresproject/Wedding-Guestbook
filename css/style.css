@@ -1225,3 +1225,178 @@ body {
 #adminLicenseMenu {
     display: none;
 }
+/* ==========================================
+   MOBILE FIX
+   Sidebar atas, content bawah
+   Desktop tetap sidebar di kiri
+========================================== */
+
+@media (max-width: 900px) {
+
+    /* =========================
+       SIDEBAR MOBILE
+    ========================= */
+
+    .sidebar {
+        position: relative;
+        left: auto;
+        top: auto;
+        bottom: auto;
+
+        width: 100%;
+        min-height: auto;
+        height: auto;
+
+        padding: 25px 20px;
+
+        display: flex;
+        flex-direction: column;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================
+       LOGO
+    ========================= */
+
+    .logo {
+        margin-bottom: 25px;
+    }
+
+    .logo img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .logo h2 {
+        font-size: 21px;
+    }
+
+
+    /* =========================
+       MENU
+    ========================= */
+
+    .sidebar nav {
+        display: flex;
+        flex-direction: column;
+
+        flex: none;
+
+        width: 100%;
+        gap: 7px;
+    }
+
+    .sidebar nav a {
+        width: 100%;
+        padding: 14px 18px;
+    }
+
+
+    /* Jangan geser menu saat hover di HP */
+    .sidebar nav a:hover {
+        transform: none;
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    .sidebar nav a:last-child {
+        margin-top: 20px;
+    }
+
+
+    /* =========================
+       CONTENT
+    ========================= */
+
+    .content {
+        margin-left: 0;
+
+        width: 100%;
+        max-width: 100%;
+
+        min-height: auto;
+
+        padding: 25px 20px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================
+       TOPBAR
+    ========================= */
+
+    .topbar {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .topbar h1 {
+        font-size: 28px;
+    }
+
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+        padding: 40px 20px;
+
+        min-height: 300px;
+
+        border-radius: 20px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+
+    /* =========================
+       CARD
+    ========================= */
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    table {
+        display: block;
+
+        width: 100%;
+
+        overflow-x: auto;
+    }
+
+
+    /* =========================
+       DELIVERY
+    ========================= */
+
+    .delivery-stats {
+        grid-template-columns: 1fr;
+    }
+
+}
