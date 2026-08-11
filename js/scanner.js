@@ -2,6 +2,12 @@ const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
 let scanner = null;
 let scanning = false;
+// =======================
+// SUARA CHECK-IN
+// =======================
+
+const beep = new Audio("assets/beep.mp3");
+beep.volume = 1;
 
 // =======================
 // LOAD DAFTAR KAMERA
@@ -244,19 +250,14 @@ async function onScanSuccess(decodedText) {
 
             }
 
-            // =======================
+    // =======================
 // SUARA CHECK-IN BERHASIL
 // =======================
 
-const beep = new Audio("assets/beep.mp3");
-
-beep.volume = 1;
 beep.currentTime = 0;
 
-// Mainkan suara
 beep.play().then(() => {
 
-    // Maksimal 3 detik
     setTimeout(() => {
 
         beep.pause();
@@ -266,13 +267,9 @@ beep.play().then(() => {
 
 }).catch(err => {
 
-    console.log(
-        "Gagal memutar suara:",
-        err
-    );
+    console.log("Gagal memutar suara:", err);
 
 });
-
         } else {
 
             alert(
@@ -310,7 +307,7 @@ beep.play().then(() => {
 
         scanning = false;
 
-    }, 2000);
+    }, 3000);
 
 }
 
