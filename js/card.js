@@ -9,43 +9,36 @@ async function load() {
         console.log("ID:", id);
 
         // ==========================
-        // SETTINGS
+        // LANGSUNG AMBIL DATA TAMU
         // ==========================
 
-        const settings =
-            await fetch(API_URL + "?action=settings")
-            .then(r => r.json());
-
-        // ==========================
-        // AMBIL DATA TAMU
-        // ==========================
-
-        const result =
-            await fetch(
-                API_URL + "?action=guest&id=" + encodeURIComponent(id)
-            )
-            .then(r => r.json());
+        const result = await fetch(
+            API_URL + "?action=guest&id=" + encodeURIComponent(id),
+            {
+                cache: "no-store"
+            }
+        ).then(r => r.json());
 
         console.log("Guest API:", result);
 
         if (!result.success) {
-
-            alert("Guest tidak ditemukan");
-
+            document.getElementById("name").innerHTML =
+                "Tamu tidak ditemukan";
             return;
         }
 
-        // ==========================================
-        // DATA TAMU LANGSUNG DARI RESULT
-        // ==========================================
-
         const guest = result;
 
-        console.log("Guest:", guest);
+        // ==========================
+        // NAMA
+        // ==========================
 
-        // ==========================================
+        document.getElementById("name").innerHTML =
+            guest.nama;
+
+        // ==========================
         // BACKGROUND
-        // ==========================================
+        // ==========================
 
         const bg =
             document.getElementById("background");
@@ -56,20 +49,11 @@ async function load() {
         bg.onerror = () =>
             console.log("Background gagal dimuat");
 
-        bg.src =
-            "assets/card-background.png";
+        bg.src = "assets/card-background.png";
 
-        // ==========================================
-        // NAMA TAMU
-        // ==========================================
-
-        document.getElementById("name").innerHTML =
-            guest.nama;
-
-        // ==========================================
-        // QR CODE
-        // ISI QR = ID TAMU
-        // ==========================================
+        // ==========================
+        // QR
+        // ==========================
 
         document.getElementById("qr").src =
             "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" +
@@ -79,7 +63,8 @@ async function load() {
 
         console.error("ERROR CARD:", error);
 
-        alert("Terjadi kesalahan saat mengambil data tamu");
+        document.getElementById("name").innerHTML =
+            "Terjadi kesalahan";
 
     }
 
