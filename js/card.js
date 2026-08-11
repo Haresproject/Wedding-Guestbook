@@ -2,41 +2,86 @@ const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
 const id = new URLSearchParams(location.search).get("id");
 
-async function load(){
+async function load() {
 
-    console.log("ID:", id);
+    try {
 
-    const settings =
-        await fetch(API_URL + "?action=settings")
-        .then(r => r.json());
+        console.log("ID:", id);
 
-    const result =
-    await fetch(API_URL + "?action=guest&id=" + id)
-    .then(r => r.json());
+        // ==========================
+        // SETTINGS
+        // ==========================
 
-if(!result.success){
+        const settings =
+            await fetch(API_URL + "?action=settings")
+            .then(r => r.json());
 
-    alert("Guest tidak ditemukan");
+        // ==========================
+        // AMBIL DATA TAMU
+        // ==========================
 
-    return;
+        const result =
+            await fetch(
+                API_URL + "?action=guest&id=" + encodeURIComponent(id)
+            )
+            .then(r => r.json());
 
-}
+        console.log("Guest API:", result);
 
-const guest = result.guest;
+        if (!result.success) {
 
-    const bg = document.getElementById("background");
+            alert("Guest tidak ditemukan");
 
-bg.onload = () => console.log("Background berhasil dimuat");
-bg.onerror = () => console.log("Background gagal dimuat");
+            return;
+        }
 
-bg.src = "assets/card-background.png";
+        // ==========================================
+        // DATA TAMU LANGSUNG DARI RESULT
+        // ==========================================
 
-    document.getElementById("name").innerHTML =
-        guest.nama;
+        const guest = result;
 
-    document.getElementById("qr").src =
-        "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" +
-        guest.id;
+        console.log("Guest:", guest);
+
+        // ==========================================
+        // BACKGROUND
+        // ==========================================
+
+        const bg =
+            document.getElementById("background");
+
+        bg.onload = () =>
+            console.log("Background berhasil dimuat");
+
+        bg.onerror = () =>
+            console.log("Background gagal dimuat");
+
+        bg.src =
+            "assets/card-background.png";
+
+        // ==========================================
+        // NAMA TAMU
+        // ==========================================
+
+        document.getElementById("name").innerHTML =
+            guest.nama;
+
+        // ==========================================
+        // QR CODE
+        // ISI QR = ID TAMU
+        // ==========================================
+
+        document.getElementById("qr").src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" +
+            encodeURIComponent(guest.id);
+
+    } catch (error) {
+
+        console.error("ERROR CARD:", error);
+
+        alert("Terjadi kesalahan saat mengambil data tamu");
+
+    }
 
 }
 
