@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aktivasi License - Buku Tamu Digital</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.55)
+                ),
+                url("https://i.imgur.com/5Thll5S.jpeg");
+
+            background-size: cover;
+            background-position: center;
+        }
+
+        .license-container {
+            width: 100%;
+            max-width: 430px;
+            padding: 20px;
+        }
+
+        .license-card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            padding: 35px 30px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.25);
+
+            animation: fadeIn 0.6s ease;
+        }
+
+        .license-icon {
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #f5f5f5;
+
+            font-size: 35px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 26px;
+            color: #222;
+        }
+
+        .subtitle {
+            margin: 0 0 25px;
+            color: #777;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .license-input {
+            width: 100%;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 10px;
+
+            font-size: 16px;
+            text-align: center;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .license-input:focus {
+            border-color: #333;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .activate-button {
+            width: 100%;
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #222;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .activate-button:hover {
+            background: #444;
+        }
+
+        .activate-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .message.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 15px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="license-container">
+
+        <div class="license-card">
+
+            <div class="license-icon">
+                🔐
+            </div>
+
+            <h1>Aktivasi License</h1>
+
+            <p class="subtitle">
+                Masukkan License Key yang diberikan oleh
+                administrator untuk mengaktifkan
+                Buku Tamu Digital.
+            </p>
+
+            <input
+                type="text"
+                id="licenseInput"
+                class="license-input"
+                placeholder="HL-XXXXXXXXXXXX"
+                autocomplete="off"
+                spellcheck="false"
+            >
+
+            <button
+                id="activateButton"
+                class="activate-button"
+                onclick="activateLicense()"
+            >
+                AKTIFKAN LISENSI
+            </button>
+
+            <div id="loading" class="loading">
+                Memeriksa license...
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="footer">
+                Buku Tamu Digital
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/license.js"></script>
+
+</body>
+
+</html>
