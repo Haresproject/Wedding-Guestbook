@@ -213,19 +213,23 @@ Gunakan:
 
 <script src="js/settings.js"></script>
 
+<script src="js/config.js"></script>
+<script src="js/license.js"></script>
+<script src="js/session.js"></script>
+<script src="js/settings.js"></script>
+
 <script>
 
-if(localStorage.getItem("login")!="true"){
-
-    location.href="index.html";
-
+if (localStorage.getItem("login") != "true") {
+    location.href = "index.html";
 }
 
-function logout(){
+function logout() {
 
     localStorage.removeItem("login");
+    sessionStorage.clear();
 
-    location.href="index.html";
+    location.href = "index.html";
 
 }
 
