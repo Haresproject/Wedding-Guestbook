@@ -114,3 +114,5 @@ async function downloadCard(){
 const autoDownload =
 new URLSearchParams(location.search)
 .get("download");
+
+loadInvitation();

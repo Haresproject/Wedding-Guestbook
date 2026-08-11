@@ -255,7 +255,10 @@ async function activateLicense() {
     // ================= LICENSE VALID =================
 
     saveLicense(license);
-
+localStorage.setItem(
+    "hareslens_spreadsheet_id",
+    data.spreadsheetId || ""
+);
 saveSpreadsheetId(
     data.spreadsheetId || ""
 );
