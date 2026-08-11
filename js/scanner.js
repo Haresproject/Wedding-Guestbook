@@ -307,7 +307,7 @@ beep.play().then(() => {
 
         scanning = false;
 
-    }, 3000);
+    }, 2000);
 
 }
 
