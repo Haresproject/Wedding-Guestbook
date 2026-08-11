@@ -9,11 +9,9 @@ console.log("ID:", id);
 console.log("Auto Download:", autoDownload);
 
 
-// =====================================================
-// LOAD GUEST
-// =====================================================
-
 async function load() {
+
+    console.log("Mulai load kartu...");
 
     if (!id) {
 
@@ -25,34 +23,56 @@ async function load() {
 
     try {
 
-        const result = await fetch(
+        // ==========================================
+        // AMBIL DATA TAMU
+        // ==========================================
+
+        const response = await fetch(
             API_URL +
             "?action=guest&id=" +
-            encodeURIComponent(id)
-        ).then(r => r.json());
+            encodeURIComponent(id) +
+            "&t=" +
+            Date.now()
+        );
 
-        console.log("Guest:", result);
+        const result = await response.json();
+
+        console.log("RESPONSE API:", result);
+
+
+        // ==========================================
+        // CEK DATA
+        // ==========================================
 
         if (!result.success) {
 
             document.getElementById("name").innerText =
-                "Tamu tidak ditemukan";
+                result.message || "Tamu tidak ditemukan";
 
             return;
         }
 
-        /*
-         * Worker kamu mengembalikan:
-         *
-         * {
-         *   success:true,
-         *   guest:{...}
-         * }
-         */
 
-        const guest = result.guest;
+        // ==========================================
+        // AMBIL GUEST
+        // ==========================================
 
-        if (!guest) {
+        // Support dua kemungkinan format API:
+        //
+        // { success:true, guest:{...} }
+        //
+        // atau
+        //
+        // { success:true, id:"001", nama:"..." }
+
+        const guest =
+            result.guest || result;
+
+
+        console.log("GUEST:", guest);
+
+
+        if (!guest.id && !guest.nama) {
 
             document.getElementById("name").innerText =
                 "Data tamu kosong";
@@ -61,27 +81,28 @@ async function load() {
         }
 
 
-        // =================================================
-        // NAMA
-        // =================================================
+        // ==========================================
+        // NAMA TAMU
+        // ==========================================
 
         document.getElementById("name").innerText =
             guest.nama || "Tamu";
 
 
-        // =================================================
+        // ==========================================
         // BACKGROUND
-        // =================================================
+        // ==========================================
 
         const bg =
             document.getElementById("background");
 
-        bg.src = "assets/card-background.png";
+        bg.src =
+            "assets/card-background.png";
 
 
-        // =================================================
-        // QR
-        // =================================================
+        // ==========================================
+        // QR CODE
+        // ==========================================
 
         const qr =
             document.getElementById("qr");
@@ -92,37 +113,47 @@ async function load() {
             encodeURIComponent(guest.id);
 
 
-        // =================================================
-        // TUNGGU GAMBAR SELESAI
-        // =================================================
+        // ==========================================
+        // TUNGGU SEMUA GAMBAR
+        // ==========================================
 
-        await waitForImage(bg);
-        await waitForImage(qr);
+        await Promise.all([
+
+            waitImage(bg),
+
+            waitImage(qr)
+
+        ]);
 
 
-        console.log("Background + QR sudah siap");
+        console.log("Kartu sudah siap");
 
 
-        // =================================================
+        // ==========================================
         // AUTO DOWNLOAD
-        // =================================================
+        // ==========================================
 
         if (autoDownload) {
 
-            console.log("Mode DOWNLOAD aktif");
+            console.log(
+                "AUTO DOWNLOAD AKTIF"
+            );
 
-            // beri sedikit waktu agar DOM benar-benar selesai
             setTimeout(() => {
 
                 downloadCard();
 
-            }, 500);
+            }, 700);
 
         }
 
+
     } catch (err) {
 
-        console.error("ERROR:", err);
+        console.error(
+            "CARD ERROR:",
+            err
+        );
 
         document.getElementById("name").innerText =
             "Terjadi kesalahan";
@@ -132,18 +163,22 @@ async function load() {
 }
 
 
-// =====================================================
-// TUNGGU IMAGE
-// =====================================================
+// ==========================================
+// WAIT IMAGE
+// ==========================================
 
-function waitForImage(img) {
+function waitImage(img) {
 
     return new Promise(resolve => {
 
-        if (img.complete && img.naturalWidth > 0) {
+        if (
+            img.complete &&
+            img.naturalWidth > 0
+        ) {
 
             resolve();
             return;
+
         }
 
         img.onload = () => resolve();
@@ -155,61 +190,88 @@ function waitForImage(img) {
 }
 
 
-// =====================================================
+// ==========================================
 // DOWNLOAD
-// =====================================================
+// ==========================================
 
 async function downloadCard() {
 
-    console.log("Membuat kartu PNG...");
+    console.log(
+        "Mulai membuat PNG..."
+    );
+
 
     try {
 
-        // Load html2canvas jika belum tersedia
-        if (typeof html2canvas === "undefined") {
+        // ======================================
+        // LOAD HTML2CANVAS
+        // ======================================
+
+        if (
+            typeof html2canvas ===
+            "undefined"
+        ) {
 
             await loadHtml2Canvas();
 
         }
 
 
+        // ======================================
+        // AMBIL CARD
+        // ======================================
+
         const card =
             document.getElementById("card");
 
 
+        // ======================================
+        // BUAT CANVAS
+        // ======================================
+
         const canvas =
-            await html2canvas(card, {
+            await html2canvas(
+                card,
+                {
 
-                scale: 3,
+                    scale: 3,
 
-                useCORS: true,
+                    useCORS: true,
 
-                allowTaint: false,
+                    allowTaint: false,
 
-                backgroundColor: null,
+                    backgroundColor: null,
 
-                logging: false
+                    logging: false
 
-            });
+                }
+            );
+
+
+        // ======================================
+        // DOWNLOAD
+        // ======================================
+
+        const name =
+            document.getElementById(
+                "name"
+            ).innerText || "Tamu";
 
 
         const link =
             document.createElement("a");
 
 
-        const guestName =
-            document.getElementById("name").innerText
-            || "Tamu";
-
-
         link.download =
             "QR-" +
-            guestName +
+            name +
             ".png";
 
 
         link.href =
-            canvas.toDataURL("image/png");
+            canvas.toDataURL(
+                "image/png"
+            );
 
 
         document.body.appendChild(link);
@@ -219,13 +281,15 @@ async function downloadCard() {
         document.body.removeChild(link);
 
 
-        console.log("Download selesai");
+        console.log(
+            "DOWNLOAD BERHASIL"
+        );
 
 
     } catch (err) {
 
         console.error(
-            "Gagal download:",
+            "DOWNLOAD ERROR:",
             err
         );
 
@@ -234,33 +298,41 @@ async function downloadCard() {
 }
 
 
-// =====================================================
+// ==========================================
 // LOAD HTML2CANVAS
-// =====================================================
+// ==========================================
 
 function loadHtml2Canvas() {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(
+        (resolve, reject) => {
 
-        const script =
-            document.createElement("script");
+            const script =
+                document.createElement(
+                    "script"
+                );
 
-        script.src =
-            "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+            script.src =
+                "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
 
-        script.onload = resolve;
+            script.onload =
+                resolve;
 
-        script.onerror = reject;
+            script.onerror =
+                reject;
 
-        document.head.appendChild(script);
+            document.head.appendChild(
+                script
+            );
 
-    });
+        }
+    );
 
 }
 
 
-// =====================================================
+// ==========================================
 // START
-// =====================================================
+// ==========================================
 
 load();
