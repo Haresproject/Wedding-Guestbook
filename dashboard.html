@@ -461,7 +461,6 @@
 
 </main>
 
-
 <!-- ================= JAVASCRIPT ================= -->
 
 <script src="js/config.js"></script>
@@ -469,157 +468,116 @@
 <script src="js/session.js"></script>
 <script src="js/dashboard.js"></script>
 
-
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
 
-    const adminName =
-        document.getElementById("adminName");
-
-    const adminMenu =
-        document.getElementById("adminMenu");
-
-    const licenseMenu =
-        document.getElementById("adminLicenseMenu");
-
-    const logoutMenu =
-        document.getElementById("logoutMenu");
-
-
-    /* =========================
-       CEK ELEMENT
-    ========================= */
+    const adminName = document.getElementById("adminName");
+    const adminMenu = document.getElementById("adminMenu");
+    const licenseMenu = document.getElementById("adminLicenseMenu");
+    const logoutMenu = document.getElementById("logoutMenu");
 
     if (!adminName || !adminMenu) {
-
-        console.error(
-            "Admin dropdown tidak ditemukan"
-        );
-
+        console.error("Admin dropdown tidak ditemukan");
         return;
-
     }
 
-
-    /* =========================
-       ADMIN / SUPER ADMIN
-    ========================= */
+    // =========================
+    // CEK SUPER ADMIN
+    // =========================
 
     if (
         typeof CONFIG !== "undefined" &&
         CONFIG.SUPER_ADMIN === true
     ) {
 
-        adminName.textContent =
-            "👑 Super Admin ▾";
-
+        adminName.textContent = "👑 Super Admin ▾";
 
         if (licenseMenu) {
-
-            licenseMenu.style.display =
-                "block";
-
+            licenseMenu.style.display = "block";
         }
 
     } else {
 
-        adminName.textContent =
-            "👤 Admin ▾";
-
+        adminName.textContent = "👤 Admin ▾";
 
         if (licenseMenu) {
-
-            licenseMenu.style.display =
-                "none";
-
+            licenseMenu.style.display = "none";
         }
-
     }
 
 
-    /* =========================
-       BUKA / TUTUP DROPDOWN
-    ========================= */
+    // =========================
+    // BUKA / TUTUP DROPDOWN
+    // =========================
 
-    adminName.addEventListener(
-        "click",
-        function (event) {
+    adminName.addEventListener("click", function (e) {
 
-            event.preventDefault();
-            event.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
-            adminMenu.classList.toggle("show");
+        adminMenu.classList.toggle("show");
 
-        }
-    );
+    });
 
 
-    /* =========================
-       JANGAN TUTUP SAAT KLIK MENU
-    ========================= */
+    // =========================
+    // KLIK DI DALAM MENU
+    // =========================
 
-    adminMenu.addEventListener(
-        "click",
-        function (event) {
+    adminMenu.addEventListener("click", function (e) {
 
-            event.stopPropagation();
+        e.stopPropagation();
 
-        }
-    );
+    });
 
 
-    /* =========================
-       KLIK DI LUAR
-    ========================= */
+    // =========================
+    // KLIK DI LUAR
+    // =========================
 
-    document.addEventListener(
-        "click",
-        function () {
+    document.addEventListener("click", function (e) {
+
+        if (
+            !adminMenu.contains(e.target) &&
+            !adminName.contains(e.target)
+        ) {
 
             adminMenu.classList.remove("show");
 
         }
-    );
+
+    });
 
 
-    /* =========================
-       LOGOUT
-    ========================= */
+    // =========================
+    // LOGOUT
+    // =========================
 
     if (logoutMenu) {
 
-        logoutMenu.addEventListener(
-            "click",
-            function (event) {
+        logoutMenu.addEventListener("click", function (e) {
 
-                event.preventDefault();
+            e.preventDefault();
 
-                if (
-                    typeof logout === "function"
-                ) {
+            if (typeof logout === "function") {
 
-                    logout();
+                logout();
 
-                } else {
+            } else {
 
-                    localStorage.clear();
-                    sessionStorage.clear();
+                localStorage.clear();
+                sessionStorage.clear();
 
-                    window.location.href =
-                        "index.html";
-
-                }
+                window.location.href = "index.html";
 
             }
-        );
+
+        });
 
     }
 
 });
-
 </script>
-
 
 </body>
 
