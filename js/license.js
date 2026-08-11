@@ -3,6 +3,7 @@
 // =====================================================
 
 const LICENSE_STORAGE_KEY = "hareslens_license";
+const SPREADSHEET_ID_STORAGE_KEY = "hareslens_spreadsheet_id";
 
 // =====================================================
 // CEK APAKAH SUPER ADMIN
@@ -30,6 +31,13 @@ function getSavedLicense() {
     return localStorage.getItem(LICENSE_STORAGE_KEY) || "";
 
 }
+function getSavedSpreadsheetId() {
+
+    return localStorage.getItem(
+        SPREADSHEET_ID_STORAGE_KEY
+    ) || "";
+
+}
 
 
 // =====================================================
@@ -44,7 +52,14 @@ function saveLicense(license) {
     );
 
 }
+function saveSpreadsheetId(id) {
 
+    localStorage.setItem(
+        SPREADSHEET_ID_STORAGE_KEY,
+        String(id || "").trim()
+    );
+
+}
 
 // =====================================================
 // HAPUS LICENSE
@@ -54,6 +69,10 @@ function removeLicense() {
 
     localStorage.removeItem(
         LICENSE_STORAGE_KEY
+    );
+
+    localStorage.removeItem(
+        SPREADSHEET_ID_STORAGE_KEY
     );
 
 }
@@ -237,15 +256,24 @@ async function activateLicense() {
 
     saveLicense(license);
 
+saveSpreadsheetId(
+    data.spreadsheetId || ""
+);
 
-    console.log(
-        "✅ License berhasil diaktifkan"
-    );
 
-    console.log(
-        "Owner:",
-        data.owner || "-"
-    );
+console.log(
+    "✅ License berhasil diaktifkan"
+);
+
+console.log(
+    "Owner:",
+    data.owner || "-"
+);
+
+console.log(
+    "Spreadsheet ID:",
+    data.spreadsheetId || "-"
+);
 
 
     showLicenseMessage(
@@ -429,17 +457,24 @@ async function checkLicense() {
     // =================================================
 
     console.log(
-        "✅ License Valid"
-    );
+    "✅ License Valid"
+);
 
+console.log(
+    "Owner:",
+    data.owner || "-"
+);
 
-    console.log(
-        "Owner:",
-        data.owner || "-"
-    );
+console.log(
+    "Spreadsheet ID:",
+    data.spreadsheetId || "-"
+);
 
+saveSpreadsheetId(
+    data.spreadsheetId || ""
+);
 
-    return true;
+return true;
 
 }
 
