@@ -21,7 +21,7 @@ renderGuests(filteredGuests);
 function previewGuest(id){
 
     window.open(
-        "invite.html?id=" + id,
+        "card.html?id=" + encodeURIComponent(id),
         "_blank"
     );
 
@@ -223,7 +223,7 @@ function printGuest(id){
 function downloadGuest(id){
 
     window.open(
-        "invite.html?id=" + id + "&download=1",
+        "card.html?id=" + encodeURIComponent(id) + "&download=1",
         "_blank"
     );
 
