@@ -4,121 +4,219 @@ let lastGuestTime = "";
 
 // ================= SETTINGS =================
 
-async function loadSettings(){
+async function loadSettings() {
 
-    try{
+    try {
 
-        const res = await fetch(CONFIG.API_URL + "?action=settings");
+        const res = await fetch(
+            CONFIG.API_URL + "?action=settings&t=" + Date.now()
+        );
+
         const data = await res.json();
 
-        document.getElementById("coupleName").innerHTML =
-            `${data.bride} ❤️ ${data.groom}`;
+        const coupleName = document.getElementById("coupleName");
+        const weddingDate = document.getElementById("weddingDate");
+        const weddingVenue = document.getElementById("weddingVenue");
+        const appName = document.getElementById("appName");
+        const weddingLogo = document.getElementById("weddingLogo");
+        const hero = document.querySelector(".hero");
 
-        document.getElementById("weddingDate").innerHTML =
-            formatTanggal(data.date);
-
-        document.getElementById("weddingVenue").innerHTML =
-            "📍 " + data.venue;
-        if(data.appName){
-
-        document.getElementById("appName").innerHTML =
-    CONFIG.APP_NAME;
-
-}    
-
-        if(data.logo){
-            document.getElementById("weddingLogo").src = data.logo;
-        if(data.background){
-
-    document.querySelector(".hero").style.backgroundImage =
-        `url(${data.background})`;
-
-    document.querySelector(".hero").style.backgroundSize =
-        "cover";
-
-    document.querySelector(".hero").style.backgroundPosition =
-        "center";
-
-}
+        if (coupleName) {
+            coupleName.innerHTML =
+                `${data.bride || ""} ❤️ ${data.groom || ""}`;
         }
-        // Dynamic Theme
-if(data.primaryColor){
-    document.documentElement.style.setProperty(
-        "--primary",
-        data.primaryColor
-    );
-}
 
-if(data.secondaryColor){
-    document.documentElement.style.setProperty(
-        "--secondary",
-        data.secondaryColor
-    );
-}
+        if (weddingDate) {
+            weddingDate.innerHTML =
+                formatTanggal(data.date);
+        }
 
-if(data.accentColor){
-    document.documentElement.style.setProperty(
-        "--accent",
-        data.accentColor
-    );
-}
+        if (weddingVenue) {
+            weddingVenue.innerHTML =
+                "📍 " + (data.venue || "");
+        }
 
-    }catch(err){
-        console.log(err);
+        if (appName) {
+            appName.innerHTML =
+                CONFIG.APP_NAME;
+        }
+
+        // ================= LOGO =================
+
+        if (data.logo && weddingLogo) {
+
+            weddingLogo.src = data.logo;
+
+        }
+
+        // ================= BACKGROUND =================
+
+        if (data.background && hero) {
+
+            hero.style.backgroundImage =
+                `url("${data.background}")`;
+
+            hero.style.backgroundSize =
+                "cover";
+
+            hero.style.backgroundPosition =
+                "center";
+
+        }
+
+        // ================= THEME =================
+
+        if (data.primaryColor) {
+
+            document.documentElement.style.setProperty(
+                "--primary",
+                data.primaryColor
+            );
+
+        }
+
+        if (data.secondaryColor) {
+
+            document.documentElement.style.setProperty(
+                "--secondary",
+                data.secondaryColor
+            );
+
+        }
+
+        if (data.accentColor) {
+
+            document.documentElement.style.setProperty(
+                "--accent",
+                data.accentColor
+            );
+
+        }
+
+    } catch (err) {
+
+        console.error(
+            "Gagal load settings:",
+            err
+        );
+
     }
 
 }
+
 
 // ================= STATS =================
 
-async function loadStats(){
+async function loadStats() {
 
-    try{
+    try {
 
-        const res = await fetch(CONFIG.API_URL + "?action=stats&t=" + Date.now());
+        const res = await fetch(
+            CONFIG.API_URL +
+            "?action=stats&t=" +
+            Date.now()
+        );
+
         const data = await res.json();
 
-        document.getElementById("total").innerText = data.total;
-        document.getElementById("hadir").innerText = data.hadir;
-        document.getElementById("belum").innerText = data.belum;
+        const total = document.getElementById("total");
+        const hadir = document.getElementById("hadir");
+        const belum = document.getElementById("belum");
 
-        document.getElementById("waCount").innerText = data.wa;
-        document.getElementById("fisikCount").innerText = data.fisik;
-        document.getElementById("bothCount").innerText = data.both;
-        document.getElementById("noneCount").innerText = data.none;
+        const waCount = document.getElementById("waCount");
+        const fisikCount = document.getElementById("fisikCount");
+        const bothCount = document.getElementById("bothCount");
+        const noneCount = document.getElementById("noneCount");
+
+        if (total) {
+            total.innerText = data.total || 0;
+        }
+
+        if (hadir) {
+            hadir.innerText = data.hadir || 0;
+        }
+
+        if (belum) {
+            belum.innerText = data.belum || 0;
+        }
+
+        if (waCount) {
+            waCount.innerText = data.wa || 0;
+        }
+
+        if (fisikCount) {
+            fisikCount.innerText = data.fisik || 0;
+        }
+
+        if (bothCount) {
+            bothCount.innerText = data.both || 0;
+        }
+
+        if (noneCount) {
+            noneCount.innerText = data.none || 0;
+        }
+
+        // ================= PROGRESS =================
 
         const persen =
             data.total > 0
-            ? ((data.hadir / data.total) * 100).toFixed(1)
-            : 0;
+                ? ((data.hadir / data.total) * 100).toFixed(1)
+                : 0;
 
-        document.getElementById("progressFill").style.width =
-            persen + "%";
+        const progressFill =
+            document.getElementById("progressFill");
 
-        document.getElementById("progressText").innerHTML =
-            persen + "% Tamu Sudah Hadir";
+        const progressText =
+            document.getElementById("progressText");
 
-    }catch(err){
+        if (progressFill) {
 
-        console.log(err);
+            progressFill.style.width =
+                persen + "%";
+
+        }
+
+        if (progressText) {
+
+            progressText.innerHTML =
+                persen + "% Tamu Sudah Hadir";
+
+        }
+
+    } catch (err) {
+
+        console.error(
+            "Gagal load statistik:",
+            err
+        );
 
     }
 
 }
 
+
 // ================= LATEST GUEST =================
 
-async function loadLatestGuest(){
+async function loadLatestGuest() {
 
-    try{
+    try {
 
-        const res = await fetch(API_URL + "?action=latestGuests&t=" + Date.now());
+        const res = await fetch(
+            API_URL +
+            "?action=latestGuests&t=" +
+            Date.now()
+        );
 
         const data = await res.json();
 
-        if(data.length === 0){
+        const latestGuest =
+            document.getElementById("latestGuest");
 
-            document.getElementById("latestGuest").innerHTML =
+        if (!latestGuest) return;
+
+        if (!Array.isArray(data) || data.length === 0) {
+
+            latestGuest.innerHTML =
                 "Belum ada tamu yang check-in.";
 
             return;
@@ -132,15 +230,24 @@ async function loadLatestGuest(){
             html += `
                 <div class="latest-card">
 
-                    <div class="latest-icon">🎉</div>
+                    <div class="latest-icon">
+                        🎉
+                    </div>
 
                     <div class="latest-info">
-                        <h3>${tamu.nama}</h3>
-                        <p>Berhasil Check-in</p>
+
+                        <h3>
+                            ${tamu.nama || "-"}
+                        </h3>
+
+                        <p>
+                            Berhasil Check-in
+                        </p>
+
                     </div>
 
                     <div class="latest-time">
-                        ${tamu.jam}
+                        ${tamu.jam || "-"}
                     </div>
 
                 </div>
@@ -148,29 +255,43 @@ async function loadLatestGuest(){
 
         });
 
-        document.getElementById("latestGuest").innerHTML = html;
+        latestGuest.innerHTML = html;
 
-    }catch(err){
+    } catch (err) {
 
-        console.log(err);
+        console.error(
+            "Gagal load aktivitas:",
+            err
+        );
 
     }
 
 }
 
-// ================= FORMAT =================
 
-function formatTanggal(tanggal){
+// ================= FORMAT TANGGAL =================
 
-    if(!tanggal) return "-";
+function formatTanggal(tanggal) {
 
-    return new Date(tanggal).toLocaleDateString("id-ID",{
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-    });
+    if (!tanggal) return "-";
+
+    const date = new Date(tanggal);
+
+    if (isNaN(date.getTime())) {
+        return tanggal;
+    }
+
+    return date.toLocaleDateString(
+        "id-ID",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
 
 }
+
 
 // ================= LOAD =================
 
@@ -178,52 +299,15 @@ loadSettings();
 loadStats();
 loadLatestGuest();
 
-// const user = getUser();
 
-// if(user){
-//     document.getElementById("adminName").innerHTML =
-//         "👤 " + user.name;
-// }
+// ================= AUTO REFRESH =================
 
-setInterval(loadStats,5000);
-setInterval(loadLatestGuest,2000);
+setInterval(
+    loadStats,
+    5000
+);
 
-// ================= SUPER ADMIN MENU =================
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    const licenseMenu = document.getElementById("licenseMenu");
-
-    if(!licenseMenu) return;
-
-    if(CONFIG.SUPER_ADMIN === true){
-
-        licenseMenu.style.display = "block";
-
-    }
-
-});
-// ================= ADMIN DROPDOWN =================
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const adminButton = document.getElementById("adminName");
-    const adminMenu = document.getElementById("adminMenu");
-
-    if (!adminButton || !adminMenu) return;
-
-    adminButton.addEventListener("click", function (e) {
-
-        e.stopPropagation();
-
-        adminMenu.classList.toggle("show");
-
-    });
-
-    document.addEventListener("click", function () {
-
-        adminMenu.classList.remove("show");
-
-    });
-
-});
+setInterval(
+    loadLatestGuest,
+    2000
+);
