@@ -95,6 +95,10 @@ async function loadLicenses() {
                         ${escapeHtml(item.activated || "-")}
                     </td>
 
+                    <td>
+                         ${escapeHtml(item.spreadsheetId || "-")}
+                    </td>
+
                 </tr>
             `;
 
