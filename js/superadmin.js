@@ -18,7 +18,7 @@ function checkSuperAdmin() {
     if (login !== "true" || !userString) {
 
         window.location.replace(
-            "superadmin-login.html"
+            "admin-login.html"
         );
 
         return false;
@@ -35,15 +35,15 @@ function checkSuperAdmin() {
         if (user.role !== "superadmin") {
 
             localStorage.removeItem(
-                "superadminLogin"
+                "adminLogin"
             );
 
             localStorage.removeItem(
-                "superadminUser"
+                "adminUser"
             );
 
             window.location.replace(
-                "superadmin-login.html"
+                "admin-login.html"
             );
 
             return false;
@@ -588,7 +588,7 @@ function logout() {
 
 
     window.location.replace(
-        "superadmin-login.html"
+        "admin-login.html"
     );
 }
 

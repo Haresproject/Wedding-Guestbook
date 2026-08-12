@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Super Admin - Wedding Guestbook</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        .topbar {
+            height: 70px;
+            background: #222;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #444;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            margin: 7px 0 0;
+            color: #777;
+        }
+
+        .create-btn {
+            border: none;
+            background: #222;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.06);
+        }
+
+        .stat-card span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card strong {
+            font-size: 28px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.06);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            font-size: 13px;
+            color: #666;
+            background: #fafafa;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge.active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge.inactive {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .license-key {
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 430px;
+            border-radius: 18px;
+            padding: 25px;
+        }
+
+        .modal-box h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cancel-btn {
+            background: #eee;
+        }
+
+        .save-btn {
+            background: #222;
+            color: white;
+        }
+
+        .result {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .result strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .new-license {
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        @media(max-width: 700px) {
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+
+        <h2>🎟️ Wedding Guestbook</h2>
+
+        <div class="admin-info">
+
+            <span id="adminName">
+                Super Admin
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="header">
+
+            <div>
+
+                <h1>Super Admin</h1>
+
+                <p>
+                    Kelola license dan customer Wedding Guestbook.
+                </p>
+
+            </div>
+
+            <button
+                class="create-btn"
+                onclick="openCreateModal()">
+
+                + Buat License
+
+            </button>
+
+        </div>
+
+
+        <!-- STATISTIK -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <span>Total License</span>
+
+                <strong id="totalLicense">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Active</span>
+
+                <strong id="activeLicense">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Sudah Dipakai</span>
+
+                <strong id="usedLicense">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Belum Dipakai</span>
+
+                <strong id="unusedLicense">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-card">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>No</th>
+                        <th>License</th>
+                        <th>Owner</th>
+                        <th>Domain</th>
+                        <th>Status</th>
+                        <th>Activated</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="licenseTable">
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty">
+
+                            Memuat license...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL CREATE LICENSE -->
+
+    <div
+        id="createModal"
+        class="modal">
+
+        <div class="modal-box">
+
+            <h2>
+                Buat License Baru
+            </h2>
+
+            <p style="color:#777;font-size:14px;">
+                Masukkan nama customer.
+            </p>
+
+
+            <div class="form-group">
+
+                <label>
+                    Nama Customer
+                </label>
+
+                <input
+                    type="text"
+                    id="ownerName"
+                    placeholder="Contoh: Anggia & Haidar">
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    class="cancel-btn"
+                    onclick="closeCreateModal()">
+
+                    Batal
+
+                </button>
+
+                <button
+                    class="save-btn"
+                    id="createButton"
+                    onclick="createNewLicense()">
+
+                    BUAT LICENSE
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="licenseResult"
+                class="result">
+
+                <strong>
+                    License berhasil dibuat:
+                </strong>
+
+                <div
+                    id="newLicense"
+                    class="new-license">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script src="js/superadmin.js"></script>
+
+</body>
+
+</html>

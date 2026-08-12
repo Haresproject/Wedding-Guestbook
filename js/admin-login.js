@@ -7,14 +7,11 @@ const API_URL = CONFIG.API_URL;
 
 async function loginSuperAdmin() {
 
-    const username =
-        document.getElementById("username")
-        .value
-        .trim();
+    const usernameElement =
+        document.getElementById("username");
 
-    const password =
-        document.getElementById("password")
-        .value;
+    const passwordElement =
+        document.getElementById("password");
 
     const button =
         document.getElementById("loginButton");
@@ -26,6 +23,17 @@ async function loginSuperAdmin() {
         document.getElementById("message");
 
 
+    const username =
+        usernameElement.value.trim();
+
+    const password =
+        passwordElement.value;
+
+
+    // =================================================
+    // VALIDASI
+    // =================================================
+
     if (!username || !password) {
 
         showMessage(
@@ -36,101 +44,119 @@ async function loginSuperAdmin() {
     }
 
 
-    // ================= LOADING =================
+    // =================================================
+    // LOADING
+    // =================================================
 
     if (button) {
 
         button.disabled = true;
-        button.innerText = "MEMERIKSA...";
+
+        button.innerText =
+            "MEMERIKSA...";
 
     }
+
 
     if (loading) {
 
-        loading.style.display = "block";
+        loading.style.display =
+            "block";
 
     }
 
+
     if (message) {
 
-        message.style.display = "none";
+        message.style.display =
+            "none";
 
     }
 
 
     try {
 
-        const res = await fetch(
-            API_URL,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                body: JSON.stringify({
+                    body: JSON.stringify({
 
-                    action: "loginSuperAdmin",
+                        action:
+                            "loginSuperAdmin",
 
-                    username: username,
+                        username:
+                            username,
 
-                    password: password
+                        password:
+                            password
 
-                })
-            }
-        );
+                    })
+                }
+            );
 
 
         const data =
-            await res.json();
+            await response.json();
 
 
         console.log(
-            "Super Admin Login:",
+            "SUPER ADMIN LOGIN:",
             data
         );
 
 
-        // ================= BERHASIL =================
+        // =================================================
+        // LOGIN BERHASIL
+        // =================================================
 
         if (data.success) {
 
             localStorage.setItem(
-                "superAdminLogin",
+                "superadminLogin",
                 "true"
             );
 
 
             localStorage.setItem(
-                "superAdmin",
+                "superadminUser",
                 JSON.stringify({
 
                     username:
-                        data.username,
-
-                    name:
-                        data.name,
+                        data.username ||
+                        username,
 
                     role:
-                        data.role
+                        "superadmin",
+
+                    name:
+                        data.name ||
+                        "Super Admin"
 
                 })
             );
 
 
-            // Masuk Super Admin Dashboard
+            // Masuk dashboard
 
-            window.location.href =
-                "admin.html";
+            window.location.replace(
+                "superadmin.html"
+            );
 
             return;
-
         }
 
 
-        // ================= GAGAL =================
+        // =================================================
+        // LOGIN GAGAL
+        // =================================================
 
         showMessage(
             data.message ||
@@ -138,32 +164,37 @@ async function loginSuperAdmin() {
         );
 
 
-    } catch (err) {
+    } catch (error) {
 
         console.error(
             "Super Admin Login Error:",
-            err
+            error
         );
+
 
         showMessage(
             "Tidak dapat terhubung ke server."
         );
 
-    }
+
+    } finally {
+
+        if (loading) {
+
+            loading.style.display =
+                "none";
+
+        }
 
 
-    // ================= SELESAI =================
+        if (button) {
 
-    if (loading) {
+            button.disabled = false;
 
-        loading.style.display = "none";
+            button.innerText =
+                "LOGIN";
 
-    }
-
-    if (button) {
-
-        button.disabled = false;
-        button.innerText = "LOGIN";
+        }
 
     }
 
@@ -177,33 +208,55 @@ async function loginSuperAdmin() {
 function showMessage(text) {
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
+
 
     if (!message) return;
 
-    message.innerText = text;
+
+    message.innerText =
+        text;
+
 
     message.className =
         "message error";
 
+
     message.style.display =
         "block";
+
 }
 
 
 // =====================================================
-// FORM
+// FORM LOGIN
 // =====================================================
 
-document
-    .getElementById("adminLoginForm")
-    ?.addEventListener(
-        "submit",
-        function(e) {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-            e.preventDefault();
+        const form =
+            document.getElementById(
+                "adminLoginForm"
+            );
 
-            loginSuperAdmin();
 
-        }
-    );
+        if (!form) return;
+
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                loginSuperAdmin();
+
+            }
+        );
+
+    }
+);
