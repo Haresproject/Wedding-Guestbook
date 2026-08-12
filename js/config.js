@@ -4,12 +4,10 @@ const CONFIG = {
 
   APP_NAME: "Wedding Guestbook",
 
-  COMPANY: "HaresLens",
-
   VERSION: "1.0.0",
 
   LICENSE: "",
 
-  SUPER_ADMIN: true
+  SUPER_ADMIN: false
 
 };
