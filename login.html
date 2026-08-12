@@ -2,19 +2,24 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Login - Buku Tamu Digital</title>
 
     <link rel="stylesheet" href="css/style.css">
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
+
             margin: 0;
             min-height: 100vh;
 
@@ -33,13 +38,16 @@
         }
 
         .login-container {
+
             width: 100%;
             max-width: 430px;
             padding: 20px;
+
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.97);
+
+            background: rgba(255,255,255,.97);
 
             border-radius: 20px;
 
@@ -48,12 +56,14 @@
             text-align: center;
 
             box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.25);
+                0 20px 50px rgba(0,0,0,.25);
 
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn .6s ease;
+
         }
 
         .login-icon {
+
             width: 75px;
             height: 75px;
 
@@ -68,17 +78,21 @@
             background: #f5f5f5;
 
             font-size: 35px;
+
         }
 
         h1 {
+
             margin: 0 0 10px;
 
             font-size: 26px;
 
             color: #222;
+
         }
 
         .subtitle {
+
             margin: 0 0 25px;
 
             color: #777;
@@ -86,15 +100,19 @@
             font-size: 14px;
 
             line-height: 1.6;
+
         }
 
         .form-group {
+
             margin-bottom: 15px;
 
             text-align: left;
+
         }
 
         .form-group label {
+
             display: block;
 
             margin-bottom: 7px;
@@ -104,9 +122,11 @@
             font-weight: bold;
 
             color: #555;
+
         }
 
         .login-input {
+
             width: 100%;
 
             padding: 15px;
@@ -119,17 +139,19 @@
 
             outline: none;
 
-            transition: 0.2s;
         }
 
         .login-input:focus {
+
             border-color: #333;
 
             box-shadow:
-                0 0 0 3px rgba(0, 0, 0, 0.05);
+                0 0 0 3px rgba(0,0,0,.05);
+
         }
 
         .login-button {
+
             width: 100%;
 
             margin-top: 5px;
@@ -150,20 +172,24 @@
 
             cursor: pointer;
 
-            transition: 0.2s;
         }
 
         .login-button:hover {
+
             background: #444;
+
         }
 
         .login-button:disabled {
-            opacity: 0.6;
+
+            opacity: .6;
 
             cursor: not-allowed;
+
         }
 
         .message {
+
             display: none;
 
             margin-top: 15px;
@@ -173,17 +199,31 @@
             border-radius: 8px;
 
             font-size: 14px;
+
         }
 
         .message.error {
+
             display: block;
 
             background: #ffebee;
 
             color: #c62828;
+
+        }
+
+        .message.success {
+
+            display: block;
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+
         }
 
         .loading {
+
             display: none;
 
             margin-top: 15px;
@@ -191,122 +231,234 @@
             color: #777;
 
             font-size: 14px;
+
         }
 
         .footer {
+
             margin-top: 25px;
 
             font-size: 12px;
 
             color: #999;
+
+        }
+
+        .hidden {
+
+            display: none !important;
+
+        }
+
+        .license-info {
+
+            margin-bottom: 15px;
+
+            padding: 10px;
+
+            background: #f5f5f5;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            color: #555;
+
         }
 
         @keyframes fadeIn {
 
             from {
+
                 opacity: 0;
 
-                transform:
-                    translateY(20px);
+                transform: translateY(20px);
+
             }
 
             to {
+
                 opacity: 1;
 
-                transform:
-                    translateY(0);
+                transform: translateY(0);
+
             }
 
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <div class="login-container">
 
-        <div class="login-card">
+<div class="login-container">
 
-            <div class="login-icon">
-                👤
-            </div>
 
-            <h1>Login</h1>
+    <div class="login-card">
 
-            <p class="subtitle">
-                Masuk untuk mengelola
-                Buku Tamu Digital Anda.
-            </p>
 
-            <form id="loginForm">
+        <div class="login-icon">
+            👤
+        </div>
 
-                <div class="form-group">
 
-                    <label for="username">
-                        Username
-                    </label>
+        <h1>Login</h1>
 
-                    <input
-                        type="text"
-                        id="username"
-                        class="login-input"
-                        placeholder="Masukkan username"
-                        autocomplete="username"
-                        required
-                    >
 
-                </div>
+        <p class="subtitle">
+            Masuk untuk mengelola
+            Buku Tamu Digital Anda.
+        </p>
 
-                <div class="form-group">
 
-                    <label for="password">
-                        Password
-                    </label>
+        <!-- ================= LICENSE ================= -->
 
-                    <input
-                        type="password"
-                        id="password"
-                        class="login-input"
-                        placeholder="Masukkan password"
-                        autocomplete="current-password"
-                        required
-                    >
+        <form id="licenseForm">
 
-                </div>
 
-                <button
-                    type="submit"
-                    id="loginButton"
-                    class="login-button"
+            <div class="form-group">
+
+                <label for="license">
+
+                    License Key
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="license"
+                    class="login-input"
+                    placeholder="Contoh: HL-XXXXXXXXXXXX"
+                    autocomplete="off"
+                    required
                 >
-                    LOGIN
-                </button>
 
-            </form>
+            </div>
 
-            <div
-                id="loading"
-                class="loading"
+
+            <button
+                type="submit"
+                id="licenseButton"
+                class="login-button"
             >
-                Memeriksa login...
-            </div>
+
+                VERIFIKASI LICENSE
+
+            </button>
+
+
+        </form>
+
+
+        <!-- ================= CUSTOMER LOGIN ================= -->
+
+        <form
+            id="loginForm"
+            class="hidden"
+        >
+
 
             <div
-                id="message"
-                class="message"
-            ></div>
-
-            <div class="footer">
-                Buku Tamu Digital
+                id="licenseInfo"
+                class="license-info"
+            >
             </div>
+
+
+            <div class="form-group">
+
+                <label for="username">
+
+                    Username
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="username"
+                    class="login-input"
+                    placeholder="Masukkan username"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+
+                    Password
+
+                </label>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    class="login-input"
+                    placeholder="Masukkan password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                id="loginButton"
+                class="login-button"
+            >
+
+                LOGIN
+
+            </button>
+
+
+        </form>
+
+
+        <div
+            id="loading"
+            class="loading"
+        >
+
+            Memeriksa...
 
         </div>
+
+
+        <div
+            id="message"
+            class="message"
+        >
+        </div>
+
+
+        <div class="footer">
+
+            Buku Tamu Digital
+
+        </div>
+
 
     </div>
 
 
-    <script src="js/config.js"></script>
-    <script src="js/login.js"></script>
+</div>
+
+
+<script src="js/config.js"></script>
+
+<script src="js/login.js"></script>
+
 
 </body>
 
