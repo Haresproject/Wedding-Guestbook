@@ -1,62 +1,282 @@
+// =====================================================
+// LOGIN SYSTEM
+// =====================================================
+
 const API_URL = CONFIG.API_URL;
 
-async function login(){
+const SPREADSHEET_ID =
+    localStorage.getItem("spreadsheetId") || "";
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
 
-    try{
+// =====================================================
+// LOGIN
+// =====================================================
 
-        const res = await fetch(API_URL,{
+async function login() {
 
-            method:"POST",
+    const username =
+        document.getElementById("username").value.trim();
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+    const password =
+        document.getElementById("password").value;
 
-            body:JSON.stringify({
+    const button =
+        document.getElementById("loginButton");
 
-                action:"login",
+    const loading =
+        document.getElementById("loading");
 
-                username,
+    const message =
+        document.getElementById("message");
 
-                password
 
-            })
+    // =================================================
+    // VALIDASI INPUT
+    // =================================================
 
-        });
+    if (!username || !password) {
 
-        const data = await res.json();
+        showMessage(
+            "Username dan password wajib diisi."
+        );
 
-       if(data.success){
+        return;
 
-    localStorage.setItem("login","true");
+    }
 
-    localStorage.setItem("user", JSON.stringify({
 
-        username: data.username || username,
+    // =================================================
+    // CEK SPREADSHEET CUSTOMER
+    // =================================================
 
-        role: data.role || "owner",
+    if (!SPREADSHEET_ID) {
 
-        name: data.name || username
+        showMessage(
+            "License belum terhubung dengan customer."
+        );
 
-    }));
+        return;
 
-    location.href="/dashboard";
+    }
 
-        }else{
 
-            alert("Username atau Password salah.");
+    // =================================================
+    // LOADING
+    // =================================================
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.innerText =
+            "MEMERIKSA...";
+
+    }
+
+    if (loading) {
+
+        loading.style.display =
+            "block";
+
+    }
+
+    if (message) {
+
+        message.style.display =
+            "none";
+
+    }
+
+
+    try {
+
+        // =================================================
+        // REQUEST LOGIN
+        // =================================================
+
+        const res = await fetch(
+            API_URL,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    action: "login",
+
+                    username:
+                        username,
+
+                    password:
+                        password,
+
+                    spreadsheetId:
+                        SPREADSHEET_ID
+
+                })
+            }
+        );
+
+
+        const data =
+            await res.json();
+
+
+        console.log(
+            "Login response:",
+            data
+        );
+
+
+        // =================================================
+        // LOGIN BERHASIL
+        // =================================================
+
+        if (data.success) {
+
+            localStorage.setItem(
+                "login",
+                "true"
+            );
+
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify({
+
+                    username:
+                        data.username ||
+                        username,
+
+                    role:
+                        data.role ||
+                        "owner",
+
+                    name:
+                        data.name ||
+                        username
+
+                })
+            );
+
+
+            console.log(
+                "✅ Login berhasil"
+            );
+
+            console.log(
+                "Customer Spreadsheet:",
+                SPREADSHEET_ID
+            );
+
+
+            // =================================================
+            // MASUK DASHBOARD
+            // =================================================
+
+            window.location.href =
+                "dashboard.html";
+
+            return;
 
         }
 
-    }catch(err){
 
-        console.log(err);
+        // =================================================
+        // LOGIN GAGAL
+        // =================================================
 
-        alert("Tidak dapat terhubung ke server.");
+        showMessage(
+            data.message ||
+            "Username atau Password salah."
+        );
+
+
+    } catch (err) {
+
+        console.error(
+            "Login error:",
+            err
+        );
+
+
+        showMessage(
+            "Tidak dapat terhubung ke server."
+        );
 
     }
+
+
+    // =================================================
+    // SELESAI LOADING
+    // =================================================
+
+    if (loading) {
+
+        loading.style.display =
+            "none";
+
+    }
+
+    if (button) {
+
+        button.disabled = false;
+
+        button.innerText =
+            "LOGIN";
+
+    }
+
+}
+
+
+// =====================================================
+// PESAN ERROR
+// =====================================================
+
+function showMessage(text) {
+
+    const message =
+        document.getElementById("message");
+
+    if (!message) return;
+
+
+    message.innerText =
+        text;
+
+    message.className =
+        "message error";
+
+    message.style.display =
+        "block";
+
+}
+
+
+// =====================================================
+// FORM LOGIN
+// =====================================================
+
+const loginForm =
+    document.getElementById("loginForm");
+
+
+if (loginForm) {
+
+    loginForm.addEventListener(
+        "submit",
+        function (e) {
+
+            e.preventDefault();
+
+            login();
+
+        }
+    );
 
 }

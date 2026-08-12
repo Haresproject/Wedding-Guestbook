@@ -289,10 +289,10 @@ console.log(
 
     setTimeout(function() {
 
-        window.location.href =
-            "dashboard.html";
+    window.location.href =
+        "login.html";
 
-    }, 1000);
+}, 1000);
 
 }
 
