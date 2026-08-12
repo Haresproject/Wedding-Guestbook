@@ -8,6 +8,6 @@ const CONFIG = {
 
   LICENSE: "",
 
-  SUPER_ADMIN: false
+  SUPER_ADMIN: true
 
 };
