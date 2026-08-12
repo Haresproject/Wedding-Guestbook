@@ -1,14 +1,3 @@
-// =====================================================
-// CEK SESSION SUPER ADMIN
-// =====================================================
-
-const superAdminLogin =
-    localStorage.getItem("superadminLogin");
-
-if (superAdminLogin !== "true") {
-    window.location.replace("superadmin-login.html");
-}
-
 const API_URL = CONFIG.API_URL;
 
 
@@ -19,16 +8,18 @@ const API_URL = CONFIG.API_URL;
 function checkSuperAdmin() {
 
     const login =
-        localStorage.getItem("login");
+        localStorage.getItem("superadminLogin");
 
     const userString =
-        localStorage.getItem("user");
+        localStorage.getItem("superadminUser");
 
 
-    if (!login || !userString) {
+    // Belum login
+    if (login !== "true" || !userString) {
 
-        window.location.href =
-            "superadmin-login.html";
+        window.location.replace(
+            "superadmin-login.html"
+        );
 
         return false;
     }
@@ -40,18 +31,28 @@ function checkSuperAdmin() {
             JSON.parse(userString);
 
 
+        // Pastikan role benar
         if (user.role !== "superadmin") {
 
-            window.location.href =
-                "login.html";
+            localStorage.removeItem(
+                "superadminLogin"
+            );
+
+            localStorage.removeItem(
+                "superadminUser"
+            );
+
+            window.location.replace(
+                "superadmin-login.html"
+            );
 
             return false;
         }
 
 
+        // Tampilkan nama
         const adminName =
             document.getElementById("adminName");
-
 
         if (adminName) {
 
@@ -66,14 +67,25 @@ function checkSuperAdmin() {
 
     } catch (err) {
 
-        console.error(err);
+        console.error(
+            "Session Super Admin error:",
+            err
+        );
 
-        window.location.href =
-            "superadmin-login.html";
+        localStorage.removeItem(
+            "superadminLogin"
+        );
+
+        localStorage.removeItem(
+            "superadminUser"
+        );
+
+        window.location.replace(
+            "superadmin-login.html"
+        );
 
         return false;
     }
-
 }
 
 
@@ -85,17 +97,14 @@ async function loadLicenses() {
 
     try {
 
-        const res =
-            await fetch(
-                API_URL +
-                "?action=licenses&t=" +
-                Date.now()
-            );
-
+        const res = await fetch(
+            API_URL +
+            "?action=licenses&t=" +
+            Date.now()
+        );
 
         const data =
             await res.json();
-
 
         console.log(
             "LICENSE DATA:",
@@ -119,7 +128,6 @@ async function loadLicenses() {
 
 
         renderStats(licenses);
-
         renderLicenses(licenses);
 
 
@@ -130,13 +138,10 @@ async function loadLicenses() {
             err
         );
 
-
         showEmpty(
             "Tidak dapat mengambil data license."
         );
-
     }
-
 }
 
 
@@ -171,25 +176,42 @@ function renderStats(licenses) {
         total - used;
 
 
-    document.getElementById(
-        "totalLicense"
-    ).innerText = total;
+    const totalElement =
+        document.getElementById(
+            "totalLicense"
+        );
+
+    const activeElement =
+        document.getElementById(
+            "activeLicense"
+        );
+
+    const usedElement =
+        document.getElementById(
+            "usedLicense"
+        );
+
+    const unusedElement =
+        document.getElementById(
+            "unusedLicense"
+        );
 
 
-    document.getElementById(
-        "activeLicense"
-    ).innerText = active;
+    if (totalElement) {
+        totalElement.innerText = total;
+    }
 
+    if (activeElement) {
+        activeElement.innerText = active;
+    }
 
-    document.getElementById(
-        "usedLicense"
-    ).innerText = used;
+    if (usedElement) {
+        usedElement.innerText = used;
+    }
 
-
-    document.getElementById(
-        "unusedLicense"
-    ).innerText = unused;
-
+    if (unusedElement) {
+        unusedElement.innerText = unused;
+    }
 }
 
 
@@ -251,13 +273,11 @@ function renderLicenses(licenses) {
                     </td>
 
                     <td>
-
                         <span class="license-key">
                             ${escapeHtml(
                                 item.license
                             )}
                         </span>
-
                     </td>
 
                     <td>
@@ -273,22 +293,16 @@ function renderLicenses(licenses) {
                     </td>
 
                     <td>
-
-                        <span
-                            class="badge ${badgeClass}">
-
+                        <span class="badge ${badgeClass}">
                             ${escapeHtml(
                                 status
                             )}
-
                         </span>
-
                     </td>
 
                     <td>
                         ${escapeHtml(
-                            item.activated ||
-                            "-"
+                            item.activated || "-"
                         )}
                     </td>
 
@@ -301,7 +315,6 @@ function renderLicenses(licenses) {
 
     table.innerHTML =
         html;
-
 }
 
 
@@ -335,7 +348,6 @@ function showEmpty(message) {
         </tr>
 
     `;
-
 }
 
 
@@ -350,12 +362,10 @@ function openCreateModal() {
             "createModal"
         );
 
-
     const owner =
         document.getElementById(
             "ownerName"
         );
-
 
     const result =
         document.getElementById(
@@ -364,16 +374,13 @@ function openCreateModal() {
 
 
     if (modal) {
-
         modal.classList.add("show");
-
     }
 
 
     if (owner) {
 
         owner.value = "";
-
         owner.focus();
 
     }
@@ -385,7 +392,6 @@ function openCreateModal() {
             "none";
 
     }
-
 }
 
 
@@ -404,7 +410,6 @@ function closeCreateModal() {
         );
 
     }
-
 }
 
 
@@ -414,18 +419,30 @@ function closeCreateModal() {
 
 async function createNewLicense() {
 
-    const owner =
+    const ownerInput =
         document.getElementById(
             "ownerName"
-        )
-        .value
-        .trim();
+        );
 
 
     const button =
         document.getElementById(
             "createButton"
         );
+
+
+    if (!ownerInput) {
+
+        alert(
+            "Input nama customer tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    const owner =
+        ownerInput.value.trim();
 
 
     if (!owner) {
@@ -440,8 +457,7 @@ async function createNewLicense() {
 
     if (button) {
 
-        button.disabled =
-            true;
+        button.disabled = true;
 
         button.innerText =
             "MEMBUAT...";
@@ -525,8 +541,7 @@ async function createNewLicense() {
         }
 
 
-        // Refresh table
-        loadLicenses();
+        await loadLicenses();
 
 
     } catch (err) {
@@ -541,6 +556,7 @@ async function createNewLicense() {
             "Tidak dapat terhubung ke server."
         );
 
+
     } finally {
 
         if (button) {
@@ -552,9 +568,7 @@ async function createNewLicense() {
                 "BUAT LICENSE";
 
         }
-
     }
-
 }
 
 
@@ -565,16 +579,17 @@ async function createNewLicense() {
 function logout() {
 
     localStorage.removeItem(
-        "login"
+        "superadminLogin"
     );
 
     localStorage.removeItem(
-        "user"
+        "superadminUser"
     );
 
-    window.location.href =
-        "superadmin-login.html";
 
+    window.location.replace(
+        "superadmin-login.html"
+    );
 }
 
 
@@ -585,27 +600,11 @@ function logout() {
 function escapeHtml(value) {
 
     return String(value || "")
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
@@ -613,8 +612,15 @@ function escapeHtml(value) {
 // START
 // =====================================================
 
-if (checkSuperAdmin()) {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    loadLicenses();
+        if (checkSuperAdmin()) {
 
-}
+            loadLicenses();
+
+        }
+
+    }
+);
