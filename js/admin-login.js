@@ -5,12 +5,12 @@ const API_URL = CONFIG.API_URL;
 // LOGIN SUPER ADMIN
 // =====================================================
 
-async function loginSuperAdmin() {
+async function adminLogin() {
 
-    const usernameElement =
+    const usernameInput =
         document.getElementById("username");
 
-    const passwordElement =
+    const passwordInput =
         document.getElementById("password");
 
     const button =
@@ -23,11 +23,21 @@ async function loginSuperAdmin() {
         document.getElementById("message");
 
 
+    if (!usernameInput || !passwordInput) {
+
+        console.error(
+            "Input username/password tidak ditemukan."
+        );
+
+        return;
+    }
+
+
     const username =
-        usernameElement.value.trim();
+        usernameInput.value.trim();
 
     const password =
-        passwordElement.value;
+        passwordInput.value;
 
 
     // =================================================
@@ -51,32 +61,26 @@ async function loginSuperAdmin() {
     if (button) {
 
         button.disabled = true;
-
-        button.innerText =
-            "MEMERIKSA...";
+        button.innerText = "MEMERIKSA...";
 
     }
-
 
     if (loading) {
 
-        loading.style.display =
-            "block";
+        loading.style.display = "block";
 
     }
 
-
     if (message) {
 
-        message.style.display =
-            "none";
+        message.style.display = "none";
 
     }
 
 
     try {
 
-        const response =
+        const res =
             await fetch(
                 API_URL,
                 {
@@ -89,14 +93,11 @@ async function loginSuperAdmin() {
 
                     body: JSON.stringify({
 
-                        action:
-                            "loginSuperAdmin",
+                        action: "superadminLogin",
 
-                        username:
-                            username,
+                        username: username,
 
-                        password:
-                            password
+                        password: password
 
                     })
                 }
@@ -104,7 +105,7 @@ async function loginSuperAdmin() {
 
 
         const data =
-            await response.json();
+            await res.json();
 
 
         console.log(
@@ -114,7 +115,7 @@ async function loginSuperAdmin() {
 
 
         // =================================================
-        // LOGIN BERHASIL
+        // BERHASIL
         // =================================================
 
         if (data.success) {
@@ -144,10 +145,10 @@ async function loginSuperAdmin() {
             );
 
 
-            // Masuk dashboard
+            // Masuk halaman Super Admin
 
             window.location.replace(
-                "superadmin.html"
+                "superadmin-login.html"
             );
 
             return;
@@ -155,7 +156,7 @@ async function loginSuperAdmin() {
 
 
         // =================================================
-        // LOGIN GAGAL
+        // GAGAL
         // =================================================
 
         showMessage(
@@ -164,11 +165,11 @@ async function loginSuperAdmin() {
         );
 
 
-    } catch (error) {
+    } catch (err) {
 
         console.error(
-            "Super Admin Login Error:",
-            error
+            "Super Admin login error:",
+            err
         );
 
 
@@ -189,7 +190,8 @@ async function loginSuperAdmin() {
 
         if (button) {
 
-            button.disabled = false;
+            button.disabled =
+                false;
 
             button.innerText =
                 "LOGIN";
@@ -208,9 +210,7 @@ async function loginSuperAdmin() {
 function showMessage(text) {
 
     const message =
-        document.getElementById(
-            "message"
-        );
+        document.getElementById("message");
 
 
     if (!message) return;
@@ -219,14 +219,11 @@ function showMessage(text) {
     message.innerText =
         text;
 
-
     message.className =
         "message error";
 
-
     message.style.display =
         "block";
-
 }
 
 
@@ -244,16 +241,23 @@ document.addEventListener(
             );
 
 
-        if (!form) return;
+        if (!form) {
+
+            console.error(
+                "adminLoginForm tidak ditemukan."
+            );
+
+            return;
+        }
 
 
         form.addEventListener(
             "submit",
-            function (event) {
+            function (e) {
 
-                event.preventDefault();
+                e.preventDefault();
 
-                loginSuperAdmin();
+                adminLogin();
 
             }
         );
