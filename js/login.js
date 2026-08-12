@@ -1,11 +1,20 @@
-// =====================================================
-// LOGIN SYSTEM
-// =====================================================
-
 const API_URL = CONFIG.API_URL;
 
 const SPREADSHEET_ID =
     localStorage.getItem("spreadsheetId") || "";
+
+
+// =====================================================
+// CEK CUSTOMER
+// =====================================================
+
+if (!SPREADSHEET_ID) {
+
+    console.warn(
+        "Spreadsheet customer belum ditemukan."
+    );
+
+}
 
 
 // =====================================================
@@ -15,10 +24,13 @@ const SPREADSHEET_ID =
 async function login() {
 
     const username =
-        document.getElementById("username").value.trim();
+        document.getElementById("username")
+            .value
+            .trim();
 
     const password =
-        document.getElementById("password").value;
+        document.getElementById("password")
+            .value;
 
     const button =
         document.getElementById("loginButton");
@@ -30,9 +42,7 @@ async function login() {
         document.getElementById("message");
 
 
-    // =================================================
-    // VALIDASI INPUT
-    // =================================================
+    // ================= VALIDASI =================
 
     if (!username || !password) {
 
@@ -41,13 +51,10 @@ async function login() {
         );
 
         return;
-
     }
 
 
-    // =================================================
-    // CEK SPREADSHEET CUSTOMER
-    // =================================================
+    // ================= CEK SPREADSHEET =================
 
     if (!SPREADSHEET_ID) {
 
@@ -56,43 +63,32 @@ async function login() {
         );
 
         return;
-
     }
 
 
-    // =================================================
-    // LOADING
-    // =================================================
+    // ================= LOADING =================
 
     if (button) {
 
         button.disabled = true;
-
-        button.innerText =
-            "MEMERIKSA...";
+        button.innerText = "MEMERIKSA...";
 
     }
 
     if (loading) {
 
-        loading.style.display =
-            "block";
+        loading.style.display = "block";
 
     }
 
     if (message) {
 
-        message.style.display =
-            "none";
+        message.style.display = "none";
 
     }
 
 
     try {
-
-        // =================================================
-        // REQUEST LOGIN
-        // =================================================
 
         const res = await fetch(
             API_URL,
@@ -108,11 +104,9 @@ async function login() {
 
                     action: "login",
 
-                    username:
-                        username,
+                    username: username,
 
-                    password:
-                        password,
+                    password: password,
 
                     spreadsheetId:
                         SPREADSHEET_ID
@@ -132,9 +126,7 @@ async function login() {
         );
 
 
-        // =================================================
-        // LOGIN BERHASIL
-        // =================================================
+        // ================= BERHASIL =================
 
         if (data.success) {
 
@@ -164,35 +156,20 @@ async function login() {
             );
 
 
-            console.log(
-                "✅ Login berhasil"
-            );
-
-            console.log(
-                "Customer Spreadsheet:",
-                SPREADSHEET_ID
-            );
-
-
-            // =================================================
             // MASUK DASHBOARD
-            // =================================================
 
             window.location.href =
                 "dashboard.html";
 
             return;
-
         }
 
 
-        // =================================================
-        // LOGIN GAGAL
-        // =================================================
+        // ================= GAGAL =================
 
         showMessage(
             data.message ||
-            "Username atau Password salah."
+            "Username atau password salah."
         );
 
 
@@ -203,7 +180,6 @@ async function login() {
             err
         );
 
-
         showMessage(
             "Tidak dapat terhubung ke server."
         );
@@ -211,14 +187,11 @@ async function login() {
     }
 
 
-    // =================================================
-    // SELESAI LOADING
-    // =================================================
+    // ================= SELESAI =================
 
     if (loading) {
 
-        loading.style.display =
-            "none";
+        loading.style.display = "none";
 
     }
 
@@ -226,8 +199,7 @@ async function login() {
 
         button.disabled = false;
 
-        button.innerText =
-            "LOGIN";
+        button.innerText = "LOGIN";
 
     }
 
@@ -235,7 +207,7 @@ async function login() {
 
 
 // =====================================================
-// PESAN ERROR
+// PESAN
 // =====================================================
 
 function showMessage(text) {
@@ -246,15 +218,13 @@ function showMessage(text) {
     if (!message) return;
 
 
-    message.innerText =
-        text;
+    message.innerText = text;
 
     message.className =
         "message error";
 
     message.style.display =
         "block";
-
 }
 
 
@@ -262,13 +232,9 @@ function showMessage(text) {
 // FORM LOGIN
 // =====================================================
 
-const loginForm =
-    document.getElementById("loginForm");
-
-
-if (loginForm) {
-
-    loginForm.addEventListener(
+document
+    .getElementById("loginForm")
+    ?.addEventListener(
         "submit",
         function (e) {
 
@@ -278,5 +244,3 @@ if (loginForm) {
 
         }
     );
-
-}
