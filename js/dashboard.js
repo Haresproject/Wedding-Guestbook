@@ -1,5 +1,8 @@
 const API_URL = CONFIG.API_URL;
 
+const SPREADSHEET_ID =
+    localStorage.getItem("spreadsheetId") || "";
+    
 let lastGuestTime = "";
 
 // ================= SETTINGS =================
@@ -9,8 +12,13 @@ async function loadSettings() {
     try {
 
         const res = await fetch(
-            CONFIG.API_URL + "?action=settings&t=" + Date.now()
-        );
+    CONFIG.API_URL +
+    "?action=settings" +
+    "&spreadsheetId=" +
+    encodeURIComponent(SPREADSHEET_ID) +
+    "&t=" +
+    Date.now()
+);
 
         const data = await res.json();
 
@@ -113,20 +121,33 @@ async function loadStats() {
 
         const res = await fetch(
             CONFIG.API_URL +
-            "?action=stats&t=" +
+            "?action=stats" +
+            "&spreadsheetId=" +
+            encodeURIComponent(SPREADSHEET_ID) +
+            "&t=" +
             Date.now()
         );
 
         const data = await res.json();
 
+        console.log("STATISTICS:", data);
+
         const total = document.getElementById("total");
         const hadir = document.getElementById("hadir");
         const belum = document.getElementById("belum");
 
-        const waCount = document.getElementById("waCount");
-        const fisikCount = document.getElementById("fisikCount");
-        const bothCount = document.getElementById("bothCount");
-        const noneCount = document.getElementById("noneCount");
+        const waCount =
+            document.getElementById("waCount");
+
+        const fisikCount =
+            document.getElementById("fisikCount");
+
+        const bothCount =
+            document.getElementById("bothCount");
+
+        const noneCount =
+            document.getElementById("noneCount");
+
 
         if (total) {
             total.innerText = data.total || 0;
@@ -156,6 +177,7 @@ async function loadStats() {
             noneCount.innerText = data.none || 0;
         }
 
+
         // ================= PROGRESS =================
 
         const persen =
@@ -163,11 +185,13 @@ async function loadStats() {
                 ? ((data.hadir / data.total) * 100).toFixed(1)
                 : 0;
 
+
         const progressFill =
             document.getElementById("progressFill");
 
         const progressText =
             document.getElementById("progressText");
+
 
         if (progressFill) {
 
@@ -175,6 +199,7 @@ async function loadStats() {
                 persen + "%";
 
         }
+
 
         if (progressText) {
 
@@ -202,10 +227,13 @@ async function loadLatestGuest() {
     try {
 
         const res = await fetch(
-            API_URL +
-            "?action=latestGuests&t=" +
-            Date.now()
-        );
+    API_URL +
+    "?action=latestGuests" +
+    "&spreadsheetId=" +
+    encodeURIComponent(SPREADSHEET_ID) +
+    "&t=" +
+    Date.now()
+);
 
         const data = await res.json();
 

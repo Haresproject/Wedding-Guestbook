@@ -2,8 +2,8 @@
 // LICENSE SYSTEM
 // =====================================================
 
-const LICENSE_STORAGE_KEY = "hareslens_license";
-const SPREADSHEET_ID_STORAGE_KEY = "hareslens_spreadsheet_id";
+const LICENSE_STORAGE_KEY = "license";
+const SPREADSHEET_ID_STORAGE_KEY = "spreadsheetId";
 
 // =====================================================
 // CEK APAKAH SUPER ADMIN
