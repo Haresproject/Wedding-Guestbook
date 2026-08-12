@@ -81,7 +81,7 @@ function checkSuperAdmin() {
         );
 
         window.location.replace(
-            "superadmin-login.html"
+            "admin-login.html"
         );
 
         return false;

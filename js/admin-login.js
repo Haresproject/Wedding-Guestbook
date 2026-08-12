@@ -1,111 +1,82 @@
+// =====================================================
+// SUPER ADMIN LOGIN
+// =====================================================
+
 const API_URL = CONFIG.API_URL;
 
 
 // =====================================================
-// LOGIN SUPER ADMIN
+// ELEMENT
 // =====================================================
 
-async function adminLogin() {
-
-    const usernameInput =
-        document.getElementById("username");
-
-    const passwordInput =
-        document.getElementById("password");
-
-    const button =
-        document.getElementById("loginButton");
-
-    const loading =
-        document.getElementById("loading");
-
-    const message =
-        document.getElementById("message");
+const form = document.getElementById("adminLoginForm");
+const loginButton = document.getElementById("loginButton");
+const loading = document.getElementById("loading");
+const message = document.getElementById("message");
 
 
-    if (!usernameInput || !passwordInput) {
+// =====================================================
+// LOGIN
+// =====================================================
 
-        console.error(
-            "Input username/password tidak ditemukan."
-        );
+form.addEventListener("submit", async function (e) {
 
-        return;
-    }
+    e.preventDefault();
 
 
     const username =
-        usernameInput.value.trim();
+        document.getElementById("username").value.trim();
 
     const password =
-        passwordInput.value;
+        document.getElementById("password").value;
 
-
-    // =================================================
-    // VALIDASI
-    // =================================================
 
     if (!username || !password) {
 
         showMessage(
-            "Username dan password wajib diisi."
+            "Username dan password wajib diisi.",
+            "error"
         );
 
         return;
     }
 
 
-    // =================================================
-    // LOADING
-    // =================================================
+    // Disable button
+    loginButton.disabled = true;
+    loginButton.innerText = "LOGIN...";
 
-    if (button) {
+    loading.style.display = "block";
+    loading.innerText = "Memeriksa login...";
 
-        button.disabled = true;
-        button.innerText = "MEMERIKSA...";
-
-    }
-
-    if (loading) {
-
-        loading.style.display = "block";
-
-    }
-
-    if (message) {
-
-        message.style.display = "none";
-
-    }
+    message.innerText = "";
 
 
     try {
 
-        const res =
-            await fetch(
-                API_URL,
-                {
-                    method: "POST",
+        const response = await fetch(
+            API_URL,
+            {
+                method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                    body: JSON.stringify({
+                body: JSON.stringify({
 
-                        action: "superadminLogin",
+                    action: "loginSuperAdmin",
 
-                        username: username,
+                    username: username,
 
-                        password: password
+                    password: password
 
-                    })
-                }
-            );
+                })
+            }
+        );
 
 
-        const data =
-            await res.json();
+        const data = await response.json();
 
 
         console.log(
@@ -115,11 +86,12 @@ async function adminLogin() {
 
 
         // =================================================
-        // BERHASIL
+        // LOGIN BERHASIL
         // =================================================
 
         if (data.success) {
 
+            // Simpan session super admin
             localStorage.setItem(
                 "superadminLogin",
                 "true"
@@ -131,136 +103,79 @@ async function adminLogin() {
                 JSON.stringify({
 
                     username:
-                        data.username ||
-                        username,
-
-                    role:
-                        "superadmin",
+                        data.username || username,
 
                     name:
-                        data.name ||
-                        "Super Admin"
+                        data.name || "Super Admin",
+
+                    role:
+                        data.role || "superadmin"
 
                 })
             );
 
 
-            // Masuk halaman Super Admin
+            loading.innerText =
+                "Login berhasil. Membuka dashboard...";
 
+
+            // Masuk ke halaman Super Admin
             window.location.replace(
                 "superadmin.html"
             );
+
 
             return;
         }
 
 
         // =================================================
-        // GAGAL
+        // LOGIN GAGAL
         // =================================================
 
         showMessage(
             data.message ||
-            "Username atau password salah."
+            "Username atau password salah.",
+            "error"
         );
 
 
-    } catch (err) {
+    } catch (error) {
 
         console.error(
-            "Super Admin login error:",
-            err
+            "SUPER ADMIN LOGIN ERROR:",
+            error
         );
 
 
         showMessage(
-            "Tidak dapat terhubung ke server."
+            "Tidak dapat terhubung ke server.",
+            "error"
         );
 
 
     } finally {
 
-        if (loading) {
+        loginButton.disabled = false;
 
-            loading.style.display =
-                "none";
+        loginButton.innerText = "LOGIN";
 
-        }
-
-
-        if (button) {
-
-            button.disabled =
-                false;
-
-            button.innerText =
-                "LOGIN";
-
-        }
+        loading.style.display = "none";
 
     }
 
-}
+});
 
 
 // =====================================================
-// PESAN
+// MESSAGE
 // =====================================================
 
-function showMessage(text) {
+function showMessage(text, type) {
 
-    const message =
-        document.getElementById("message");
-
-
-    if (!message) return;
-
-
-    message.innerText =
-        text;
+    message.innerText = text;
 
     message.className =
-        "message error";
+        "message " + type;
 
-    message.style.display =
-        "block";
 }
-
-
-// =====================================================
-// FORM LOGIN
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        const form =
-            document.getElementById(
-                "adminLoginForm"
-            );
-
-
-        if (!form) {
-
-            console.error(
-                "adminLoginForm tidak ditemukan."
-            );
-
-            return;
-        }
-
-
-        form.addEventListener(
-            "submit",
-            function (e) {
-
-                e.preventDefault();
-
-                adminLogin();
-
-            }
-        );
-
-    }
-);
