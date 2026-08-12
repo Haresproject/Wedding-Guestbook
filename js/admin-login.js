@@ -148,7 +148,7 @@ async function adminLogin() {
             // Masuk halaman Super Admin
 
             window.location.replace(
-                "superadmin-login.html"
+                "superadmin.html"
             );
 
             return;
