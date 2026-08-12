@@ -1,3 +1,14 @@
+// =====================================================
+// CEK SESSION SUPER ADMIN
+// =====================================================
+
+const superAdminLogin =
+    localStorage.getItem("superadminLogin");
+
+if (superAdminLogin !== "true") {
+    window.location.replace("superadmin-login.html");
+}
+
 const API_URL = CONFIG.API_URL;
 
 
