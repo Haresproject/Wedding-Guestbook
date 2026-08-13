@@ -1,143 +1,449 @@
 const API_URL = CONFIG.API_URL;
 
+
+// =====================================================
+// AMBIL SPREADSHEET ID CUSTOMER
+// =====================================================
+
+function getCustomerSpreadsheetId() {
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("user") || "{}"
+        );
+
+
+    // ================================================
+    // SUPER ADMIN
+    // ================================================
+
+    if (
+        String(user.role || "")
+            .trim()
+            .toLowerCase() === "superadmin"
+        ||
+        String(user.username || "")
+            .trim()
+            .toLowerCase() === "admin"
+    ) {
+
+        return "";
+
+    }
+
+
+    // ================================================
+    // CUSTOMER
+    // ================================================
+
+    return (
+        localStorage.getItem(
+            "spreadsheetId"
+        ) || ""
+    );
+
+}
+
+
 // ================= LOAD SETTINGS =================
 
 async function loadSettings(){
 
     try{
 
-        const res = await fetch(API_URL + "?action=settings");
-        const data = await res.json();
+        const spreadsheetId =
+            getCustomerSpreadsheetId();
 
-        document.getElementById("bride").value = data.bride || "";
-        document.getElementById("groom").value = data.groom || "";
-        document.getElementById("venue").value = data.venue || "";
-        document.getElementById("invitationLink").value = data.invitationLink || "";
-        document.getElementById("logo").value = data.logo || "";
-        document.getElementById("background").value = data.background || "";
-        document.getElementById("cardBackground").value = data.cardBackground || "";
+
+        // ============================================
+        // BUAT URL SETTINGS
+        // ============================================
+
+        let url =
+            API_URL +
+            "?action=settings";
+
+
+        // Customer
+        if (spreadsheetId) {
+
+            url +=
+                "&spreadsheetId=" +
+                encodeURIComponent(
+                    spreadsheetId
+                );
+
+        }
+
+
+        console.log(
+            "📥 LOAD SETTINGS:",
+            url
+        );
+
+
+        const res =
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const data =
+            await res.json();
+
+
+        console.log(
+            "⚙ SETTINGS RESPONSE:",
+            data
+        );
+
+
+        // ============================================
+        // DATA SETTINGS
+        // ============================================
+
+        document.getElementById("bride").value =
+            data.bride || "";
+
+
+        document.getElementById("groom").value =
+            data.groom || "";
+
+
+        document.getElementById("venue").value =
+            data.venue || "";
+
+
+        document.getElementById("invitationLink").value =
+            data.invitationLink || "";
+
+
+        document.getElementById("logo").value =
+            data.logo || "";
+
+
+        document.getElementById("background").value =
+            data.background || "";
+
+
+        document.getElementById("cardBackground").value =
+            data.cardBackground || "";
+
+
+        // ============================================
+        // CARD BACKGROUND PREVIEW
+        // ============================================
 
         if(data.cardBackground){
 
-        document.getElementById("cardBgPreview").src =
-        data.cardBackground;
+            document.getElementById(
+                "cardBgPreview"
+            ).src =
+                data.cardBackground;
 
-        document.getElementById("cardBgPreview").style.display="block";
+
+            document.getElementById(
+                "cardBgPreview"
+            ).style.display =
+                "block";
 
         }
+
+
+        // ============================================
+        // LOGO PREVIEW
+        // ============================================
+
         if(data.logo){
 
-            document.getElementById("logoPreview").src = data.logo;
-            document.getElementById("logoPreview").style.display="block";
+            document.getElementById(
+                "logoPreview"
+            ).src =
+                data.logo;
+
+
+            document.getElementById(
+                "logoPreview"
+            ).style.display =
+                "block";
 
         }
+
+
+        // ============================================
+        // BACKGROUND PREVIEW
+        // ============================================
 
         if(data.background){
 
-            document.getElementById("bgPreview").src = data.background;
-            document.getElementById("bgPreview").style.display="block";
+            document.getElementById(
+                "bgPreview"
+            ).src =
+                data.background;
+
+
+            document.getElementById(
+                "bgPreview"
+            ).style.display =
+                "block";
 
         }
 
+
+        // ============================================
+        // DATE
+        // ============================================
 
         if(data.date){
 
-            const d = new Date(data.date);
+            const d =
+                new Date(data.date);
 
-            document.getElementById("date").value =
-                d.toISOString().split("T")[0];
+
+            document.getElementById(
+                "date"
+            ).value =
+                d.toISOString()
+                    .split("T")[0];
 
         }
 
-        document.getElementById("theme").value =
-            data.theme || "emerald";
 
-        applyTheme(data.theme || "emerald");
+        // ============================================
+        // THEME
+        // ============================================
 
-        document.getElementById("username").value =
-    data.username || "admin";
+        document.getElementById(
+            "theme"
+        ).value =
+            data.theme ||
+            "emerald";
 
-document.getElementById("password").value =
-    data.password || "admin123";
-     
-      document.getElementById("waTemplate").value =
-    data.waTemplate || "";
 
-    }catch(err){
+        applyTheme(
+            data.theme ||
+            "emerald"
+        );
 
-        console.log(err);
+
+        // ============================================
+        // USERNAME
+        // ============================================
+
+        document.getElementById(
+            "username"
+        ).value =
+            data.username ||
+            "admin";
+
+
+        // ============================================
+        // PASSWORD
+        // ============================================
+
+        document.getElementById(
+            "password"
+        ).value =
+            data.password ||
+            "admin123";
+
+
+        // ============================================
+        // WHATSAPP TEMPLATE
+        // ============================================
+
+        document.getElementById(
+            "waTemplate"
+        ).value =
+            data.waTemplate ||
+            "";
+
+
+    }
+    catch(err){
+
+        console.error(
+            "LOAD SETTINGS ERROR:",
+            err
+        );
 
     }
 
 }
+
 
 // ================= SAVE SETTINGS =================
 
 async function saveSettings(){
 
-    const body={
+    const spreadsheetId =
+        getCustomerSpreadsheetId();
 
-    action:"saveSettings",
 
-    bride:document.getElementById("bride").value,
+    // ================================================
+    // BODY
+    // ================================================
 
-    groom:document.getElementById("groom").value,
+    const body = {
 
-    date:document.getElementById("date").value,
+        action:
+            "saveSettings",
 
-    venue:document.getElementById("venue").value,
 
-    invitationLink: document.getElementById("invitationLink").value,
+        // ============================================
+        // CUSTOMER SPREADSHEET
+        // ============================================
 
-    logo:document.getElementById("logo").value,
+        spreadsheetId:
+            spreadsheetId,
 
-    background:document.getElementById("background").value,
 
-    theme:document.getElementById("theme").value,
+        bride:
+            document.getElementById(
+                "bride"
+            ).value,
 
-    username:document.getElementById("username").value,
 
-    password:document.getElementById("password").value,
+        groom:
+            document.getElementById(
+                "groom"
+            ).value,
 
-    waTemplate:document.getElementById("waTemplate").value,
-    
-    cardBackground:document.getElementById("cardBackground").value,
 
-};
+        date:
+            document.getElementById(
+                "date"
+            ).value,
+
+
+        venue:
+            document.getElementById(
+                "venue"
+            ).value,
+
+
+        invitationLink:
+            document.getElementById(
+                "invitationLink"
+            ).value,
+
+
+        logo:
+            document.getElementById(
+                "logo"
+            ).value,
+
+
+        background:
+            document.getElementById(
+                "background"
+            ).value,
+
+
+        theme:
+            document.getElementById(
+                "theme"
+            ).value,
+
+
+        username:
+            document.getElementById(
+                "username"
+            ).value,
+
+
+        password:
+            document.getElementById(
+                "password"
+            ).value,
+
+
+        waTemplate:
+            document.getElementById(
+                "waTemplate"
+            ).value,
+
+
+        cardBackground:
+            document.getElementById(
+                "cardBackground"
+            ).value
+
+    };
+
+
+    console.log(
+        "📤 SAVE SETTINGS:",
+        body
+    );
+
 
     try{
 
-        const res = await fetch(API_URL,{
+        const res =
+            await fetch(
+                API_URL,
+                {
 
-            method:"POST",
+                    method:
+                        "POST",
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            body:JSON.stringify(body)
+                    body:
+                        JSON.stringify(
+                            body
+                        )
 
-        });
+                }
+            );
 
-        const result = await res.json();
 
-        alert(result.message);
+        const result =
+            await res.json();
 
-    }catch(err){
 
-        console.log(err);
+        console.log(
+            "SAVE SETTINGS RESPONSE:",
+            result
+        );
 
-        alert("Gagal menyimpan.");
+
+        alert(
+            result.message ||
+            "Pengaturan berhasil disimpan."
+        );
+
+
+    }
+    catch(err){
+
+        console.error(
+            "SAVE SETTINGS ERROR:",
+            err
+        );
+
+
+        alert(
+            "Gagal menyimpan."
+        );
 
     }
 
 }
 
+
 // ================= THEME =================
 
 function applyTheme(theme){
 
-    const themes={
+    const themes = {
 
         emerald:{
             primary:"#214E43",
@@ -171,76 +477,143 @@ function applyTheme(theme){
 
     };
 
-    const c=themes[theme];
 
-    document.documentElement.style.setProperty("--primary",c.primary);
-    document.documentElement.style.setProperty("--secondary",c.secondary);
-    document.documentElement.style.setProperty("--accent",c.accent);
+    const c =
+        themes[theme] ||
+        themes.emerald;
+
+
+    document.documentElement.style.setProperty(
+        "--primary",
+        c.primary
+    );
+
+
+    document.documentElement.style.setProperty(
+        "--secondary",
+        c.secondary
+    );
+
+
+    document.documentElement.style.setProperty(
+        "--accent",
+        c.accent
+    );
 
 }
 
-document
-.getElementById("theme")
-.addEventListener("change",function(){
-
-    applyTheme(this.value);
-
-});
 
 document
-.getElementById("saveBtn")
-.addEventListener("click",saveSettings);
+    .getElementById("theme")
+    .addEventListener(
+        "change",
+        function(){
+
+            applyTheme(
+                this.value
+            );
+
+        }
+    );
+
+
+document
+    .getElementById("saveBtn")
+    .addEventListener(
+        "click",
+        saveSettings
+    );
+
+
 // ================= UPLOAD FILE =================
 
 async function uploadFile(file){
 
-    return new Promise((resolve,reject)=>{
+    return new Promise(
+        (resolve,reject)=>{
 
-        const reader = new FileReader();
+            const reader =
+                new FileReader();
 
-        reader.onload = async function(e){
 
-            try{
+            reader.onload =
+                async function(e){
 
-                const base64 = e.target.result.split(",")[1];
+                    try{
 
-                const res = await fetch(API_URL,{
+                        const base64 =
+                            e.target.result
+                                .split(",")[1];
 
-                    method:"POST",
 
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
+                        const spreadsheetId =
+                            getCustomerSpreadsheetId();
 
-                    body:JSON.stringify({
 
-                        action:"uploadImage",
+                        const res =
+                            await fetch(
+                                API_URL,
+                                {
 
-                        base64:base64,
+                                    method:
+                                        "POST",
 
-                        fileName:file.name,
+                                    headers:{
+                                        "Content-Type":
+                                            "application/json"
+                                    },
 
-                        mimeType:file.type
+                                    body:
+                                        JSON.stringify({
 
-                    })
+                                            action:
+                                                "uploadImage",
 
-                });
+                                            spreadsheetId:
+                                                spreadsheetId,
 
-                const data = await res.json();
+                                            base64:
+                                                base64,
 
-                resolve(data.url);
+                                            fileName:
+                                                file.name,
 
-            }catch(err){
+                                            mimeType:
+                                                file.type
 
-                reject(err);
+                                        })
 
-            }
+                                }
+                            );
 
-        };
 
-        reader.readAsDataURL(file);
+                        const data =
+                            await res.json();
 
-    });
+
+                        resolve(
+                            data.url
+                        );
+
+
+                    }
+                    catch(err){
+
+                        reject(
+                            err
+                        );
+
+                    }
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
 
 }
 
@@ -248,84 +621,191 @@ async function uploadFile(file){
 // ================= LOGO =================
 
 document
-.getElementById("logoFile")
-.addEventListener("change",async function(){
+    .getElementById("logoFile")
+    .addEventListener(
+        "change",
+        async function(){
 
-    if(this.files.length===0) return;
+            if(
+                this.files.length === 0
+            ) return;
 
-    const file=this.files[0];
 
-    document.getElementById("logoPreview").src =
-        URL.createObjectURL(file);
+            const file =
+                this.files[0];
 
-    document.getElementById("logoPreview").style.display="block";
 
-    try{
+            document.getElementById(
+                "logoPreview"
+            ).src =
+                URL.createObjectURL(
+                    file
+                );
 
-        const url=await uploadFile(file);
 
-        document.getElementById("logo").value=url;
+            document.getElementById(
+                "logoPreview"
+            ).style.display =
+                "block";
 
-    }catch(err){
 
-        alert("Upload logo gagal");
+            try{
 
-        console.log(err);
+                const url =
+                    await uploadFile(
+                        file
+                    );
 
-    }
 
-});
+                document.getElementById(
+                    "logo"
+                ).value =
+                    url;
+
+
+            }
+            catch(err){
+
+                alert(
+                    "Upload logo gagal"
+                );
+
+
+                console.log(
+                    err
+                );
+
+            }
+
+        }
+    );
 
 
 // ================= BACKGROUND =================
 
 document
-.getElementById("bgFile")
-.addEventListener("change",async function(){
+    .getElementById("bgFile")
+    .addEventListener(
+        "change",
+        async function(){
 
-    if(this.files.length===0) return;
+            if(
+                this.files.length === 0
+            ) return;
 
-    const file=this.files[0];
 
-    document.getElementById("bgPreview").src =
-        URL.createObjectURL(file);
+            const file =
+                this.files[0];
 
-    document.getElementById("bgPreview").style.display="block";
 
-    try{
+            document.getElementById(
+                "bgPreview"
+            ).src =
+                URL.createObjectURL(
+                    file
+                );
 
-        const url=await uploadFile(file);
 
-        document.getElementById("background").value=url;
+            document.getElementById(
+                "bgPreview"
+            ).style.display =
+                "block";
 
-    }catch(err){
 
-        alert("Upload background gagal");
+            try{
 
-        console.log(err);
+                const url =
+                    await uploadFile(
+                        file
+                    );
 
-    }
 
-});
+                document.getElementById(
+                    "background"
+                ).value =
+                    url;
+
+
+            }
+            catch(err){
+
+                alert(
+                    "Upload background gagal"
+                );
+
+
+                console.log(
+                    err
+                );
+
+            }
+
+        }
+    );
+
+
+// ================= CARD BACKGROUND =================
 
 document
-.getElementById("cardBgFile")
-.addEventListener("change",async function(){
+    .getElementById("cardBgFile")
+    .addEventListener(
+        "change",
+        async function(){
 
-if(this.files.length===0)return;
+            if(
+                this.files.length === 0
+            ) return;
 
-const file=this.files[0];
 
-document.getElementById("cardBgPreview").src=
-URL.createObjectURL(file);
+            const file =
+                this.files[0];
 
-document.getElementById("cardBgPreview").style.display="block";
 
-const url=await uploadFile(file);
+            document.getElementById(
+                "cardBgPreview"
+            ).src =
+                URL.createObjectURL(
+                    file
+                );
 
-document.getElementById("cardBackground").value=url;
 
-});
+            document.getElementById(
+                "cardBgPreview"
+            ).style.display =
+                "block";
+
+
+            try{
+
+                const url =
+                    await uploadFile(
+                        file
+                    );
+
+
+                document.getElementById(
+                    "cardBackground"
+                ).value =
+                    url;
+
+
+            }
+            catch(err){
+
+                alert(
+                    "Upload background QR gagal"
+                );
+
+
+                console.log(
+                    err
+                );
+
+            }
+
+        }
+    );
+
 
 // ================= INIT =================
 
