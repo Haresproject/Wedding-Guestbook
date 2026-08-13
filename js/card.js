@@ -115,9 +115,9 @@ if (qr) {
 
         text: String(guest.id),
 
-        width: 300,
+        width: 160,
 
-        height: 300,
+        height: 160,
 
         correctLevel:
             QRCode.CorrectLevel.M
@@ -125,21 +125,14 @@ if (qr) {
     });
 
 }
-        // ==========================================
-        // TUNGGU SEMUA GAMBAR
-        // ==========================================
 
-        await Promise.all([
+     // ==========================================
+    // TUNGGU BACKGROUND
+    // ==========================================
 
-            waitImage(bg),
-
-            waitImage(qr)
-
-        ]);
-
+        await waitImage(bg);
 
         console.log("Kartu sudah siap");
-
 
         // ==========================================
         // AUTO DOWNLOAD
