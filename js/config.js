@@ -8,6 +8,8 @@ const CONFIG = {
 
   LICENSE: "",
 
-  SUPER_ADMIN: false
+  SUPER_ADMIN: true,
+
+  SUPER_ADMIN_SPREADSHEET_ID: "1UD0JkA5648XBuSETCMzukduZD_F-te-fZLc0kAOoM3Y"
 
 };

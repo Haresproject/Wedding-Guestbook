@@ -18,8 +18,17 @@ const API_URL = CONFIG.API_URL;
     const IS_SUPER_ADMIN =
         USER.role === "superadmin";
 
+
+    // =================================================
+    // SPREADSHEET ID
+    // =================================================
+    // Super Admin = Spreadsheet milik kamu
+    // Customer    = Spreadsheet dari license
+
     const SPREADSHEET_ID =
-        localStorage.getItem("spreadsheetId") || "";
+        IS_SUPER_ADMIN
+            ? (CONFIG.SUPER_ADMIN_SPREADSHEET_ID || "")
+            : (localStorage.getItem("spreadsheetId") || "");
 
 
     // =================================================
@@ -49,6 +58,22 @@ const API_URL = CONFIG.API_URL;
             "login.html";
 
         return;
+
+    }
+
+
+    // =================================================
+    // SUPER ADMIN WAJIB PUNYA SPREADSHEET
+    // =================================================
+
+    if (
+        IS_SUPER_ADMIN &&
+        !SPREADSHEET_ID
+    ) {
+
+        console.error(
+            "SUPER_ADMIN_SPREADSHEET_ID belum diatur di config.js"
+        );
 
     }
 
@@ -208,10 +233,23 @@ const API_URL = CONFIG.API_URL;
 
 
     // =====================================================
-    // LOAD DASHBOARD CUSTOMER
+    // LOAD DASHBOARD
     // =====================================================
 
     async function loadDashboard() {
+
+        // Jangan request kalau ID belum tersedia
+
+        if (!SPREADSHEET_ID) {
+
+            console.error(
+                "Spreadsheet ID kosong."
+            );
+
+            return;
+
+        }
+
 
         try {
 
@@ -702,28 +740,7 @@ const API_URL = CONFIG.API_URL;
 
             setupAdminMenu();
 
-
-            // =============================================
-            // SUPER ADMIN
-            // =============================================
-
-            if (IS_SUPER_ADMIN) {
-
-                console.log(
-                    "👑 Super Admin Dashboard aktif"
-                );
-
-                return;
-
-            }
-
-
-            // =============================================
-            // CUSTOMER
-            // =============================================
-
             loadDashboard();
-
 
             setInterval(
                 loadDashboard,
