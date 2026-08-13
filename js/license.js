@@ -280,9 +280,9 @@ console.log(
 
 
     showLicenseMessage(
-        "License berhasil diaktifkan! Mengarahkan ke dashboard...",
-        "success"
-    );
+    "License berhasil diaktifkan! Silakan login...",
+    "success"
+);
 
 
     // ================= MASUK DASHBOARD =================
