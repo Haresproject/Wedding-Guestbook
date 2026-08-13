@@ -10,29 +10,94 @@ const DOMAIN =
 
 
 // =====================================================
+// ELEMENT
+// =====================================================
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const usernameElement =
+    document.getElementById("username");
+
+const passwordElement =
+    document.getElementById("password");
+
+const licenseElement =
+    document.getElementById("license");
+
+const licenseBox =
+    document.getElementById("licenseBox");
+
+const button =
+    document.getElementById("loginButton");
+
+const loading =
+    document.getElementById("loading");
+
+const message =
+    document.getElementById("message");
+
+
+// =====================================================
+// DETEKSI USERNAME
+// =====================================================
+
+if (usernameElement) {
+
+    usernameElement.addEventListener(
+        "input",
+        function () {
+
+            const username =
+                this.value.trim().toLowerCase();
+
+            // Admin tidak membutuhkan license
+            if (username === "admin") {
+
+                if (licenseBox) {
+                    licenseBox.classList.remove("show");
+                }
+
+                if (licenseElement) {
+                    licenseElement.required = false;
+                }
+
+            }
+
+            // Customer membutuhkan license
+            else {
+
+                if (licenseBox) {
+                    licenseBox.classList.add("show");
+                }
+
+                if (licenseElement) {
+                    licenseElement.required = true;
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
 // LOGIN
 // =====================================================
 
 async function login() {
 
-    const licenseElement =
-        document.getElementById("license");
+    const username =
+        usernameElement
+            ? usernameElement.value.trim()
+            : "";
 
-    const usernameElement =
-        document.getElementById("username");
-
-    const passwordElement =
-        document.getElementById("password");
-
-    const button =
-        document.getElementById("loginButton");
-
-    const loading =
-        document.getElementById("loading");
-
-    const message =
-        document.getElementById("message");
-
+    const password =
+        passwordElement
+            ? passwordElement.value
+            : "";
 
     const license =
         licenseElement
@@ -40,26 +105,25 @@ async function login() {
             : "";
 
 
-    const username =
-        usernameElement
-            ? usernameElement.value.trim()
-            : "";
-
-
-    const password =
-        passwordElement
-            ? passwordElement.value
-            : "";
-
-
     // =================================================
-    // VALIDASI USERNAME & PASSWORD
+    // VALIDASI
     // =================================================
 
-    if (!username || !password) {
+    if (!username) {
 
         showMessage(
-            "Username dan password wajib diisi."
+            "Username wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    if (!password) {
+
+        showMessage(
+            "Password wajib diisi."
         );
 
         return;
@@ -99,8 +163,9 @@ async function login() {
 
     try {
 
+
         // =================================================
-        // 1. SUPER ADMIN LOGIN
+        // SUPER ADMIN
         // =================================================
 
         if (
@@ -108,7 +173,7 @@ async function login() {
         ) {
 
             console.log(
-                "LOGIN SUPER ADMIN"
+                "LOGIN SUPER ADMIN..."
             );
 
 
@@ -116,6 +181,7 @@ async function login() {
                 await fetch(
                     API_URL,
                     {
+
                         method: "POST",
 
                         headers: {
@@ -136,6 +202,7 @@ async function login() {
                                     password
 
                             })
+
                     }
                 );
 
@@ -150,10 +217,6 @@ async function login() {
             );
 
 
-            // =================================================
-            // SUPER ADMIN GAGAL
-            // =================================================
-
             if (!data.success) {
 
                 showMessage(
@@ -167,7 +230,7 @@ async function login() {
 
 
             // =================================================
-            // SUPER ADMIN BERHASIL
+            // SIMPAN LOGIN SUPER ADMIN
             // =================================================
 
             localStorage.setItem(
@@ -181,7 +244,6 @@ async function login() {
                 JSON.stringify({
 
                     username:
-                        data.username ||
                         "admin",
 
                     role:
@@ -194,7 +256,8 @@ async function login() {
             );
 
 
-            // Bersihkan data customer lama
+            // Hapus data customer lama
+
             localStorage.removeItem(
                 "spreadsheetId"
             );
@@ -213,9 +276,7 @@ async function login() {
             );
 
 
-            // =================================================
-            // MASUK HALAMAN SUPER ADMIN
-            // =================================================
+            // Masuk License Management
 
             window.location.href =
                 "license.html";
@@ -227,7 +288,7 @@ async function login() {
 
 
         // =================================================
-        // 2. CUSTOMER
+        // CUSTOMER
         // =================================================
 
         if (!license) {
@@ -242,7 +303,7 @@ async function login() {
 
 
         // =================================================
-        // 3. CEK LICENSE
+        // CEK LICENSE
         // =================================================
 
         const licenseUrl =
@@ -272,10 +333,6 @@ async function login() {
             licenseData
         );
 
-
-        // =================================================
-        // LICENSE GAGAL
-        // =================================================
 
         if (!licenseData.success) {
 
@@ -309,36 +366,14 @@ async function login() {
 
 
         // =================================================
-        // SIMPAN CUSTOMER
-        // =================================================
-
-        localStorage.setItem(
-            "spreadsheetId",
-            spreadsheetId
-        );
-
-
-        localStorage.setItem(
-            "license",
-            license
-        );
-
-
-        localStorage.setItem(
-            "owner",
-            licenseData.owner ||
-            ""
-        );
-
-
-        // =================================================
-        // 4. LOGIN CUSTOMER
+        // LOGIN CUSTOMER
         // =================================================
 
         const response =
             await fetch(
                 API_URL,
                 {
+
                     method: "POST",
 
                     headers: {
@@ -362,6 +397,7 @@ async function login() {
                                 spreadsheetId
 
                         })
+
                 }
             );
 
@@ -376,16 +412,7 @@ async function login() {
         );
 
 
-        // =================================================
-        // LOGIN CUSTOMER GAGAL
-        // =================================================
-
         if (!data.success) {
-
-            localStorage.removeItem(
-                "spreadsheetId"
-            );
-
 
             showMessage(
                 data.message ||
@@ -398,12 +425,27 @@ async function login() {
 
 
         // =================================================
-        // CUSTOMER LOGIN BERHASIL
+        // SIMPAN CUSTOMER
         // =================================================
 
         localStorage.setItem(
             "login",
             "true"
+        );
+
+        localStorage.setItem(
+            "spreadsheetId",
+            spreadsheetId
+        );
+
+        localStorage.setItem(
+            "license",
+            license
+        );
+
+        localStorage.setItem(
+            "owner",
+            licenseData.owner || ""
         );
 
 
@@ -428,17 +470,20 @@ async function login() {
         );
 
 
+        console.log(
+            "CUSTOMER LOGIN BERHASIL"
+        );
+
+
         // =================================================
-        // MASUK DASHBOARD CUSTOMER
+        // DASHBOARD
         // =================================================
 
         window.location.href =
             "dashboard.html";
 
-    }
 
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "LOGIN ERROR:",
@@ -450,10 +495,8 @@ async function login() {
             "Tidak dapat terhubung ke server."
         );
 
-    }
 
-
-    finally {
+    } finally {
 
         if (loading) {
 
@@ -484,12 +527,6 @@ async function login() {
 
 function showMessage(text) {
 
-    const message =
-        document.getElementById(
-            "message"
-        );
-
-
     if (!message) {
         return;
     }
@@ -510,12 +547,12 @@ function showMessage(text) {
 
 
 // =====================================================
-// FORM LOGIN
+// SUBMIT
 // =====================================================
 
-document
-    .getElementById("loginForm")
-    ?.addEventListener(
+if (loginForm) {
+
+    loginForm.addEventListener(
         "submit",
         function (e) {
 
@@ -525,3 +562,5 @@ document
 
         }
     );
+
+}

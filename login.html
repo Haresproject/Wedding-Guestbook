@@ -5,12 +5,17 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Login - Buku Tamu Digital</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
     <style>
 
@@ -21,10 +26,13 @@
         body {
 
             margin: 0;
+
             min-height: 100vh;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             font-family: Arial, sans-serif;
@@ -40,7 +48,9 @@
         .login-container {
 
             width: 100%;
+
             max-width: 430px;
+
             padding: 20px;
 
         }
@@ -65,12 +75,15 @@
         .login-icon {
 
             width: 75px;
+
             height: 75px;
 
             margin: 0 auto 20px;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             border-radius: 50%;
@@ -93,13 +106,29 @@
 
         .subtitle {
 
-            margin: 0 0 25px;
+            margin: 0 0 20px;
 
             color: #777;
 
             font-size: 14px;
 
             line-height: 1.6;
+
+        }
+
+        .admin-info {
+
+            margin-bottom: 20px;
+
+            padding: 10px 12px;
+
+            background: #f5f5f5;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            color: #666;
 
         }
 
@@ -188,6 +217,20 @@
 
         }
 
+        .license-box {
+
+            display: none;
+
+            margin-top: 15px;
+
+        }
+
+        .license-box.show {
+
+            display: block;
+
+        }
+
         .message {
 
             display: none;
@@ -204,8 +247,6 @@
 
         .message.error {
 
-            display: block;
-
             background: #ffebee;
 
             color: #c62828;
@@ -213,8 +254,6 @@
         }
 
         .message.success {
-
-            display: block;
 
             background: #e8f5e9;
 
@@ -241,28 +280,6 @@
             font-size: 12px;
 
             color: #999;
-
-        }
-
-        .hidden {
-
-            display: none !important;
-
-        }
-
-        .license-info {
-
-            margin-bottom: 15px;
-
-            padding: 10px;
-
-            background: #f5f5f5;
-
-            border-radius: 8px;
-
-            font-size: 13px;
-
-            color: #555;
 
         }
 
@@ -305,139 +322,38 @@
         </div>
 
 
-        <h1>Login</h1>
+        <h1>
+            Wedding Guestbook
+        </h1>
 
 
         <p class="subtitle">
-            Masuk untuk mengelola
-            Buku Tamu Digital Anda.
+            Silakan login untuk mengakses sistem.
         </p>
 
 
-        <!-- ================= LICENSE ================= -->
+        <div class="admin-info">
 
-        <form id="licenseForm">
+            🔐 <b>Super Admin</b><br>
 
+            Gunakan username:
+            <b>admin</b>
 
-            <div class="form-group">
-
-                <label for="license">
-
-                    License Key
-
-                </label>
+        </div>
 
 
-                <input
-                    type="text"
-                    id="license"
-                    class="login-input"
-                    placeholder="Contoh: HL-XXXXXXXXXXXX"
-                    autocomplete="off"
-                    required
-                >
-
-            </div>
-
-
-            <button
-                type="submit"
-                id="licenseButton"
-                class="login-button"
-            >
-
-                VERIFIKASI LICENSE
-
-            </button>
-
-
-        </form>
-
-
-        <!-- ================= CUSTOMER LOGIN ================= -->
+        <!-- ================= LOGIN ================= -->
 
         <form id="loginForm">
 
-    <div class="form-group">
 
-        <label for="license">
-            License
-        </label>
-
-        <input
-            type="text"
-            id="license"
-            class="login-input"
-            placeholder="Contoh: HL-XXXXXXXXXXXX"
-            autocomplete="off"
-            required
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label for="username">
-            Username
-        </label>
-
-        <input
-            type="text"
-            id="username"
-            class="login-input"
-            placeholder="Masukkan username"
-            autocomplete="username"
-            required
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label for="password">
-            Password
-        </label>
-
-        <input
-            type="password"
-            id="password"
-            class="login-input"
-            placeholder="Masukkan password"
-            autocomplete="current-password"
-            required
-        >
-
-    </div>
-
-
-    <button
-        type="submit"
-        id="loginButton"
-        class="login-button"
-    >
-        LOGIN
-    </button>
-
-</form>
-
-
-            <div
-                id="licenseInfo"
-                class="license-info"
-            >
-            </div>
-
+            <!-- USERNAME -->
 
             <div class="form-group">
 
                 <label for="username">
-
                     Username
-
                 </label>
-
 
                 <input
                     type="text"
@@ -451,14 +367,13 @@
             </div>
 
 
+            <!-- PASSWORD -->
+
             <div class="form-group">
 
                 <label for="password">
-
                     Password
-
                 </label>
-
 
                 <input
                     type="password"
@@ -468,6 +383,32 @@
                     autocomplete="current-password"
                     required
                 >
+
+            </div>
+
+
+            <!-- LICENSE CUSTOMER -->
+
+            <div
+                id="licenseBox"
+                class="license-box"
+            >
+
+                <div class="form-group">
+
+                    <label for="license">
+                        License Key
+                    </label>
+
+                    <input
+                        type="text"
+                        id="license"
+                        class="login-input"
+                        placeholder="HL-XXXXXXXXXXXX"
+                        autocomplete="off"
+                    >
+
+                </div>
 
             </div>
 
@@ -486,6 +427,8 @@
         </form>
 
 
+        <!-- LOADING -->
+
         <div
             id="loading"
             class="loading"
@@ -495,6 +438,8 @@
 
         </div>
 
+
+        <!-- MESSAGE -->
 
         <div
             id="message"

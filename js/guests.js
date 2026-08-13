@@ -2,6 +2,9 @@ const API_URL = CONFIG.API_URL;
 
 let guests = [];
 
+const spreadsheetId =
+    localStorage.getItem("spreadsheetId") || "";
+
 // Pagination
 let currentPage = 1;
 const rowsPerPage = 10;
@@ -10,7 +13,14 @@ async function loadGuests() {
 
     try {
 
-        const response = await fetch(API_URL + "?action=guests&t=" + Date.now());
+        const response = await fetch(
+    API_URL +
+    "?action=guests" +
+    "&spreadsheetId=" +
+    encodeURIComponent(spreadsheetId) +
+    "&t=" +
+    Date.now()
+);
 
         guests = await response.json();
 
@@ -101,11 +111,13 @@ async function manualCheckin(id){
 
             body:JSON.stringify({
 
-                action:"manualCheckin",
+    action:"manualCheckin",
 
-                id:id
+    id:id,
 
-            })
+    spreadsheetId:spreadsheetId
+
+})
 
         });
 
@@ -213,11 +225,13 @@ async function importExcel(e){
 
                 body:JSON.stringify({
 
-                    action:"importGuests",
+    action:"importGuests",
 
-                    guests:rows
+    guests:rows,
 
-                })
+    spreadsheetId:spreadsheetId
+
+})
 
             });
 
@@ -370,17 +384,17 @@ async function saveGuest(){
                 "Content-Type":"application/json"
             },
 
-            body:JSON.stringify({
+           body:JSON.stringify({
 
-                action:"addGuest",
+    action:"addGuest",
 
-                nama:nama,
-                notes:notes,
-                tipe:tipe,
-                fisik:fisik
+    nama:nama,
+    notes:notes,
+    tipe:tipe,
+    fisik:fisik,
+    spreadsheetId:spreadsheetId
 
-            })
-
+})
         });
 
         const result = await res.json();
