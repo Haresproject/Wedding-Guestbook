@@ -400,7 +400,7 @@ async function activateLicense() {
             function () {
 
                 window.location.href =
-                    "login.html";
+                    "dashboard.html";
 
             },
             1000
