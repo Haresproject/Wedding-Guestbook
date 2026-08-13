@@ -100,19 +100,31 @@ async function load() {
             "assets/card-background.png";
 
 
-        // ==========================================
-        // QR CODE
-        // ==========================================
+// ==========================================
+// QR CODE
+// ==========================================
 
-        const qr =
-            document.getElementById("qr");
+const qr =
+    document.getElementById("qr");
 
-        qr.src =
-            "https://api.qrserver.com/v1/create-qr-code/" +
-            "?size=500x500&data=" +
-            encodeURIComponent(guest.id);
+if (qr) {
 
+    qr.innerHTML = "";
 
+    new QRCode(qr, {
+
+        text: String(guest.id),
+
+        width: 300,
+
+        height: 300,
+
+        correctLevel:
+            QRCode.CorrectLevel.M
+
+    });
+
+}
         // ==========================================
         // TUNGGU SEMUA GAMBAR
         // ==========================================
