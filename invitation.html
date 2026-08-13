@@ -100,6 +100,148 @@ th,td{
     color:white;
 
 }
+.edit-btn{
+    background:#6c63ff;
+    color:white;
+}
+
+.delete-btn{
+    background:#dc3545;
+    color:white;
+}
+
+.edit-btn:hover{
+    background:#554ee6;
+}
+
+.delete-btn:hover{
+    background:#bb2d3b;
+}
+.modal-overlay{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    backdrop-filter:blur(5px);
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+
+.modal-overlay.show{
+
+    display:flex;
+
+}
+
+
+.modal-box{
+
+    width:min(500px,90%);
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.2);
+
+}
+
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+
+.modal-header h2{
+
+    margin:0;
+
+}
+
+
+.modal-close{
+
+    border:none;
+
+    background:none;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    color:#777;
+
+}
+
+
+.form-group{
+
+    margin-bottom:15px;
+
+}
+
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    font-weight:600;
+
+}
+
+
+.form-group input,
+.form-group select{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:11px 13px;
+
+    border:1px solid #ddd;
+
+    border-radius:9px;
+
+    font-size:14px;
+
+}
+
+
+.modal-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
 </style>
 
 </head>
@@ -228,6 +370,145 @@ th,td{
         </table>
 
     </main>
+
+</div>
+<!-- =====================================================
+     EDIT GUEST MODAL
+===================================================== -->
+
+<div id="editGuestModal" class="modal-overlay">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>
+                ✏️ Edit Tamu
+            </h2>
+
+            <button
+                onclick="closeEditModal()"
+                class="modal-close">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>ID</label>
+
+            <input
+                type="text"
+                id="editGuestId"
+                readonly>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Nama Tamu</label>
+
+            <input
+                type="text"
+                id="editGuestName"
+                placeholder="Nama tamu">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Notes</label>
+
+            <input
+                type="text"
+                id="editGuestNotes"
+                placeholder="Contoh: Teman sekolah">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Jenis Undangan</label>
+
+            <select id="editGuestJenis">
+
+                <option value="">
+                    Pilih jenis
+                </option>
+
+                <option value="VIP">
+                    VIP
+                </option>
+
+                <option value="Reguler">
+                    Reguler
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Tipe Tamu</label>
+
+            <select id="editGuestTipe">
+
+                <option value="">
+                    Pilih tipe
+                </option>
+
+                <option value="VIP">
+                    VIP
+                </option>
+
+                <option value="Bridesmaid">
+                    Bridesmaid
+                </option>
+
+                <option value="Keluarga">
+                    Keluarga
+                </option>
+
+                <option value="Tamu">
+                    Tamu
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="action-btn"
+                onclick="closeEditModal()">
+
+                Batal
+
+            </button>
+
+
+            <button
+                class="action-btn edit-btn"
+                onclick="saveGuestEdit()">
+
+                💾 Simpan Perubahan
+
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
 
