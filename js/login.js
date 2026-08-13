@@ -44,8 +44,7 @@ function getSavedUser() {
             localStorage.getItem("user") || "{}"
         );
 
-    }
-    catch (error) {
+    } catch (error) {
 
         return {};
 
@@ -117,25 +116,19 @@ async function login() {
     if (button) {
 
         button.disabled = true;
-
-        button.innerText =
-            "MEMERIKSA...";
+        button.innerText = "MEMERIKSA...";
 
     }
-
 
     if (loading) {
 
-        loading.style.display =
-            "block";
+        loading.style.display = "block";
 
     }
 
-
     if (message) {
 
-        message.style.display =
-            "none";
+        message.style.display = "none";
 
     }
 
@@ -146,9 +139,7 @@ async function login() {
         // SUPER ADMIN
         // =================================================
 
-        if (
-            isSuperAdminUser(username)
-        ) {
+        if (isSuperAdminUser(username)) {
 
             console.log(
                 "LOGIN SUPER ADMIN..."
@@ -195,6 +186,10 @@ async function login() {
             );
 
 
+            // =================================================
+            // LOGIN SUPER ADMIN GAGAL
+            // =================================================
+
             if (!data.success) {
 
                 showMessage(
@@ -208,7 +203,7 @@ async function login() {
 
 
             // =================================================
-            // SIMPAN SUPER ADMIN
+            // SIMPAN SESSION SUPER ADMIN
             // =================================================
 
             localStorage.setItem(
@@ -238,7 +233,7 @@ async function login() {
 
 
             // =================================================
-            // BERSIHKAN DATA CUSTOMER
+            // HAPUS DATA CUSTOMER
             // =================================================
 
             localStorage.removeItem(
@@ -260,12 +255,11 @@ async function login() {
 
 
             // =================================================
-            // TETAP KE DASHBOARD UTAMA
+            // MASUK DASHBOARD
             // =================================================
 
             window.location.href =
                 "dashboard.html";
-
 
             return;
 
@@ -297,13 +291,12 @@ async function login() {
         ) {
 
             console.log(
-                "Customer belum aktivasi license."
+                "Customer belum memiliki license."
             );
 
 
             window.location.href =
                 "activation.html";
-
 
             return;
 
@@ -353,9 +346,7 @@ async function login() {
         // LICENSE INVALID
         // =================================================
 
-        if (
-            !licenseData.success
-        ) {
+        if (!licenseData.success) {
 
             console.warn(
                 "License customer tidak valid."
@@ -378,14 +369,13 @@ async function login() {
             window.location.href =
                 "activation.html";
 
-
             return;
 
         }
 
 
         // =================================================
-        // SPREADSHEET CUSTOMER
+        // AMBIL SPREADSHEET CUSTOMER
         // =================================================
 
         const customerSpreadsheetId =
@@ -393,9 +383,7 @@ async function login() {
             spreadsheetId;
 
 
-        if (
-            !customerSpreadsheetId
-        ) {
+        if (!customerSpreadsheetId) {
 
             showMessage(
                 "Spreadsheet customer belum tersedia."
@@ -418,10 +406,8 @@ async function login() {
                     method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json"
-
                     },
 
                     body:
@@ -456,7 +442,7 @@ async function login() {
 
 
         // =================================================
-        // LOGIN GAGAL
+        // LOGIN CUSTOMER GAGAL
         // =================================================
 
         if (!data.success) {
@@ -554,19 +540,16 @@ async function login() {
 
         if (loading) {
 
-            loading.style.display =
-                "none";
+            loading.style.display = "none";
 
         }
 
 
         if (button) {
 
-            button.disabled =
-                false;
+            button.disabled = false;
 
-            button.innerText =
-                "LOGIN";
+            button.innerText = "LOGIN";
 
         }
 
@@ -582,9 +565,7 @@ async function login() {
 function showMessage(text) {
 
     if (!message) {
-
         return;
-
     }
 
 
@@ -639,9 +620,7 @@ document.addEventListener(
         // =================================================
 
         if (
-            localStorage.getItem(
-                "login"
-            ) === "true"
+            localStorage.getItem("login") === "true"
         ) {
 
             console.log(
@@ -653,56 +632,28 @@ document.addEventListener(
             window.location.href =
                 "dashboard.html";
 
-
             return;
 
         }
 
 
         // =================================================
-        // CEK CUSTOMER
+        // PENTING
         // =================================================
-
-        const savedLicense =
-            localStorage.getItem(
-                "license"
-            ) || "";
-
-        const savedSpreadsheet =
-            localStorage.getItem(
-                "spreadsheetId"
-            ) || "";
-
-
-        // =================================================
-        // BELUM AKTIVASI
-        // =================================================
-
-        if (
-            !savedLicense ||
-            !savedSpreadsheet
-        ) {
-
-            console.log(
-                "Customer belum aktivasi."
-            );
-
-
-            window.location.href =
-                "activation.html";
-
-
-            return;
-
-        }
-
-
-        // =================================================
-        // SUDAH AKTIVASI
+        // JANGAN CEK LICENSE DI SINI.
+        //
+        // Karena login adalah 1 pintu.
+        //
+        // Kita belum tahu orang ini:
+        // - Super Admin
+        // - Customer
+        //
+        // Penentuan dilakukan SETELAH
+        // username dan password dimasukkan.
         // =================================================
 
         console.log(
-            "Customer license ditemukan."
+            "Login page siap."
         );
 
     }
