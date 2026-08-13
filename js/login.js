@@ -15,51 +15,51 @@ const DOMAIN =
 
 async function login() {
 
-    const license =
-        document
-            .getElementById("license")
-            .value
-            .trim()
-            .toUpperCase();
+    const licenseElement =
+        document.getElementById("license");
 
+    const usernameElement =
+        document.getElementById("username");
 
-    const username =
-        document
-            .getElementById("username")
-            .value
-            .trim();
-
-
-    const password =
-        document
-            .getElementById("password")
-            .value;
-
+    const passwordElement =
+        document.getElementById("password");
 
     const button =
         document.getElementById("loginButton");
 
-
     const loading =
         document.getElementById("loading");
-
 
     const message =
         document.getElementById("message");
 
 
+    const license =
+        licenseElement
+            ? licenseElement.value.trim().toUpperCase()
+            : "";
+
+
+    const username =
+        usernameElement
+            ? usernameElement.value.trim()
+            : "";
+
+
+    const password =
+        passwordElement
+            ? passwordElement.value
+            : "";
+
+
     // =================================================
-    // VALIDASI
+    // VALIDASI USERNAME & PASSWORD
     // =================================================
 
-    if (
-        !license ||
-        !username ||
-        !password
-    ) {
+    if (!username || !password) {
 
         showMessage(
-            "License, username dan password wajib diisi."
+            "Username dan password wajib diisi."
         );
 
         return;
@@ -100,7 +100,149 @@ async function login() {
     try {
 
         // =================================================
-        // 1. CEK LICENSE
+        // 1. SUPER ADMIN LOGIN
+        // =================================================
+
+        if (
+            username.toLowerCase() === "admin"
+        ) {
+
+            console.log(
+                "LOGIN SUPER ADMIN"
+            );
+
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                action:
+                                    "loginSuperAdmin",
+
+                                username:
+                                    username,
+
+                                password:
+                                    password
+
+                            })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "SUPER ADMIN RESPONSE:",
+                data
+            );
+
+
+            // =================================================
+            // SUPER ADMIN GAGAL
+            // =================================================
+
+            if (!data.success) {
+
+                showMessage(
+                    data.message ||
+                    "Username atau password Super Admin salah."
+                );
+
+                return;
+
+            }
+
+
+            // =================================================
+            // SUPER ADMIN BERHASIL
+            // =================================================
+
+            localStorage.setItem(
+                "login",
+                "true"
+            );
+
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify({
+
+                    username:
+                        data.username ||
+                        "admin",
+
+                    role:
+                        "superadmin",
+
+                    name:
+                        "Super Admin"
+
+                })
+            );
+
+
+            // Bersihkan data customer lama
+            localStorage.removeItem(
+                "spreadsheetId"
+            );
+
+            localStorage.removeItem(
+                "license"
+            );
+
+            localStorage.removeItem(
+                "owner"
+            );
+
+
+            console.log(
+                "SUPER ADMIN LOGIN BERHASIL"
+            );
+
+
+            // =================================================
+            // MASUK HALAMAN SUPER ADMIN
+            // =================================================
+
+            window.location.href =
+                "license.html";
+
+
+            return;
+
+        }
+
+
+        // =================================================
+        // 2. CUSTOMER
+        // =================================================
+
+        if (!license) {
+
+            showMessage(
+                "License wajib diisi untuk login customer."
+            );
+
+            return;
+
+        }
+
+
+        // =================================================
+        // 3. CEK LICENSE
         // =================================================
 
         const licenseUrl =
@@ -135,9 +277,7 @@ async function login() {
         // LICENSE GAGAL
         // =================================================
 
-        if (
-            !licenseData.success
-        ) {
+        if (!licenseData.success) {
 
             showMessage(
                 licenseData.message ||
@@ -192,7 +332,7 @@ async function login() {
 
 
         // =================================================
-        // 2. LOGIN CUSTOMER
+        // 4. LOGIN CUSTOMER
         // =================================================
 
         const response =
@@ -231,20 +371,16 @@ async function login() {
 
 
         console.log(
-            "LOGIN RESPONSE:",
+            "CUSTOMER LOGIN RESPONSE:",
             data
         );
 
 
         // =================================================
-        // LOGIN GAGAL
+        // LOGIN CUSTOMER GAGAL
         // =================================================
 
         if (!data.success) {
-
-            // Jangan hapus license.
-            // Tapi spreadsheetId boleh dibersihkan
-            // supaya tidak tersangkut akun lain.
 
             localStorage.removeItem(
                 "spreadsheetId"
@@ -262,7 +398,7 @@ async function login() {
 
 
         // =================================================
-        // LOGIN BERHASIL
+        // CUSTOMER LOGIN BERHASIL
         // =================================================
 
         localStorage.setItem(
@@ -293,14 +429,14 @@ async function login() {
 
 
         // =================================================
-        // MASUK DASHBOARD LAMA
+        // MASUK DASHBOARD CUSTOMER
         // =================================================
 
         window.location.href =
             "dashboard.html";
 
-
     }
+
 
     catch (error) {
 
@@ -315,6 +451,7 @@ async function login() {
         );
 
     }
+
 
     finally {
 
