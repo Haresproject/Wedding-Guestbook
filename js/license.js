@@ -11,14 +11,21 @@ const SPREADSHEET_ID_STORAGE_KEY = "spreadsheetId";
 
 function isSuperAdmin() {
 
-    if (
-        typeof CONFIG !== "undefined" &&
-        CONFIG.SUPER_ADMIN === true
-    ) {
-        return true;
-    }
+    const user =
+        JSON.parse(
+            localStorage.getItem("user") || "{}"
+        );
 
-    return false;
+    return (
+        String(user.role || "")
+            .trim()
+            .toLowerCase() === "superadmin"
+        ||
+        String(user.username || "")
+            .trim()
+            .toLowerCase() === "admin"
+    );
+
 }
 
 
@@ -254,16 +261,7 @@ async function activateLicense() {
 
     // ================= LICENSE VALID =================
 
-    saveLicense(license);
-localStorage.setItem(
-    "hareslens_spreadsheet_id",
-    data.spreadsheetId || ""
-);
-saveSpreadsheetId(
-    data.spreadsheetId || ""
-);
-
-
+    
 console.log(
     "✅ License berhasil diaktifkan"
 );
