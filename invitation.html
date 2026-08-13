@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Undangan - Wedding Guestbook</title>
 
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
 
 <style>
+
+/* =====================================================
+   TABLE
+===================================================== */
 
 table{
     width:100%;
@@ -17,67 +34,167 @@ table{
     background:white;
 }
 
-th,td{
+th,
+td{
     padding:12px;
     border-bottom:1px solid #eee;
     text-align:left;
 }
 
+
+/* =====================================================
+   ACTION BUTTON
+===================================================== */
+
 .action-btn{
+
     padding:8px 12px;
+
     border:none;
+
     border-radius:6px;
+
     cursor:pointer;
+
     margin-right:5px;
 
     display:inline-flex;
+
     align-items:center;
+
     gap:6px;
+
+    font-weight:600;
+
 }
 
+.action-btn:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+
+/* =====================================================
+   BUTTON COLORS
+===================================================== */
+
 .preview{
+
     background:#214E43;
+
     color:white;
+
 }
 
 .wa{
+
     background:#25D366;
+
     color:white;
+
 }
 
 .print{
+
     background:#E8C547;
+
+    color:#111;
+
 }
-.delivery{
-    display:inline-block;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:13px;
-    font-weight:bold;
+
+.edit-btn{
+
+    background:#6c63ff;
+
     color:white;
+
+}
+
+.delete-btn{
+
+    background:#dc3545;
+
+    color:white;
+
+}
+
+.edit-btn:hover{
+
+    background:#554ee6;
+
+}
+
+.delete-btn:hover{
+
+    background:#bb2d3b;
+
+}
+
+
+/* =====================================================
+   DELIVERY STATUS
+===================================================== */
+
+.delivery{
+
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    color:white;
+
+    white-space:nowrap;
+
 }
 
 .delivery.wa{
+
     background:#28a745;
+
 }
 
 .delivery.fisik{
-    background:#4ac3f3;
-    color:rgb(250, 250, 250);
+
+    background:#29b6e6;
+
 }
 
 .delivery.both{
+
     background:#ffc107;
+
+    color:#222;
+
 }
 
 .delivery.none{
+
     background:#dc3545;
+
 }
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
 .filter-bar{
 
     display:flex;
+
     flex-wrap:wrap;
+
     gap:10px;
+
     margin:15px 0;
 
 }
@@ -85,11 +202,17 @@ th,td{
 .filter-bar button{
 
     border:none;
+
     padding:10px 16px;
+
     border-radius:8px;
+
     cursor:pointer;
+
     background:#f2f2f2;
+
     font-weight:600;
+
     transition:.2s;
 
 }
@@ -97,26 +220,16 @@ th,td{
 .filter-bar button:hover{
 
     background:#214E43;
+
     color:white;
 
 }
-.edit-btn{
-    background:#6c63ff;
-    color:white;
-}
 
-.delete-btn{
-    background:#dc3545;
-    color:white;
-}
 
-.edit-btn:hover{
-    background:#554ee6;
-}
+/* =====================================================
+   MODAL
+===================================================== */
 
-.delete-btn:hover{
-    background:#bb2d3b;
-}
 .modal-overlay{
 
     display:none;
@@ -137,13 +250,11 @@ th,td{
 
 }
 
-
 .modal-overlay.show{
 
     display:flex;
 
 }
-
 
 .modal-box{
 
@@ -159,7 +270,6 @@ th,td{
 
 }
 
-
 .modal-header{
 
     display:flex;
@@ -172,13 +282,11 @@ th,td{
 
 }
 
-
 .modal-header h2{
 
     margin:0;
 
 }
-
 
 .modal-close{
 
@@ -194,13 +302,11 @@ th,td{
 
 }
 
-
 .form-group{
 
     margin-bottom:15px;
 
 }
-
 
 .form-group label{
 
@@ -211,7 +317,6 @@ th,td{
     font-weight:600;
 
 }
-
 
 .form-group input,
 .form-group select{
@@ -230,7 +335,6 @@ th,td{
 
 }
 
-
 .modal-actions{
 
     display:flex;
@@ -242,37 +346,106 @@ th,td{
     margin-top:20px;
 
 }
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:700px){
+
+    th,
+    td{
+
+        padding:10px 8px;
+
+        font-size:13px;
+
+    }
+
+    .action-btn{
+
+        margin-bottom:5px;
+
+    }
+
+    .delivery{
+
+        font-size:12px;
+
+        padding:5px 9px;
+
+    }
+
+}
+
 </style>
 
 </head>
+
+
 <body>
 
 <div class="layout">
 
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
     <aside class="sidebar">
 
         <div class="logo">
+
             <img src="assets/logo.png">
-            <h2>Wedding Guestbook</h2>
+
+            <h2>
+                Wedding Guestbook
+            </h2>
+
         </div>
+
 
         <nav>
 
-            <a href="dashboard.html">🏠 Dashboard</a>
-            <a href="guests.html">👥 Daftar Tamu</a>
-            <a href="scanner.html">📷 Scanner</a>
+            <a href="dashboard.html">
+                🏠 Dashboard
+            </a>
 
-            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
+            <a href="guests.html">
+                👥 Daftar Tamu
+            </a>
+
+            <a href="scanner.html">
+                📷 Scanner
+            </a>
+
+
+            <a
+                href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display"
+                target="_blank"
+            >
                 📺 Display
             </a>
 
-            <a href="invitation.html" class="active">
+
+            <a
+                href="invitation.html"
+                class="active"
+            >
                 💌 Undangan
             </a>
 
-            <a href="settings.html">⚙ Pengaturan</a>
 
-            <a href="#" onclick="logout()">
+            <a href="settings.html">
+                ⚙ Pengaturan
+            </a>
+
+
+            <a
+                href="#"
+                onclick="logout()"
+            >
                 🚪 Logout
             </a>
 
@@ -280,88 +453,159 @@ th,td{
 
     </aside>
 
+
+
+    <!-- =================================================
+         CONTENT
+    ================================================== -->
+
     <main class="content">
 
+
         <header class="topbar">
-            <h1>💌 Undangan</h1>
+
+            <h1>
+                💌 Undangan
+            </h1>
+
         </header>
+
+
+        <!-- SEARCH -->
+
         <div style="margin:20px 0;">
 
-    <input
-        type="text"
-        id="searchGuest"
-        placeholder="🔍 Cari nama tamu..."
-        onkeyup="searchGuest()"
-        style="
-            width:100%;
-            padding:12px 15px;
-            border:1px solid #ddd;
-            border-radius:10px;
-            font-size:15px;
-        ">
+            <input
+                type="text"
+                id="searchGuest"
+                placeholder="🔍 Cari nama tamu..."
+                onkeyup="searchGuest()"
+                style="
+                    width:100%;
+                    padding:12px 15px;
+                    border:1px solid #ddd;
+                    border-radius:10px;
+                    font-size:15px;
+                    box-sizing:border-box;
+                "
+            >
 
-</div>
-<div class="filter-bar">
+        </div>
 
-    <button onclick="filterDelivery('all')">
-        Semua
-    </button>
 
-    <button onclick="filterDelivery('wa')">
-        🟢 WhatsApp
-    </button>
+        <!-- FILTER -->
 
-    <button onclick="filterDelivery('fisik')">
-        🔵 Fisik
-    </button>
+        <div class="filter-bar">
 
-    <button onclick="filterDelivery('both')">
-        🟡 Keduanya
-    </button>
+            <button
+                onclick="filterDelivery('all')"
+            >
+                Semua
+            </button>
 
-    <button onclick="filterDelivery('none')">
-        🔴 Belum
-    </button>
 
-</div>
-<p
-    id="resultInfo"
-    style="
-        margin-top:10px;
-        color:#777;
-        font-size:14px;
-    ">
-    Menampilkan 0 tamu
-</p>
-<div style="display:flex;justify-content:space-between;align-items:center;margin:15px 0;">
+            <button
+                onclick="filterDelivery('wa')"
+            >
+                🟢 WhatsApp
+            </button>
 
-    <button id="prevBtn" class="action-btn">
-        ◀ Sebelumnya
-    </button>
 
-    <span id="pageInfo">
-        Halaman 1 / 1
-    </span>
+            <button
+                onclick="filterDelivery('fisik')"
+            >
+                🔵 Fisik
+            </button>
 
-    <button id="nextBtn" class="action-btn">
-        Berikutnya ▶
-    </button>
 
-</div>
+            <button
+                onclick="filterDelivery('both')"
+            >
+                🟡 Keduanya
+            </button>
+
+
+            <button
+                onclick="filterDelivery('none')"
+            >
+                🔴 Belum
+            </button>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <p
+            id="resultInfo"
+            style="
+                margin-top:10px;
+                color:#777;
+                font-size:14px;
+            "
+        >
+            Menampilkan 0 tamu
+        </p>
+
+
+        <!-- PAGINATION -->
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin:15px 0;
+            "
+        >
+
+            <button
+                id="prevBtn"
+                class="action-btn"
+            >
+                ◀ Sebelumnya
+            </button>
+
+
+            <span id="pageInfo">
+                Halaman 1 / 1
+            </span>
+
+
+            <button
+                id="nextBtn"
+                class="action-btn"
+            >
+                Berikutnya ▶
+            </button>
+
+        </div>
+
+
+        <!-- TABLE -->
 
         <table>
 
             <thead>
 
                 <tr>
+
                     <th>ID</th>
+
                     <th>Nama</th>
+
                     <th>Notes</th>
-                    <th>Status Pengiriman</th>
+
+                    <th>
+                        Status Pengiriman
+                    </th>
+
                     <th>Aksi</th>
+
                 </tr>
 
             </thead>
+
 
             <tbody id="guestTable">
 
@@ -369,16 +613,24 @@ th,td{
 
         </table>
 
+
     </main>
 
 </div>
+
+
+
 <!-- =====================================================
      EDIT GUEST MODAL
 ===================================================== -->
 
-<div id="editGuestModal" class="modal-overlay">
+<div
+    id="editGuestModal"
+    class="modal-overlay"
+>
 
     <div class="modal-box">
+
 
         <div class="modal-header">
 
@@ -386,69 +638,98 @@ th,td{
                 ✏️ Edit Tamu
             </h2>
 
+
             <button
                 onclick="closeEditModal()"
-                class="modal-close">
-
+                class="modal-close"
+            >
                 ×
-
             </button>
 
         </div>
 
 
+
+        <!-- ID -->
+
         <div class="form-group">
 
-            <label>ID</label>
+            <label>
+                ID
+            </label>
 
             <input
                 type="text"
                 id="editGuestId"
-                readonly>
+                readonly
+            >
 
         </div>
 
 
+
+        <!-- NAMA -->
+
         <div class="form-group">
 
-            <label>Nama Tamu</label>
+            <label>
+                Nama Tamu
+            </label>
 
             <input
                 type="text"
                 id="editGuestName"
-                placeholder="Nama tamu">
+                placeholder="Nama tamu"
+            >
 
         </div>
 
 
+
+        <!-- NOTES -->
+
         <div class="form-group">
 
-            <label>Notes</label>
+            <label>
+                Notes
+            </label>
 
             <input
                 type="text"
                 id="editGuestNotes"
-                placeholder="Contoh: Teman sekolah">
+                placeholder="Contoh: Teman sekolah"
+            >
 
         </div>
 
 
+
+        <!-- =================================================
+             STATUS PENGIRIMAN
+        ================================================== -->
+
         <div class="form-group">
 
-            <label>Jenis Undangan</label>
+            <label>
+                Status Pengiriman
+            </label>
 
-            <select id="editGuestJenis">
+            <select id="editGuestDelivery">
 
-                <option value="">
-                    Pilih jenis
+                <option value="none">
+                    🔴 Belum
                 </option>
 
-                <option value="Fisik">
-                    Fisik
+                <option value="wa">
+                    🟢 WhatsApp
                 </option>
 
-                <option value="Digital">
-                    Digital
+                <option value="fisik">
+                    🔵 Fisik
+                </option>
+
+                <option value="both">
+                    🟡 Keduanya
                 </option>
 
             </select>
@@ -456,9 +737,16 @@ th,td{
         </div>
 
 
+
+        <!-- =================================================
+             TIPE TAMU
+        ================================================== -->
+
         <div class="form-group">
 
-            <label>Tipe Tamu</label>
+            <label>
+                Tipe Tamu
+            </label>
 
             <select id="editGuestTipe">
 
@@ -487,24 +775,27 @@ th,td{
         </div>
 
 
+
+        <!-- ACTION -->
+
         <div class="modal-actions">
+
 
             <button
                 class="action-btn"
-                onclick="closeEditModal()">
-
+                onclick="closeEditModal()"
+            >
                 Batal
-
             </button>
 
 
             <button
                 class="action-btn edit-btn"
-                onclick="saveGuestEdit()">
-
+                onclick="saveGuestEdit()"
+            >
                 💾 Simpan Perubahan
-
             </button>
+
 
         </div>
 
@@ -512,23 +803,51 @@ th,td{
 
 </div>
 
+
+
+<!-- =====================================================
+     SCRIPT
+===================================================== -->
+
 <script src="js/config.js"></script>
+
 <script src="js/invitation.js"></script>
+
 
 <script>
 
-if(localStorage.getItem("login")!="true"){
-    location.href="index.html";
+if(
+    localStorage.getItem("login") !== "true"
+){
+
+    location.href =
+        "index.html";
+
 }
+
 
 function logout(){
 
-    localStorage.removeItem("login");
-    location.href="index.html";
+    localStorage.removeItem(
+        "login"
+    );
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    localStorage.removeItem(
+        "spreadsheetId"
+    );
+
+    location.href =
+        "index.html";
 
 }
 
 </script>
 
+
 </body>
+
 </html>

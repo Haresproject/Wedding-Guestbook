@@ -26,21 +26,19 @@ const SPREADSHEET_ID =
 
 if (!IS_LOGIN) {
 
-    window.location.href = "login.html";
+    window.location.href =
+        "index.html";
 
 }
 
-
-// =====================================================
-// CUSTOMER WAJIB PUNYA SPREADSHEET
-// =====================================================
 
 if (
     !IS_SUPER_ADMIN &&
     !SPREADSHEET_ID
 ) {
 
-    window.location.href = "login.html";
+    window.location.href =
+        "index.html";
 
 }
 
@@ -61,17 +59,12 @@ const rowsPerPage = 10;
 
 
 // =====================================================
-// GET SPREADSHEET ID
+// SPREADSHEET ID
 // =====================================================
 
-function getSpreadsheetId() {
+function getSpreadsheetId(){
 
-    /*
-     * Super Admin menggunakan spreadsheet milik sendiri.
-     * Customer menggunakan spreadsheet dari login.
-     */
-
-    if (IS_SUPER_ADMIN) {
+    if(IS_SUPER_ADMIN){
 
         return (
             CONFIG.SUPER_ADMIN_SPREADSHEET_ID ||
@@ -90,9 +83,9 @@ function getSpreadsheetId() {
 // LOAD GUESTS
 // =====================================================
 
-async function loadGuests() {
+async function loadGuests(){
 
-    try {
+    try{
 
         const spreadsheetId =
             getSpreadsheetId();
@@ -109,17 +102,11 @@ async function loadGuests() {
             Date.now();
 
 
-        console.log(
-            "Load invitation:",
-            url
-        );
-
-
         const res =
             await fetch(
                 url,
                 {
-                    cache: "no-store"
+                    cache:"no-store"
                 }
             );
 
@@ -134,22 +121,23 @@ async function loadGuests() {
         );
 
 
-        if (Array.isArray(data)) {
+        if(Array.isArray(data)){
 
             guests = data;
 
         }
 
-        else if (
+        else if(
             data &&
             Array.isArray(data.guests)
-        ) {
+        ){
 
-            guests = data.guests;
+            guests =
+                data.guests;
 
         }
 
-        else {
+        else{
 
             guests = [];
 
@@ -169,7 +157,7 @@ async function loadGuests() {
 
 
     }
-    catch (err) {
+    catch(err){
 
         console.error(
             "Gagal load undangan:",
@@ -183,10 +171,12 @@ async function loadGuests() {
             );
 
 
-        if (tbody) {
+        if(tbody){
 
             tbody.innerHTML = `
+
                 <tr>
+
                     <td
                         colspan="5"
                         style="
@@ -195,9 +185,13 @@ async function loadGuests() {
                             color:#999;
                         "
                     >
+
                         ❌ Gagal memuat data tamu
+
                     </td>
+
                 </tr>
+
             `;
 
         }
@@ -211,7 +205,7 @@ async function loadGuests() {
 // PREVIEW
 // =====================================================
 
-function previewGuest(id) {
+function previewGuest(id){
 
     window.open(
         "card.html?id=" +
@@ -226,7 +220,7 @@ function previewGuest(id) {
 // RENDER GUESTS
 // =====================================================
 
-function renderGuests(data) {
+function renderGuests(data){
 
     const tbody =
         document.getElementById(
@@ -234,7 +228,7 @@ function renderGuests(data) {
         );
 
 
-    if (!tbody) return;
+    if(!tbody) return;
 
 
     const start =
@@ -257,9 +251,10 @@ function renderGuests(data) {
     let html = "";
 
 
-    if (pageData.length === 0) {
+    if(pageData.length === 0){
 
         html = `
+
             <tr>
 
                 <td
@@ -276,6 +271,7 @@ function renderGuests(data) {
                 </td>
 
             </tr>
+
         `;
 
     }
@@ -328,8 +324,6 @@ function renderGuests(data) {
                 <td>
 
 
-                    <!-- LIHAT -->
-
                     <button
                         class="action-btn preview"
                         onclick="
@@ -344,7 +338,6 @@ function renderGuests(data) {
                     </button>
 
 
-                    <!-- WHATSAPP -->
 
                     <button
                         class="action-btn wa"
@@ -365,7 +358,6 @@ function renderGuests(data) {
                     </button>
 
 
-                    <!-- DOWNLOAD -->
 
                     <button
                         class="action-btn print"
@@ -381,7 +373,6 @@ function renderGuests(data) {
                     </button>
 
 
-                    <!-- EDIT -->
 
                     <button
                         class="action-btn edit-btn"
@@ -397,7 +388,6 @@ function renderGuests(data) {
                     </button>
 
 
-                    <!-- DELETE -->
 
                     <button
                         class="action-btn delete-btn"
@@ -445,7 +435,7 @@ function renderGuests(data) {
         );
 
 
-    if (resultInfo) {
+    if(resultInfo){
 
         resultInfo.innerText =
             `Menampilkan ${from}-${to} dari ${data.length} tamu`;
@@ -461,192 +451,316 @@ function renderGuests(data) {
 
 
 // =====================================================
-// WHATSAPP
+// DELIVERY STATUS
 // =====================================================
 
-async function sendWhatsapp(
-    id,
-    nama
-) {
+function getDeliveryStatus(g){
 
-    try {
-
-        const spreadsheetId =
-            getSpreadsheetId();
+    const wa =
+        g.wa === true ||
+        g.wa === "TRUE";
 
 
-        // =============================================
-        // LOAD SETTINGS CUSTOMER
-        // =============================================
+    const fisik =
+        g.fisik === true ||
+        g.fisik === "TRUE";
 
-        const settingsUrl =
-            API_URL +
-            "?action=settings" +
-            "&spreadsheetId=" +
-            encodeURIComponent(
-                spreadsheetId
-            ) +
-            "&t=" +
-            Date.now();
 
+    if(
+        wa &&
+        fisik
+    ){
+
+        return `
+
+            <span class="delivery both">
+                🟡 Keduanya
+            </span>
+
+        `;
+
+    }
+
+
+    if(wa){
+
+        return `
+
+            <span class="delivery wa">
+                🟢 WhatsApp
+            </span>
+
+        `;
+
+    }
+
+
+    if(fisik){
+
+        return `
+
+            <span class="delivery fisik">
+                🔵 Fisik
+            </span>
+
+        `;
+
+    }
+
+
+    return `
+
+        <span class="delivery none">
+            🔴 Belum
+        </span>
+
+    `;
+
+}
+
+
+// =====================================================
+// GET DELIVERY VALUE
+// =====================================================
+
+function getDeliveryValue(g){
+
+    const wa =
+        g.wa === true ||
+        g.wa === "TRUE";
+
+
+    const fisik =
+        g.fisik === true ||
+        g.fisik === "TRUE";
+
+
+    if(
+        wa &&
+        fisik
+    ){
+
+        return "both";
+
+    }
+
+
+    if(wa){
+
+        return "wa";
+
+    }
+
+
+    if(fisik){
+
+        return "fisik";
+
+    }
+
+
+    return "none";
+
+}
+
+
+// =====================================================
+// EDIT GUEST
+// =====================================================
+
+function editGuest(id){
+
+    const guest =
+        guests.find(
+            g =>
+                String(g.id) ===
+                String(id)
+        );
+
+
+    if(!guest){
+
+        alert(
+            "Data tamu tidak ditemukan."
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "editGuestId"
+    ).value =
+        guest.id || "";
+
+
+    document.getElementById(
+        "editGuestName"
+    ).value =
+        guest.nama || "";
+
+
+    document.getElementById(
+        "editGuestNotes"
+    ).value =
+        guest.notes || "";
+
+
+    // =================================================
+    // STATUS PENGIRIMAN
+    // =================================================
+
+    document.getElementById(
+        "editGuestDelivery"
+    ).value =
+        getDeliveryValue(
+            guest
+        );
+
+
+    // =================================================
+    // TIPE TAMU
+    // =================================================
+
+    document.getElementById(
+        "editGuestTipe"
+    ).value =
+        guest.tipe || "";
+
+
+    document
+        .getElementById(
+            "editGuestModal"
+        )
+        .classList
+        .add("show");
+
+}
+
+
+// =====================================================
+// CLOSE MODAL
+// =====================================================
+
+function closeEditModal(){
+
+    const modal =
+        document.getElementById(
+            "editGuestModal"
+        );
+
+
+    if(modal){
+
+        modal.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// SAVE EDIT
+// =====================================================
+
+async function saveGuestEdit(){
+
+    const id =
+        document
+            .getElementById(
+                "editGuestId"
+            )
+            .value
+            .trim();
+
+
+    const nama =
+        document
+            .getElementById(
+                "editGuestName"
+            )
+            .value
+            .trim();
+
+
+    const notes =
+        document
+            .getElementById(
+                "editGuestNotes"
+            )
+            .value
+            .trim();
+
+
+    const delivery =
+        document
+            .getElementById(
+                "editGuestDelivery"
+            )
+            .value
+            .trim();
+
+
+    const tipe =
+        document
+            .getElementById(
+                "editGuestTipe"
+            )
+            .value
+            .trim();
+
+
+    if(!nama){
+
+        alert(
+            "Nama tamu wajib diisi."
+        );
+
+        return;
+
+    }
+
+
+    const spreadsheetId =
+        getSpreadsheetId();
+
+
+    try{
 
         const res =
-            await fetch(
-                settingsUrl,
-                {
-                    cache: "no-store"
-                }
-            );
-
-
-        const settings =
-            await res.json();
-
-
-        console.log(
-            "WA Settings:",
-            settings
-        );
-
-
-        // =============================================
-        // LINK UNDANGAN
-        // =============================================
-
-        let invitation =
-            settings.invitationLink ||
-            "";
-
-
-        if (!invitation) {
-
-            alert(
-                "Link undangan belum diatur di Pengaturan."
-            );
-
-            return;
-
-        }
-
-
-        const separator =
-            invitation.includes("?")
-                ? "&"
-                : "?";
-
-
-        invitation +=
-            separator +
-            "ev=1&to=" +
-            encodeURIComponent(
-                nama
-            );
-
-
-        // =============================================
-        // QR LINK
-        // =============================================
-
-        const qr =
-            location.origin +
-            "/card.html?id=" +
-            encodeURIComponent(
-                id
-            );
-
-
-        // =============================================
-        // TEMPLATE
-        // =============================================
-
-        let text =
-            settings.waTemplate ||
-            "";
-
-
-        if (!text) {
-
-            text =
-`Assalamu'alaikum Wr. Wb.
-
-Yth.
-{nama}
-
-Dengan penuh rasa syukur dan tanpa mengurangi rasa hormat melalui pesan ini kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami.
-
-Anggia & Haidar
-
-🌸 Buka Undangan
-{undangan}
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-📍 REGISTRASI TAMU
-
-Untuk mempercepat proses registrasi pada hari acara,
-silakan simpan QR Check-in melalui tautan berikut.
-
-👉 {link}
-
-Mohon tunjukkan QR tersebut kepada penerima tamu saat memasuki area acara.
-
-Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
-
-Terima kasih.`;
-
-        }
-
-
-        // =============================================
-        // REPLACE
-        // =============================================
-
-        text =
-            text
-                .replaceAll(
-                    "{nama}",
-                    nama
-                )
-                .replaceAll(
-                    "{link}",
-                    qr
-                )
-                .replaceAll(
-                    "{undangan}",
-                    invitation
-                );
-
-
-        console.log(
-            "Invitation:",
-            invitation
-        );
-
-
-        // =============================================
-        // UPDATE STATUS WA
-        // =============================================
-
-        try {
-
             await fetch(
                 API_URL,
                 {
 
-                    method: "POST",
+                    method:"POST",
 
-                    headers: {
+                    headers:{
                         "Content-Type":
                             "application/json"
                     },
 
-                    body: JSON.stringify({
+                    body:JSON.stringify({
 
                         action:
-                            "updateWaStatus",
+                            "updateGuest",
 
                         id:
                             id,
+
+                        nama:
+                            nama,
+
+                        notes:
+                            notes,
+
+                        delivery:
+                            delivery,
+
+                        tipe:
+                            tipe,
 
                         spreadsheetId:
                             spreadsheetId
@@ -656,62 +770,53 @@ Terima kasih.`;
                 }
             );
 
-        }
-        catch (err) {
 
-            console.warn(
-                "Gagal update status WA:",
-                err
+        const data =
+            await res.json();
+
+
+        console.log(
+            "Update guest:",
+            data
+        );
+
+
+        if(!data.success){
+
+            alert(
+                data.message ||
+                "Gagal mengubah data tamu."
             );
 
+            return;
+
         }
 
 
-        // =============================================
-        // BUKA WHATSAPP
-        // =============================================
-
-        const waUrl =
-            "https://api.whatsapp.com/send?text=" +
-            encodeURIComponent(
-                text
-            );
+        closeEditModal();
 
 
-        window.location.href =
-            waUrl;
+        await loadGuests();
 
+
+        alert(
+            "Data tamu berhasil diperbarui."
+        );
 
     }
-    catch (err) {
+    catch(err){
 
         console.error(
-            "WhatsApp error:",
+            "Update guest error:",
             err
         );
 
 
         alert(
-            "Gagal membuat pesan WhatsApp."
+            "Terjadi kesalahan saat mengubah data tamu."
         );
 
     }
-
-}
-
-
-// =====================================================
-// DOWNLOAD
-// =====================================================
-
-function downloadGuest(id) {
-
-    window.open(
-        "card.html?id=" +
-        encodeURIComponent(id) +
-        "&download=1",
-        "_blank"
-    );
 
 }
 
@@ -720,131 +825,9 @@ function downloadGuest(id) {
 // SEARCH
 // =====================================================
 
-function searchGuest() {
+function searchGuest(){
 
-    const keyword =
-        document
-            .getElementById(
-                "searchGuest"
-            )
-            .value
-            .toLowerCase()
-            .trim();
-
-
-    currentPage = 1;
-
-
-    filteredGuests =
-        guests.filter(
-            g => {
-
-                const nama =
-                    String(
-                        g.nama || ""
-                    )
-                    .toLowerCase();
-
-
-                const notes =
-                    String(
-                        g.notes || ""
-                    )
-                    .toLowerCase();
-
-
-                const id =
-                    String(
-                        g.id || ""
-                    )
-                    .toLowerCase();
-
-
-                const wa =
-                    g.wa === true ||
-                    g.wa === "TRUE";
-
-
-                const fisik =
-                    g.fisik === true ||
-                    g.fisik === "TRUE";
-
-
-                let cocokFilter =
-                    true;
-
-
-                switch (
-                    currentFilter
-                ) {
-
-                    case "wa":
-
-                        cocokFilter =
-                            wa &&
-                            !fisik;
-
-                        break;
-
-
-                    case "fisik":
-
-                        cocokFilter =
-                            fisik &&
-                            !wa;
-
-                        break;
-
-
-                    case "both":
-
-                        cocokFilter =
-                            wa &&
-                            fisik;
-
-                        break;
-
-
-                    case "none":
-
-                        cocokFilter =
-                            !wa &&
-                            !fisik;
-
-                        break;
-
-                }
-
-
-                return (
-
-                    (
-                        nama.includes(
-                            keyword
-                        ) ||
-
-                        notes.includes(
-                            keyword
-                        ) ||
-
-                        id.includes(
-                            keyword
-                        )
-                    )
-
-                    &&
-
-                    cocokFilter
-
-                );
-
-            }
-        );
-
-
-    renderGuests(
-        filteredGuests
-    );
+    applyFilters();
 
 }
 
@@ -853,9 +836,7 @@ function searchGuest() {
 // FILTER DELIVERY
 // =====================================================
 
-function filterDelivery(
-    type
-) {
+function filterDelivery(type){
 
     currentFilter =
         type;
@@ -874,7 +855,7 @@ function filterDelivery(
 // APPLY FILTERS
 // =====================================================
 
-function applyFilters() {
+function applyFilters(){
 
     const input =
         document.getElementById(
@@ -929,9 +910,9 @@ function applyFilters() {
                     true;
 
 
-                switch (
+                switch(
                     currentFilter
-                ) {
+                ){
 
                     case "wa":
 
@@ -972,20 +953,10 @@ function applyFilters() {
 
 
                 const cocokSearch =
-
                     !keyword ||
-
-                    nama.includes(
-                        keyword
-                    ) ||
-
-                    notes.includes(
-                        keyword
-                    ) ||
-
-                    id.includes(
-                        keyword
-                    );
+                    nama.includes(keyword) ||
+                    notes.includes(keyword) ||
+                    id.includes(keyword);
 
 
                 return (
@@ -1010,7 +981,7 @@ function applyFilters() {
 
 function updatePagination(
     totalData
-) {
+){
 
     const totalPages =
         Math.ceil(
@@ -1025,7 +996,7 @@ function updatePagination(
         );
 
 
-    if (pageInfo) {
+    if(pageInfo){
 
         pageInfo.innerText =
             `Halaman ${currentPage} / ${Math.max(
@@ -1048,7 +1019,7 @@ function updatePagination(
         );
 
 
-    if (prevBtn) {
+    if(prevBtn){
 
         prevBtn.disabled =
             currentPage === 1;
@@ -1056,11 +1027,10 @@ function updatePagination(
     }
 
 
-    if (nextBtn) {
+    if(nextBtn){
 
         nextBtn.disabled =
-            currentPage >=
-            totalPages ||
+            currentPage >= totalPages ||
             totalPages === 0;
 
     }
@@ -1069,327 +1039,238 @@ function updatePagination(
 
 
 // =====================================================
-// PREVIOUS
+// PREVIOUS / NEXT
 // =====================================================
 
-const prevBtn =
-    document.getElementById(
-        "prevBtn"
-    );
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const prevBtn =
+            document.getElementById(
+                "prevBtn"
+            );
 
 
-if (prevBtn) {
-
-    prevBtn.onclick =
-        function () {
-
-            if (
-                currentPage > 1
-            ) {
-
-                currentPage--;
-
-                renderGuests(
-                    filteredGuests
-                );
-
-            }
-
-        };
-
-}
+        const nextBtn =
+            document.getElementById(
+                "nextBtn"
+            );
 
 
-// =====================================================
-// NEXT
-// =====================================================
+        if(prevBtn){
 
-const nextBtn =
-    document.getElementById(
-        "nextBtn"
-    );
+            prevBtn.onclick =
+                function(){
 
+                    if(
+                        currentPage > 1
+                    ){
 
-if (nextBtn) {
+                        currentPage--;
 
-    nextBtn.onclick =
-        function () {
+                        renderGuests(
+                            filteredGuests
+                        );
 
-            const totalPages =
-                Math.ceil(
-                    filteredGuests.length /
-                    rowsPerPage
-                );
+                    }
 
+                };
 
-            if (
-                currentPage <
-                totalPages
-            ) {
-
-                currentPage++;
-
-                renderGuests(
-                    filteredGuests
-                );
-
-            }
-
-        };
-
-}
+        }
 
 
-// =====================================================
-// DELIVERY STATUS
-// =====================================================
+        if(nextBtn){
 
-function getDeliveryStatus(g) {
+            nextBtn.onclick =
+                function(){
 
-    const wa =
-        g.wa === true ||
-        g.wa === "TRUE";
-
-
-    const fisik =
-        g.fisik === true ||
-        g.fisik === "TRUE";
+                    const totalPages =
+                        Math.ceil(
+                            filteredGuests.length /
+                            rowsPerPage
+                        );
 
 
-    if (
-        wa &&
-        fisik
-    ) {
+                    if(
+                        currentPage <
+                        totalPages
+                    ){
 
-        return `
-            <span class="delivery both">
-                🟡 Keduanya
-            </span>
-        `;
+                        currentPage++;
+
+                        renderGuests(
+                            filteredGuests
+                        );
+
+                    }
+
+                };
+
+        }
+
+
+        loadGuests();
 
     }
-
-
-    if (wa) {
-
-        return `
-            <span class="delivery wa">
-                🟢 WhatsApp
-            </span>
-        `;
-
-    }
-
-
-    if (fisik) {
-
-        return `
-            <span class="delivery fisik">
-                🔵 Fisik
-            </span>
-        `;
-
-    }
-
-
-    return `
-        <span class="delivery none">
-            🔴 Belum
-        </span>
-    `;
-
-}
+);
 
 
 // =====================================================
-// EDIT GUEST
+// WHATSAPP
 // =====================================================
 
-function editGuest(id) {
+async function sendWhatsapp(
+    id,
+    nama
+){
 
-    const guest =
-        guests.find(
-            g =>
-                String(g.id) ===
-                String(id)
-        );
+    try{
 
-
-    if (!guest) {
-
-        alert(
-            "Data tamu tidak ditemukan."
-        );
-
-        return;
-
-    }
+        const spreadsheetId =
+            getSpreadsheetId();
 
 
-    document.getElementById(
-        "editGuestId"
-    ).value =
-        guest.id || "";
+        const settingsUrl =
+            API_URL +
+            "?action=settings" +
+            "&spreadsheetId=" +
+            encodeURIComponent(
+                spreadsheetId
+            ) +
+            "&t=" +
+            Date.now();
 
-
-    document.getElementById(
-        "editGuestName"
-    ).value =
-        guest.nama || "";
-
-
-    document.getElementById(
-        "editGuestNotes"
-    ).value =
-        guest.notes || "";
-
-
-    document.getElementById(
-        "editGuestJenis"
-    ).value =
-        guest.jenis || "";
-
-
-    document.getElementById(
-        "editGuestTipe"
-    ).value =
-        guest.tipe || "";
-
-
-    document
-        .getElementById(
-            "editGuestModal"
-        )
-        .classList
-        .add("show");
-
-}
-
-
-// =====================================================
-// CLOSE EDIT MODAL
-// =====================================================
-
-function closeEditModal() {
-
-    const modal =
-        document.getElementById(
-            "editGuestModal"
-        );
-
-
-    if (modal) {
-
-        modal.classList.remove(
-            "show"
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// SAVE EDIT
-// =====================================================
-
-async function saveGuestEdit() {
-
-    const id =
-        document
-            .getElementById(
-                "editGuestId"
-            )
-            .value
-            .trim();
-
-
-    const nama =
-        document
-            .getElementById(
-                "editGuestName"
-            )
-            .value
-            .trim();
-
-
-    const notes =
-        document
-            .getElementById(
-                "editGuestNotes"
-            )
-            .value
-            .trim();
-
-
-    const jenis =
-        document
-            .getElementById(
-                "editGuestJenis"
-            )
-            .value
-            .trim();
-
-
-    const tipe =
-        document
-            .getElementById(
-                "editGuestTipe"
-            )
-            .value
-            .trim();
-
-
-    if (!nama) {
-
-        alert(
-            "Nama tamu wajib diisi."
-        );
-
-        return;
-
-    }
-
-
-    const spreadsheetId =
-        getSpreadsheetId();
-
-
-    try {
 
         const res =
+            await fetch(
+                settingsUrl,
+                {
+                    cache:"no-store"
+                }
+            );
+
+
+        const settings =
+            await res.json();
+
+
+        let invitation =
+            settings.invitationLink ||
+            "";
+
+
+        if(!invitation){
+
+            alert(
+                "Link undangan belum diatur di Pengaturan."
+            );
+
+            return;
+
+        }
+
+
+        const separator =
+            invitation.includes("?")
+                ? "&"
+                : "?";
+
+
+        invitation +=
+            separator +
+            "ev=1&to=" +
+            encodeURIComponent(
+                nama
+            );
+
+
+        const qr =
+            location.origin +
+            "/card.html?id=" +
+            encodeURIComponent(
+                id
+            );
+
+
+        let text =
+            settings.waTemplate ||
+            "";
+
+
+        if(!text){
+
+            text =
+`Assalamu'alaikum Wr. Wb.
+
+Yth.
+{nama}
+
+Dengan penuh rasa syukur dan tanpa mengurangi rasa hormat melalui pesan ini kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami.
+
+Anggia & Haidar
+
+🌸 Buka Undangan
+{undangan}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+📍 REGISTRASI TAMU
+
+Untuk mempercepat proses registrasi pada hari acara,
+silakan simpan QR Check-in melalui tautan berikut.
+
+👉 {link}
+
+Mohon tunjukkan QR tersebut kepada penerima tamu saat memasuki area acara.
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
+
+Terima kasih.`;
+
+        }
+
+
+        text =
+            text
+                .replaceAll(
+                    "{nama}",
+                    nama
+                )
+                .replaceAll(
+                    "{link}",
+                    qr
+                )
+                .replaceAll(
+                    "{undangan}",
+                    invitation
+                );
+
+
+        // =================================================
+        // UPDATE WA
+        // =================================================
+
+        try{
+
             await fetch(
                 API_URL,
                 {
 
-                    method: "POST",
+                    method:"POST",
 
-                    headers: {
-
+                    headers:{
                         "Content-Type":
                             "application/json"
-
                     },
 
-                    body: JSON.stringify({
+                    body:JSON.stringify({
 
                         action:
-                            "updateGuest",
+                            "updateWaStatus",
 
                         id:
                             id,
-
-                        nama:
-                            nama,
-
-                        notes:
-                            notes,
-
-                        jenis:
-                            jenis,
-
-                        tipe:
-                            tipe,
 
                         spreadsheetId:
                             spreadsheetId
@@ -1399,50 +1280,39 @@ async function saveGuestEdit() {
                 }
             );
 
+        }
+        catch(err){
 
-        const data =
-            await res.json();
-
-
-        console.log(
-            "Update guest:",
-            data
-        );
-
-
-        if (!data.success) {
-
-            alert(
-                data.message ||
-                "Gagal mengubah data tamu."
+            console.warn(
+                "Gagal update status WA:",
+                err
             );
-
-            return;
 
         }
 
 
-        closeEditModal();
+        const waUrl =
+            "https://api.whatsapp.com/send?text=" +
+            encodeURIComponent(
+                text
+            );
 
 
-        await loadGuests();
+        window.location.href =
+            waUrl;
 
-
-        alert(
-            "Data tamu berhasil diperbarui."
-        );
 
     }
-    catch (err) {
+    catch(err){
 
         console.error(
-            "Update guest error:",
+            "WhatsApp error:",
             err
         );
 
 
         alert(
-            "Terjadi kesalahan saat mengubah data tamu."
+            "Gagal membuat pesan WhatsApp."
         );
 
     }
@@ -1451,10 +1321,26 @@ async function saveGuestEdit() {
 
 
 // =====================================================
-// DELETE GUEST
+// DOWNLOAD
 // =====================================================
 
-async function deleteGuest(id) {
+function downloadGuest(id){
+
+    window.open(
+        "card.html?id=" +
+        encodeURIComponent(id) +
+        "&download=1",
+        "_blank"
+    );
+
+}
+
+
+// =====================================================
+// DELETE
+// =====================================================
+
+async function deleteGuest(id){
 
     const guest =
         guests.find(
@@ -1464,7 +1350,7 @@ async function deleteGuest(id) {
         );
 
 
-    if (!guest) {
+    if(!guest){
 
         alert(
             "Data tamu tidak ditemukan."
@@ -1487,7 +1373,7 @@ async function deleteGuest(id) {
         );
 
 
-    if (!yakin) {
+    if(!yakin){
 
         return;
 
@@ -1498,23 +1384,21 @@ async function deleteGuest(id) {
         getSpreadsheetId();
 
 
-    try {
+    try{
 
         const res =
             await fetch(
                 API_URL,
                 {
 
-                    method: "POST",
+                    method:"POST",
 
-                    headers: {
-
+                    headers:{
                         "Content-Type":
                             "application/json"
-
                     },
 
-                    body: JSON.stringify({
+                    body:JSON.stringify({
 
                         action:
                             "deleteGuest",
@@ -1535,13 +1419,7 @@ async function deleteGuest(id) {
             await res.json();
 
 
-        console.log(
-            "Delete guest:",
-            data
-        );
-
-
-        if (!data.success) {
+        if(!data.success){
 
             alert(
                 data.message ||
@@ -1561,7 +1439,7 @@ async function deleteGuest(id) {
         );
 
     }
-    catch (err) {
+    catch(err){
 
         console.error(
             "Delete guest error:",
@@ -1582,7 +1460,7 @@ async function deleteGuest(id) {
 // ESCAPE HTML
 // =====================================================
 
-function escapeHtml(text) {
+function escapeHtml(text){
 
     const div =
         document.createElement(
@@ -1602,34 +1480,20 @@ function escapeHtml(text) {
 
 
 // =====================================================
-// ESCAPE JAVASCRIPT
+// ESCAPE JS
 // =====================================================
 
-function escapeJs(text) {
+function escapeJs(text){
 
     return String(
         text == null
             ? ""
             : text
     )
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n")
-        .replace(/\r/g, "\\r");
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'")
+        .replace(/"/g,'\\"')
+        .replace(/\n/g,"\\n")
+        .replace(/\r/g,"\\r");
 
 }
-
-
-// =====================================================
-// INIT
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadGuests();
-
-    }
-);
