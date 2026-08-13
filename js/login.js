@@ -279,7 +279,7 @@ async function login() {
             // Masuk License Management
 
             window.location.href =
-                "license.html";
+                "dashboard.html";
 
 
             return;
