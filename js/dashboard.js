@@ -7,18 +7,23 @@ const API_URL = CONFIG.API_URL;
 
 (function () {
 
-    const USER =
-        JSON.parse(
-            localStorage.getItem("user") || "{}"
-        );
+const USER =
+    JSON.parse(
+        localStorage.getItem("user") || "{}"
+    );
 
-    const IS_LOGIN =
-        localStorage.getItem("login") === "true";
-
-    const IS_SUPER_ADMIN =
-        USER.role === "superadmin";
+const IS_LOGIN =
+    localStorage.getItem("login") === "true";
 
 
+const IS_SUPER_ADMIN =
+    String(USER.role || "")
+        .trim()
+        .toLowerCase() === "superadmin"
+    ||
+    String(USER.username || "")
+        .trim()
+        .toLowerCase() === "admin";
     // =================================================
     // SPREADSHEET ID
     // =================================================
