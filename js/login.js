@@ -5,7 +5,8 @@ const API_URL = CONFIG.API_URL;
 // DOMAIN
 // =====================================================
 
-const DOMAIN = window.location.hostname;
+const DOMAIN =
+    window.location.hostname;
 
 
 // =====================================================
@@ -14,22 +15,34 @@ const DOMAIN = window.location.hostname;
 
 async function login() {
 
+    const license =
+        document
+            .getElementById("license")
+            .value
+            .trim()
+            .toUpperCase();
+
+
     const username =
         document
             .getElementById("username")
             .value
             .trim();
 
+
     const password =
         document
             .getElementById("password")
             .value;
 
+
     const button =
         document.getElementById("loginButton");
 
+
     const loading =
         document.getElementById("loading");
+
 
     const message =
         document.getElementById("message");
@@ -39,34 +52,47 @@ async function login() {
     // VALIDASI
     // =================================================
 
-    if (!username || !password) {
+    if (
+        !license ||
+        !username ||
+        !password
+    ) {
 
         showMessage(
-            "Username dan password wajib diisi."
+            "License, username dan password wajib diisi."
         );
 
         return;
+
     }
 
+
+    // =================================================
+    // LOADING
+    // =================================================
 
     if (button) {
 
         button.disabled = true;
-        button.innerText = "MEMERIKSA...";
+
+        button.innerText =
+            "MEMERIKSA...";
 
     }
+
 
     if (loading) {
 
-        loading.style.display = "block";
-        loading.innerText =
-            "Memeriksa license...";
+        loading.style.display =
+            "block";
 
     }
 
+
     if (message) {
 
-        message.style.display = "none";
+        message.style.display =
+            "none";
 
     }
 
@@ -74,48 +100,29 @@ async function login() {
     try {
 
         // =================================================
-        // 1. AMBIL LICENSE
+        // 1. CEK LICENSE
         // =================================================
 
-        const license =
-            localStorage.getItem("license") || "";
+        const licenseUrl =
+            API_URL +
+            "?action=license" +
+            "&license=" +
+            encodeURIComponent(license) +
+            "&domain=" +
+            encodeURIComponent(DOMAIN);
 
 
-        // =================================================
-        // CEK LICENSE
-        // =================================================
-
-        if (!license) {
-
-            showMessage(
-                "License tidak ditemukan."
-            );
-
-            return;
-        }
-
-
-        console.log(
-            "Memeriksa license:",
-            license
-        );
-
-
-        const licenseRes =
+        const licenseResponse =
             await fetch(
-                API_URL +
-                "?action=license" +
-                "&license=" +
-                encodeURIComponent(license) +
-                "&domain=" +
-                encodeURIComponent(DOMAIN) +
-                "&t=" +
-                Date.now()
+                licenseUrl,
+                {
+                    cache: "no-store"
+                }
             );
 
 
         const licenseData =
-            await licenseRes.json();
+            await licenseResponse.json();
 
 
         console.log(
@@ -125,10 +132,12 @@ async function login() {
 
 
         // =================================================
-        // LICENSE INVALID
+        // LICENSE GAGAL
         // =================================================
 
-        if (!licenseData.success) {
+        if (
+            !licenseData.success
+        ) {
 
             showMessage(
                 licenseData.message ||
@@ -136,16 +145,32 @@ async function login() {
             );
 
             return;
+
         }
 
 
         // =================================================
-        // SIMPAN DATA LICENSE
+        // SPREADSHEET CUSTOMER
         // =================================================
 
         const spreadsheetId =
-            licenseData.spreadsheetId || "";
+            licenseData.spreadsheetId;
 
+
+        if (!spreadsheetId) {
+
+            showMessage(
+                "Spreadsheet customer belum tersedia."
+            );
+
+            return;
+
+        }
+
+
+        // =================================================
+        // SIMPAN CUSTOMER
+        // =================================================
 
         localStorage.setItem(
             "spreadsheetId",
@@ -154,14 +179,15 @@ async function login() {
 
 
         localStorage.setItem(
-            "licenseOwner",
-            licenseData.owner || ""
+            "license",
+            license
         );
 
 
-        console.log(
-            "Spreadsheet customer:",
-            spreadsheetId
+        localStorage.setItem(
+            "owner",
+            licenseData.owner ||
+            ""
         );
 
 
@@ -169,15 +195,7 @@ async function login() {
         // 2. LOGIN CUSTOMER
         // =================================================
 
-        if (loading) {
-
-            loading.innerText =
-                "Memeriksa username dan password...";
-
-        }
-
-
-        const loginRes =
+        const response =
             await fetch(
                 API_URL,
                 {
@@ -188,27 +206,28 @@ async function login() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        action: "login",
+                            action:
+                                "login",
 
-                        username:
-                            username,
+                            username:
+                                username,
 
-                        password:
-                            password,
+                            password:
+                                password,
 
-                        spreadsheetId:
-                            spreadsheetId
+                            spreadsheetId:
+                                spreadsheetId
 
-                    })
-
+                        })
                 }
             );
 
 
         const data =
-            await loginRes.json();
+            await response.json();
 
 
         console.log(
@@ -218,73 +237,76 @@ async function login() {
 
 
         // =================================================
-        // LOGIN BERHASIL
+        // LOGIN GAGAL
         // =================================================
 
-        if (data.success) {
+        if (!data.success) {
 
-            localStorage.setItem(
-                "login",
-                "true"
+            // Jangan hapus license.
+            // Tapi spreadsheetId boleh dibersihkan
+            // supaya tidak tersangkut akun lain.
+
+            localStorage.removeItem(
+                "spreadsheetId"
             );
 
 
-            localStorage.setItem(
-                "user",
-                JSON.stringify({
-
-                    username:
-                        data.username ||
-                        username,
-
-                    role:
-                        data.role ||
-                        "owner",
-
-                    name:
-                        data.name ||
-                        data.owner ||
-                        username,
-
-                    license:
-                        data.license ||
-                        license,
-
-                    spreadsheetId:
-                        spreadsheetId
-
-                })
+            showMessage(
+                data.message ||
+                "Username atau password salah."
             );
-
-
-            // =============================================
-            // MASUK DASHBOARD
-            // =============================================
-
-            window.location.href =
-                "dashboard.html";
 
             return;
+
         }
 
 
         // =================================================
-        // LOGIN GAGAL
+        // LOGIN BERHASIL
         // =================================================
 
-        showMessage(
-            data.message ||
-            "Username atau password salah."
+        localStorage.setItem(
+            "login",
+            "true"
         );
+
+
+        localStorage.setItem(
+            "user",
+            JSON.stringify({
+
+                username:
+                    data.username ||
+                    username,
+
+                role:
+                    data.role ||
+                    "owner",
+
+                name:
+                    data.name ||
+                    licenseData.owner ||
+                    username
+
+            })
+        );
+
+
+        // =================================================
+        // MASUK DASHBOARD LAMA
+        // =================================================
+
+        window.location.href =
+            "dashboard.html";
 
 
     }
 
-    catch (err) {
+    catch (error) {
 
         console.error(
-            "Login error:",
-            err
+            "LOGIN ERROR:",
+            error
         );
 
 
@@ -298,14 +320,19 @@ async function login() {
 
         if (loading) {
 
-            loading.style.display = "none";
+            loading.style.display =
+                "none";
 
         }
 
+
         if (button) {
 
-            button.disabled = false;
-            button.innerText = "LOGIN";
+            button.disabled =
+                false;
+
+            button.innerText =
+                "LOGIN";
 
         }
 
@@ -321,15 +348,23 @@ async function login() {
 function showMessage(text) {
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
-    if (!message) return;
+
+    if (!message) {
+        return;
+    }
 
 
-    message.innerText = text;
+    message.innerText =
+        text;
+
 
     message.className =
         "message error";
+
 
     message.style.display =
         "block";
@@ -338,7 +373,7 @@ function showMessage(text) {
 
 
 // =====================================================
-// FORM
+// FORM LOGIN
 // =====================================================
 
 document
