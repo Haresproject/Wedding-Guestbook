@@ -34,6 +34,36 @@ async function loadGuests() {
 
 }
 
+// ================= WARNA TIPE TAMU =================
+
+function getTipeBadge(tipe) {
+
+    const value = String(tipe || "")
+        .trim()
+        .toUpperCase();
+
+    if (value === "VIP") {
+
+        return `<span class="tipe-badge tipe-vip">VIP</span>`;
+
+    }
+
+    if (value === "KELUARGA") {
+
+        return `<span class="tipe-badge tipe-keluarga">Keluarga</span>`;
+
+    }
+
+    if (value === "BRIDESMAID") {
+
+        return `<span class="tipe-badge tipe-bridesmaid">Bridesmaid</span>`;
+
+    }
+
+    return `<span class="tipe-badge tipe-reguler">Reguler</span>`;
+
+}
+
 // ================= TAMPILKAN TABEL =================
 function renderGuests(data){
 
@@ -76,7 +106,7 @@ const pageData = data.slice(start, end);
     </span>
 </td>
 
-            <td>${guest.tipe || "-"}</td>
+            <td>${getTipeBadge(guest.tipe)}</td>
 
             <td>${formatJam(guest.jam)}</td>
 
