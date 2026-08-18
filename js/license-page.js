@@ -796,7 +796,7 @@ function shareLicense(item) {
         (item.owner || "Customer") +
         ",\n\n" +
 
-        "Terima Kasih Telah Mempercayakan Pembuatan Wedding Guestbook Anda Kepada Kami. Berikut akses Wedding Guestbook Anda:\n\n" +
+        "Terima Kasih Telah Mempercayakan Pembuatan Wedding Guestbook Anda Kepada Kami. Berikut akses ke akun anda:\n\n" +
 
         "👤 Customer: " +
         (item.owner || "-") +
