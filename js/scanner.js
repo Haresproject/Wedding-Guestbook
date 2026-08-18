@@ -212,27 +212,109 @@ async function onScanSuccess(decodedText) {
 
         console.log("QR TERBACA:", decodedText);
 
-        const spreadsheetId =
-            localStorage.getItem("spreadsheetId") || "";
+// =================================================
+// TENTUKAN SPREADSHEET BERDASARKAN ROLE LOGIN
+// =================================================
 
-        console.log(
-            "SPREADSHEET ID:",
-            spreadsheetId
+let spreadsheetId = "";
+
+let savedUser = {};
+
+try {
+
+    savedUser =
+        JSON.parse(
+            localStorage.getItem("user") || "{}"
         );
 
-        if (!spreadsheetId) {
+} catch (error) {
 
-            alert(
-                "Spreadsheet customer belum dipilih."
-            );
+    console.error(
+        "Gagal membaca data user:",
+        error
+    );
 
-            document.getElementById("status").innerHTML =
-                "❌ Spreadsheet customer belum dipilih";
+    savedUser = {};
 
-            scanning = false;
+}
 
-            return;
-        }
+
+// =================================================
+// SUPER ADMIN
+// =================================================
+
+if (
+    String(savedUser.role || "")
+        .trim()
+        .toLowerCase() === "superadmin"
+) {
+
+    spreadsheetId =
+        CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+
+    console.log(
+        "MODE SCANNER: SUPER ADMIN"
+    );
+
+}
+
+
+// =================================================
+// CUSTOMER
+// =================================================
+
+else {
+
+    spreadsheetId =
+        localStorage.getItem(
+            "spreadsheetId"
+        ) || "";
+
+    console.log(
+        "MODE SCANNER: CUSTOMER"
+    );
+
+}
+
+
+// =================================================
+// DEBUG
+// =================================================
+
+console.log(
+    "USER:",
+    savedUser
+);
+
+console.log(
+    "ROLE:",
+    savedUser.role
+);
+
+console.log(
+    "SPREADSHEET ID:",
+    spreadsheetId
+);
+
+
+// =================================================
+// CEK SPREADSHEET
+// =================================================
+
+if (!spreadsheetId) {
+
+    alert(
+        "Spreadsheet belum tersedia untuk akun ini."
+    );
+
+    document.getElementById("status").innerHTML =
+        "❌ Spreadsheet belum tersedia";
+
+    scanning = false;
+
+    return;
+
+}
 
         const checkinUrl =
             API_URL +
