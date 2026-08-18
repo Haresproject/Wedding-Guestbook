@@ -814,8 +814,8 @@ function shareLicense(item) {
         (item.password || "-") +
         "\n\n" +
 
-        "Silakan gunakan data tersebut untuk login. Apabila Ada Pertanyaan Atau Memerlukan Bantuan, Silakan Hubungi Kami. Kami Siap Membantu Anda Selama Proses Ini Berlangsung."
-        "Terimakasih,"
+        "Silakan gunakan data tersebut untuk login. Apabila Ada Pertanyaan Atau Memerlukan Bantuan, Silakan Hubungi Kami. Kami Siap Membantu Anda Selama Proses Ini Berlangsung." +
+        "Terimakasih," +
         "Haresproject";
 
     // =================================================
