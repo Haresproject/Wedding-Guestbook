@@ -212,79 +212,116 @@ async function onScanSuccess(decodedText) {
 
         console.log("QR TERBACA:", decodedText);
 
-        const url =
-            API_URL +
-            "?action=checkin&id=" +
-            encodeURIComponent(decodedText);
+        const spreadsheetId =
+            localStorage.getItem("spreadsheetId") || "";
 
-        console.log("CHECK-IN URL:", url);
+        console.log(
+            "SPREADSHEET ID:",
+            spreadsheetId
+        );
 
-        const res = await fetch(url);
+        if (!spreadsheetId) {
 
-        console.log("HTTP STATUS:", res.status);
-        console.log("CONTENT TYPE:", res.headers.get("content-type"));
-
-        // Ambil sebagai TEXT dulu
-        const raw = await res.text();
-
-        console.log("RESPON SERVER:", raw);
-
-        // Coba ubah ke JSON
-        let data;
-
-        try {
-
-            data = JSON.parse(raw);
-
-        } catch (jsonError) {
-
-            console.error(
-                "RESPON SERVER BUKAN JSON:",
-                raw
+            alert(
+                "Spreadsheet customer belum dipilih."
             );
 
             document.getElementById("status").innerHTML =
-                "❌ Server check-in bermasalah";
-
-            alert(
-                "Server tidak mengembalikan JSON.\n\n" +
-                "Cek Console untuk melihat respon server."
-            );
+                "❌ Spreadsheet customer belum dipilih";
 
             scanning = false;
 
             return;
         }
 
+        const checkinUrl =
+            API_URL +
+            "?action=checkin" +
+            "&id=" +
+            encodeURIComponent(decodedText) +
+            "&spreadsheetId=" +
+            encodeURIComponent(spreadsheetId);
 
-        console.log("DATA CHECK-IN:", data);
+        console.log(
+            "CHECK-IN URL:",
+            checkinUrl
+        );
 
+        const res =
+            await fetch(checkinUrl, {
+                cache: "no-store"
+            });
 
-        // =========================
-        // CHECK-IN BERHASIL
-        // =========================
+        console.log(
+            "HTTP STATUS:",
+            res.status
+        );
+
+        const contentType =
+            res.headers.get("content-type") || "";
+
+        console.log(
+            "CONTENT TYPE:",
+            contentType
+        );
+
+        const text =
+            await res.text();
+
+        console.log(
+            "RESPON SERVER:",
+            text
+        );
+
+        // =================================================
+        // CEK APAKAH RESPONSE JSON
+        // =================================================
+
+        if (
+            !contentType.includes("application/json")
+        ) {
+
+            console.error(
+                "RESPON SERVER BUKAN JSON:",
+                text
+            );
+
+            alert(
+                "Server tidak mengembalikan JSON.\n\n" +
+                "Cek Console untuk melihat respon server."
+            );
+
+            document.getElementById("status").innerHTML =
+                "❌ Server error";
+
+            return;
+        }
+
+        const data =
+            JSON.parse(text);
+
+        console.log(
+            "CHECK-IN DATA:",
+            data
+        );
+
+        // =================================================
+        // BERHASIL
+        // =================================================
 
         if (data.success) {
 
-            // Nama tamu
             document.getElementById("guestName").innerHTML =
                 data.nama || "";
 
-            // Tipe tamu
             document.getElementById("guestType").innerHTML =
                 data.tipe || "";
 
-            // Popup
             document.getElementById("popupSuccess").style.display =
                 "flex";
 
             document.getElementById("status").innerHTML =
                 "✅ Berhasil Check-in";
-
-
-            // =========================
-            // GETAR
-            // =========================
 
             if (navigator.vibrate) {
 
@@ -295,11 +332,6 @@ async function onScanSuccess(decodedText) {
                 ]);
 
             }
-
-
-            // =========================
-            // SUARA CHECK-IN
-            // =========================
 
             beep.currentTime = 0;
 
@@ -321,7 +353,6 @@ async function onScanSuccess(decodedText) {
 
             });
 
-
         } else {
 
             alert(
@@ -333,7 +364,6 @@ async function onScanSuccess(decodedText) {
                 "❌ QR tidak valid";
 
         }
-
 
     } catch (err) {
 
@@ -350,11 +380,6 @@ async function onScanSuccess(decodedText) {
             "❌ Gagal menghubungi server";
 
     }
-
-
-    // =========================
-    // SIAP SCAN LAGI
-    // =========================
 
     setTimeout(() => {
 
