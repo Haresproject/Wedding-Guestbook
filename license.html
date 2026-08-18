@@ -85,6 +85,47 @@
             color: #777;
         }
 
+    .license-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.license-action {
+    border: none;
+    padding: 7px 9px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-edit {
+    background: #e8f1ff;
+    color: #1e5aa8;
+}
+
+.btn-toggle {
+    background: #fff4d6;
+    color: #9a6a00;
+}
+
+.btn-delete {
+    background: #ffe5e5;
+    color: #c62828;
+}
+
+.btn-share {
+    background: #e5f7ed;
+    color: #198754;
+}
+
+.btn-edit:hover,
+.btn-toggle:hover,
+.btn-delete:hover,
+.btn-share:hover {
+    opacity: .8;
+}
     </style>
 
 </head>
@@ -200,25 +241,19 @@
 
             <table class="license-table">
 
-                <thead>
-
-                    <tr>
-
-                        <th>License</th>
-
-                        <th>Owner</th>
-
-                        <th>Domain</th>
-
-                        <th>Status</th>
-
-                        <th>Activated</th>
-
-                        <th>Spreadsheet ID</th>
-
-                    </tr>
-
-                </thead>
+               <thead>
+    <tr>
+        <th>Customer</th>
+        <th>License</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Domain</th>
+        <th>Status</th>
+        <th>Activated</th>
+        <th>Spreadsheet ID</th>
+        <th>Aksi</th>
+    </tr>
+</thead>
 
 
                 <tbody id="licenseTable">
