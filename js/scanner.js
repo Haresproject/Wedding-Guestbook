@@ -210,17 +210,59 @@ async function onScanSuccess(decodedText) {
 
     try {
 
-        const res = await fetch(
+        console.log("QR TERBACA:", decodedText);
 
+        const url =
             API_URL +
             "?action=checkin&id=" +
-            encodeURIComponent(decodedText)
+            encodeURIComponent(decodedText);
 
-        );
+        console.log("CHECK-IN URL:", url);
 
-        const data = await res.json();
+        const res = await fetch(url);
 
-        console.log("Check-in:", data);
+        console.log("HTTP STATUS:", res.status);
+        console.log("CONTENT TYPE:", res.headers.get("content-type"));
+
+        // Ambil sebagai TEXT dulu
+        const raw = await res.text();
+
+        console.log("RESPON SERVER:", raw);
+
+        // Coba ubah ke JSON
+        let data;
+
+        try {
+
+            data = JSON.parse(raw);
+
+        } catch (jsonError) {
+
+            console.error(
+                "RESPON SERVER BUKAN JSON:",
+                raw
+            );
+
+            document.getElementById("status").innerHTML =
+                "❌ Server check-in bermasalah";
+
+            alert(
+                "Server tidak mengembalikan JSON.\n\n" +
+                "Cek Console untuk melihat respon server."
+            );
+
+            scanning = false;
+
+            return;
+        }
+
+
+        console.log("DATA CHECK-IN:", data);
+
+
+        // =========================
+        // CHECK-IN BERHASIL
+        // =========================
 
         if (data.success) {
 
@@ -239,7 +281,11 @@ async function onScanSuccess(decodedText) {
             document.getElementById("status").innerHTML =
                 "✅ Berhasil Check-in";
 
-            // Getar
+
+            // =========================
+            // GETAR
+            // =========================
+
             if (navigator.vibrate) {
 
                 navigator.vibrate([
@@ -250,26 +296,32 @@ async function onScanSuccess(decodedText) {
 
             }
 
-    // =======================
-// SUARA CHECK-IN BERHASIL
-// =======================
 
-beep.currentTime = 0;
+            // =========================
+            // SUARA CHECK-IN
+            // =========================
 
-beep.play().then(() => {
+            beep.currentTime = 0;
 
-    setTimeout(() => {
+            beep.play().then(() => {
 
-        beep.pause();
-        beep.currentTime = 0;
+                setTimeout(() => {
 
-    }, 3000);
+                    beep.pause();
+                    beep.currentTime = 0;
 
-}).catch(err => {
+                }, 3000);
 
-    console.log("Gagal memutar suara:", err);
+            }).catch(err => {
 
-});
+                console.log(
+                    "Gagal memutar suara:",
+                    err
+                );
+
+            });
+
+
         } else {
 
             alert(
@@ -282,9 +334,13 @@ beep.play().then(() => {
 
         }
 
+
     } catch (err) {
 
-        console.error(err);
+        console.error(
+            "ERROR CHECK-IN:",
+            err
+        );
 
         alert(
             "Gagal menghubungi server."
@@ -295,7 +351,11 @@ beep.play().then(() => {
 
     }
 
-    // Tunggu sebentar kemudian siap scan lagi
+
+    // =========================
+    // SIAP SCAN LAGI
+    // =========================
+
     setTimeout(() => {
 
         document.getElementById(
