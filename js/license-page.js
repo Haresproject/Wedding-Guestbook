@@ -796,7 +796,7 @@ function shareLicense(item) {
         (item.owner || "Customer") +
         ",\n\n" +
 
-        "Berikut akses Wedding Guestbook Anda:\n\n" +
+        "Terima Kasih Telah Mempercayakan Pembuatan Wedding Guestbook Anda Kepada Kami. Berikut akses Wedding Guestbook Anda:\n\n" +
 
         "👤 Customer: " +
         (item.owner || "-") +
@@ -814,8 +814,9 @@ function shareLicense(item) {
         (item.password || "-") +
         "\n\n" +
 
-        "Silakan gunakan data tersebut untuk login.";
-
+        "Silakan gunakan data tersebut untuk login. Apabila Ada Pertanyaan Atau Memerlukan Bantuan, Silakan Hubungi Kami. Kami Siap Membantu Anda Selama Proses Ini Berlangsung.";
+        "Terimakasih,"
+        "Haresproject"
 
     // =================================================
     // COPY KE CLIPBOARD
