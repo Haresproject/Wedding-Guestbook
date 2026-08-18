@@ -817,7 +817,7 @@ function shareLicense(item) {
         "Silakan gunakan data tersebut untuk login. Apabila Ada Pertanyaan Atau Memerlukan Bantuan, Silakan Hubungi Kami. Kami Siap Membantu Anda Selama Proses Ini Berlangsung." +
         "\n\n" +
         "Terimakasih," +
-        "\n\n" + "Haresproject";
+        "\n" + "Haresproject";
 
     // =================================================
     // COPY KE CLIPBOARD
