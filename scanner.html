@@ -169,19 +169,25 @@ Pilih kamera lalu tekan Mulai Scanner
 
 </div>
 
+<script src="js/config.js"></script>
 <script src="js/scanner.js"></script>
 
 <script>
 
 if(localStorage.getItem("login")!="true"){
 
-    location.href="index.html";
+    location.href="login.html";
 
 }
 
 function logout(){
 
     localStorage.removeItem("login");
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("license");
+    localStorage.removeItem("spreadsheetId");
+    localStorage.removeItem("owner");
 
     location.href="login.html";
 
