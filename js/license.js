@@ -501,7 +501,38 @@ async function activateLicense() {
             );
 
         }
+        
+        // =================================================
+// SIMPAN CUSTOMER PEMILIK LICENSE
+// =================================================
 
+try {
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem(
+                "user"
+            ) || "{}"
+        );
+
+
+    if (currentUser.username) {
+
+        localStorage.setItem(
+            "licenseUsername",
+            currentUser.username
+        );
+
+    }
+
+} catch (error) {
+
+    console.error(
+        "Gagal menyimpan pemilik license:",
+        error
+    );
+
+}
 
         // =================================================
         // HAPUS PENDING
