@@ -54,6 +54,79 @@ function getSavedUser() {
 
 
 // =====================================================
+// SIMPAN SESSION CUSTOMER
+// =====================================================
+
+function saveCustomerSession(data, username) {
+
+    localStorage.setItem(
+        "login",
+        "true"
+    );
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify({
+
+            username:
+                data.username ||
+                username,
+
+            name:
+                data.name ||
+                data.owner ||
+                username,
+
+            owner:
+                data.owner ||
+                data.name ||
+                "",
+
+            role:
+                data.role ||
+                "owner"
+
+        })
+    );
+
+}
+
+
+// =====================================================
+// CEK LICENSE MILIK USER INI
+// =====================================================
+
+function hasLicenseForCurrentUser(username) {
+
+    const activatedUsername =
+        localStorage.getItem(
+            "activatedUsername"
+        ) || "";
+
+    const savedLicense =
+        localStorage.getItem(
+            "license"
+        ) || "";
+
+    const savedSpreadsheetId =
+        localStorage.getItem(
+            "spreadsheetId"
+        ) || "";
+
+
+    return (
+        activatedUsername.trim().toLowerCase() ===
+        username.trim().toLowerCase()
+        &&
+        savedLicense !== ""
+        &&
+        savedSpreadsheetId !== ""
+    );
+
+}
+
+
+// =====================================================
 // LOGIN
 // =====================================================
 
@@ -133,9 +206,7 @@ async function login() {
         // =================================================
 
         if (
-            username
-                .trim()
-                .toLowerCase() === "admin"
+            username.toLowerCase() === "admin"
         ) {
 
             console.log(
@@ -183,10 +254,6 @@ async function login() {
             );
 
 
-            // =============================================
-            // SUPER ADMIN GAGAL
-            // =============================================
-
             if (!data.success) {
 
                 showMessage(
@@ -199,16 +266,16 @@ async function login() {
             }
 
 
-            // =============================================
-            // BERSIHKAN SESSION CUSTOMER
-            // =============================================
+            // =================================================
+            // BERSIHKAN SEMUA SESSION CUSTOMER
+            // =================================================
 
             localStorage.clear();
 
 
-            // =============================================
+            // =================================================
             // SIMPAN SESSION SUPER ADMIN
-            // =============================================
+            // =================================================
 
             localStorage.setItem(
                 "login",
@@ -229,7 +296,6 @@ async function login() {
                         "Super Admin",
 
                     role:
-                        data.role ||
                         "superadmin"
 
                 })
@@ -241,9 +307,9 @@ async function login() {
             );
 
 
-            // =============================================
-            // DASHBOARD SUPER ADMIN
-            // =============================================
+            // =================================================
+            // DASHBOARD
+            // =================================================
 
             window.location.href =
                 "dashboard.html";
@@ -325,77 +391,63 @@ async function login() {
         // SIMPAN SESSION CUSTOMER
         // =================================================
 
-        localStorage.setItem(
-            "login",
-            "true"
-        );
-
-
-        localStorage.setItem(
-            "user",
-            JSON.stringify({
-
-                username:
-                    data.username ||
-                    username,
-
-                name:
-                    data.name ||
-                    data.owner ||
-                    username,
-
-                owner:
-                    data.owner ||
-                    data.name ||
-                    "",
-
-                role:
-                    data.role ||
-                    "owner"
-
-            })
-        );
-
-
-        console.log(
-            "CUSTOMER LOGIN BERHASIL"
+        saveCustomerSession(
+            data,
+            username
         );
 
 
         // =================================================
-        // CEK APAKAH SUDAH ADA LICENSE
+        // CEK LICENSE MILIK CUSTOMER INI
         // =================================================
 
-        const savedLicense =
-            localStorage.getItem(
-                "license"
-            ) || "";
-
-
-        const savedSpreadsheetId =
-            localStorage.getItem(
-                "spreadsheetId"
-            ) || "";
-
-
-        // =================================================
-        // CUSTOMER PERTAMA KALI
-        // BELUM ADA LICENSE
-        // =================================================
-
-        if (
-            !savedLicense ||
-            !savedSpreadsheetId
-        ) {
-
-            console.log(
-                "Customer belum aktivasi license."
+        const sudahAktif =
+            hasLicenseForCurrentUser(
+                username
             );
 
 
-            // Jangan hapus session login.
-            // Karena setelah aktivasi berhasil
-            // customer langsung masuk dashboard.
+        // =================================================
+        // BELUM AKTIF
+        // =================================================
+
+        if (!sudahAktif) {
+
+            console.log(
+                "Customer belum memiliki license sendiri."
+            );
+
+
+            /*
+             * Jangan hapus user.
+             *
+             * Tetapi license lama milik customer lain
+             * tidak boleh dipakai.
+             */
+
+            localStorage.removeItem(
+                "license"
+            );
+
+            localStorage.removeItem(
+                "spreadsheetId"
+            );
+
+            localStorage.removeItem(
+                "owner"
+            );
+
+
+            /*
+             * Simpan customer yang sedang
+             * melakukan aktivasi.
+             */
+
+            localStorage.setItem(
+                "pendingActivationUsername",
+                username
+            );
+
 
             window.location.href =
                 "activation.html";
@@ -406,11 +458,16 @@ async function login() {
 
 
         // =================================================
-        // CUSTOMER SUDAH PERNAH AKTIVASI
+        // SUDAH AKTIF
         // =================================================
 
         console.log(
-            "Customer sudah memiliki license."
+            "Customer sudah memiliki license sendiri."
+        );
+
+
+        localStorage.removeItem(
+            "pendingActivationUsername"
         );
 
 
@@ -515,74 +572,34 @@ document.addEventListener(
             getSavedUser();
 
 
-        // =================================================
-        // SUDAH LOGIN
-        // =================================================
-
         if (
-            localStorage.getItem("login") === "true"
+            localStorage.getItem("login") !== "true"
         ) {
 
             console.log(
-                "User sudah login:",
-                savedUser
+                "Login page siap."
             );
 
+            return;
 
-            // =================================================
-            // SUPER ADMIN
-            // =================================================
-
-            if (
-                String(savedUser.role || "")
-                    .trim()
-                    .toLowerCase() === "superadmin"
-            ) {
-
-                window.location.href =
-                    "dashboard.html";
-
-                return;
-
-            }
+        }
 
 
-            // =================================================
-            // CUSTOMER
-            // =================================================
-
-            const savedLicense =
-                localStorage.getItem(
-                    "license"
-                ) || "";
+        console.log(
+            "User sudah login:",
+            savedUser
+        );
 
 
-            const savedSpreadsheetId =
-                localStorage.getItem(
-                    "spreadsheetId"
-                ) || "";
+        // =================================================
+        // SUPER ADMIN
+        // =================================================
 
-
-            // =================================================
-            // CUSTOMER BELUM AKTIVASI
-            // =================================================
-
-            if (
-                !savedLicense ||
-                !savedSpreadsheetId
-            ) {
-
-                window.location.href =
-                    "activation.html";
-
-                return;
-
-            }
-
-
-            // =================================================
-            // CUSTOMER SUDAH AKTIVASI
-            // =================================================
+        if (
+            String(savedUser.role || "")
+                .trim()
+                .toLowerCase() === "superadmin"
+        ) {
 
             window.location.href =
                 "dashboard.html";
@@ -593,12 +610,48 @@ document.addEventListener(
 
 
         // =================================================
-        // BELUM LOGIN
+        // CUSTOMER
         // =================================================
 
-        console.log(
-            "Login page siap."
-        );
+        const username =
+            String(
+                savedUser.username || ""
+            ).trim();
+
+
+        if (!username) {
+
+            localStorage.clear();
+
+            return;
+
+        }
+
+
+        // =================================================
+        // CUSTOMER SUDAH AKTIF
+        // =================================================
+
+        if (
+            hasLicenseForCurrentUser(
+                username
+            )
+        ) {
+
+            window.location.href =
+                "dashboard.html";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // CUSTOMER BELUM AKTIF
+        // =================================================
+
+        window.location.href =
+            "activation.html";
 
     }
 );

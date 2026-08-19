@@ -8,9 +8,12 @@ const LICENSE_STORAGE_KEY =
 const SPREADSHEET_ID_STORAGE_KEY =
     "spreadsheetId";
 
+const ACTIVATED_USERNAME_STORAGE_KEY =
+    "activatedUsername";
+
 
 // =====================================================
-// CEK APAKAH SUPER ADMIN
+// CEK SUPER ADMIN
 // =====================================================
 
 function isSuperAdmin() {
@@ -34,11 +37,6 @@ function isSuperAdmin() {
 
     } catch (error) {
 
-        console.error(
-            "Error cek Super Admin:",
-            error
-        );
-
         return false;
 
     }
@@ -47,7 +45,28 @@ function isSuperAdmin() {
 
 
 // =====================================================
-// AMBIL LICENSE TERSIMPAN
+// AMBIL USER LOGIN
+// =====================================================
+
+function getCurrentUser() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem("user") || "{}"
+        );
+
+    } catch (error) {
+
+        return {};
+
+    }
+
+}
+
+
+// =====================================================
+// AMBIL LICENSE
 // =====================================================
 
 function getSavedLicense() {
@@ -66,6 +85,17 @@ function getSavedSpreadsheetId() {
     return (
         localStorage.getItem(
             SPREADSHEET_ID_STORAGE_KEY
+        ) || ""
+    );
+
+}
+
+
+function getActivatedUsername() {
+
+    return (
+        localStorage.getItem(
+            ACTIVATED_USERNAME_STORAGE_KEY
         ) || ""
     );
 
@@ -98,6 +128,18 @@ function saveSpreadsheetId(id) {
 }
 
 
+function saveActivatedUsername(username) {
+
+    localStorage.setItem(
+        ACTIVATED_USERNAME_STORAGE_KEY,
+        String(username || "")
+            .trim()
+            .toLowerCase()
+    );
+
+}
+
+
 // =====================================================
 // HAPUS LICENSE
 // =====================================================
@@ -113,6 +155,10 @@ function removeLicense() {
     );
 
     localStorage.removeItem(
+        ACTIVATED_USERNAME_STORAGE_KEY
+    );
+
+    localStorage.removeItem(
         "owner"
     );
 
@@ -120,7 +166,7 @@ function removeLicense() {
 
 
 // =====================================================
-// CEK LICENSE KE SERVER
+// VALIDASI LICENSE KE SERVER
 // =====================================================
 
 async function validateLicense(license) {
@@ -178,7 +224,6 @@ async function validateLicense(license) {
 
 
         return data;
-
 
     } catch (err) {
 
@@ -247,6 +292,51 @@ async function activateLicense() {
 
 
     // =================================================
+    // AMBIL USER YANG LOGIN
+    // =================================================
+
+    const user =
+        getCurrentUser();
+
+
+    const username =
+        String(
+            user.username ||
+            localStorage.getItem(
+                "pendingActivationUsername"
+            ) ||
+            ""
+        )
+            .trim();
+
+
+    // =================================================
+    // USER WAJIB ADA
+    // =================================================
+
+    if (!username) {
+
+        showLicenseMessage(
+            "Sesi login tidak ditemukan. Silakan login kembali.",
+            "error"
+        );
+
+        setTimeout(
+            function () {
+
+                window.location.href =
+                    "login.html";
+
+            },
+            1500
+        );
+
+        return;
+
+    }
+
+
+    // =================================================
     // VALIDASI INPUT
     // =================================================
 
@@ -297,7 +387,7 @@ async function activateLicense() {
     try {
 
         // =================================================
-        // CEK LICENSE KE SERVER
+        // VALIDASI KE SERVER
         // =================================================
 
         const data =
@@ -307,7 +397,7 @@ async function activateLicense() {
 
 
         // =================================================
-        // LICENSE INVALID
+        // INVALID
         // =================================================
 
         if (!data.success) {
@@ -315,6 +405,22 @@ async function activateLicense() {
             showLicenseMessage(
                 data.message ||
                 "License tidak valid.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        // =================================================
+        // PASTIKAN SPREADSHEET ADA
+        // =================================================
+
+        if (!data.spreadsheetId) {
+
+            showLicenseMessage(
+                "License valid tetapi Spreadsheet customer tidak ditemukan.",
                 "error"
             );
 
@@ -333,6 +439,12 @@ async function activateLicense() {
 
 
         console.log(
+            "Customer:",
+            username
+        );
+
+
+        console.log(
             "License:",
             license
         );
@@ -346,7 +458,7 @@ async function activateLicense() {
 
         console.log(
             "Spreadsheet ID:",
-            data.spreadsheetId || "-"
+            data.spreadsheetId
         );
 
 
@@ -360,11 +472,20 @@ async function activateLicense() {
 
 
         // =================================================
-        // SIMPAN SPREADSHEET ID
+        // SIMPAN SPREADSHEET ID CUSTOMER
         // =================================================
 
         saveSpreadsheetId(
-            data.spreadsheetId || ""
+            data.spreadsheetId
+        );
+
+
+        // =================================================
+        // SIMPAN USERNAME PEMILIK LICENSE
+        // =================================================
+
+        saveActivatedUsername(
+            username
         );
 
 
@@ -383,17 +504,26 @@ async function activateLicense() {
 
 
         // =================================================
-        // PESAN BERHASIL
+        // HAPUS PENDING
+        // =================================================
+
+        localStorage.removeItem(
+            "pendingActivationUsername"
+        );
+
+
+        // =================================================
+        // PESAN
         // =================================================
 
         showLicenseMessage(
-            "License berhasil diaktifkan! Silakan login...",
+            "License berhasil diaktifkan! Membuka dashboard...",
             "success"
         );
 
 
         // =================================================
-        // KEMBALI KE LOGIN
+        // LANGSUNG DASHBOARD
         // =================================================
 
         setTimeout(
@@ -447,7 +577,7 @@ async function activateLicense() {
 
 
 // =====================================================
-// PESAN AKTIVASI
+// PESAN
 // =====================================================
 
 function showLicenseMessage(
@@ -505,65 +635,29 @@ async function checkLicense() {
 
 
     // =================================================
-    // INFO
+    // USER LOGIN
     // =================================================
 
-    console.log(
-        "License System"
-    );
+    const user =
+        getCurrentUser();
 
 
-    console.log(
-        "App:",
-        CONFIG.APP_NAME
-    );
+    const username =
+        String(
+            user.username || ""
+        )
+            .trim()
+            .toLowerCase();
 
 
-    console.log(
-        "Version:",
-        CONFIG.VERSION
-    );
-
-
-    console.log(
-        "Domain:",
-        location.hostname
-    );
-
-
-    // =================================================
-    // AMBIL LICENSE
-    // =================================================
-
-    const savedLicense =
-        getSavedLicense();
-
-
-    // =================================================
-    // BELUM ADA LICENSE
-    // =================================================
-
-    if (!savedLicense) {
+    if (!username) {
 
         console.warn(
-            "Belum ada license tersimpan."
+            "Tidak ada user login."
         );
 
-
-        // Jangan redirect kalau memang
-        // sedang berada di halaman activation
-
-        if (
-            !location.pathname.endsWith(
-                "activation.html"
-            )
-        ) {
-
-            window.location.href =
-                "activation.html";
-
-        }
-
+        window.location.href =
+            "login.html";
 
         return false;
 
@@ -571,7 +665,49 @@ async function checkLicense() {
 
 
     // =================================================
-    // VALIDASI LICENSE
+    // LICENSE TERSIMPAN
+    // =================================================
+
+    const savedLicense =
+        getSavedLicense();
+
+
+    const savedSpreadsheetId =
+        getSavedSpreadsheetId();
+
+
+    const activatedUsername =
+        getActivatedUsername();
+
+
+    // =================================================
+    // LICENSE BUKAN MILIK USER INI
+    // =================================================
+
+    if (
+        !savedLicense ||
+        !savedSpreadsheetId ||
+        activatedUsername !== username
+    ) {
+
+        console.warn(
+            "License tidak ditemukan atau bukan milik user ini."
+        );
+
+
+        removeLicense();
+
+
+        window.location.href =
+            "activation.html";
+
+        return false;
+
+    }
+
+
+    // =================================================
+    // VALIDASI ULANG KE SERVER
     // =================================================
 
     const data =
@@ -581,7 +717,7 @@ async function checkLicense() {
 
 
     // =================================================
-    // LICENSE INVALID
+    // INVALID
     // =================================================
 
     if (!data.success) {
@@ -595,17 +731,8 @@ async function checkLicense() {
         removeLicense();
 
 
-        if (
-            !location.pathname.endsWith(
-                "activation.html"
-            )
-        ) {
-
-            window.location.href =
-                "activation.html";
-
-        }
-
+        window.location.href =
+            "activation.html";
 
         return false;
 
@@ -613,36 +740,18 @@ async function checkLicense() {
 
 
     // =================================================
-    // LICENSE VALID
+    // PASTIKAN SPREADSHEET SESUAI
     // =================================================
 
-    console.log(
-        "✅ License Valid"
-    );
+    if (
+        data.spreadsheetId &&
+        data.spreadsheetId !== savedSpreadsheetId
+    ) {
 
+        console.warn(
+            "Spreadsheet ID berubah. Memperbarui..."
+        );
 
-    console.log(
-        "Owner:",
-        data.owner || "-"
-    );
-
-
-    console.log(
-        "Spreadsheet ID:",
-        data.spreadsheetId || "-"
-    );
-
-
-    // =================================================
-    // UPDATE DATA TERBARU
-    // =================================================
-
-    saveLicense(
-        savedLicense
-    );
-
-
-    if (data.spreadsheetId) {
 
         saveSpreadsheetId(
             data.spreadsheetId
@@ -650,6 +759,10 @@ async function checkLicense() {
 
     }
 
+
+    // =================================================
+    // UPDATE OWNER
+    // =================================================
 
     if (data.owner) {
 
@@ -661,28 +774,24 @@ async function checkLicense() {
     }
 
 
+    console.log(
+        "✅ License Valid"
+    );
+
+
+    console.log(
+        "Customer:",
+        username
+    );
+
+
+    console.log(
+        "Spreadsheet:",
+        data.spreadsheetId ||
+        savedSpreadsheetId
+    );
+
+
     return true;
 
 }
-
-
-// =====================================================
-// CATATAN
-// =====================================================
-//
-// license.js TIDAK menjalankan checkLicense()
-// secara otomatis.
-//
-// login.html:
-//     login dulu.
-//
-// activation.html:
-//     customer memasukkan license.
-//
-// dashboard.html:
-//     boleh memanggil checkLicense().
-//
-// Super Admin:
-//     checkLicense() langsung return true.
-//
-// =====================================================
