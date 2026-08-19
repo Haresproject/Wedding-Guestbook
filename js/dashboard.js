@@ -722,7 +722,67 @@ function setupAdminMenu() {
 
     }
 
+// =====================================================
+// DISPLAY MENU
+// =====================================================
 
+function setupDisplayMenu() {
+
+    const displayMenu =
+        document.getElementById(
+            "displayMenu"
+        );
+
+
+    if (!displayMenu) {
+
+        console.error(
+            "Menu Display tidak ditemukan."
+        );
+
+        return;
+
+    }
+
+
+    // =============================================
+    // SUPER ADMIN
+    // =============================================
+
+    if (IS_SUPER_ADMIN) {
+
+        displayMenu.href =
+            "https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display";
+
+        displayMenu.target =
+            "_blank";
+
+        console.log(
+            "👑 Display Super Admin aktif."
+        );
+
+    }
+
+
+    // =============================================
+    // CUSTOMER
+    // =============================================
+
+    else {
+
+        displayMenu.href =
+            "display.html";
+
+        displayMenu.target =
+            "_self";
+
+        console.log(
+            "👤 Display Customer aktif."
+        );
+
+    }
+
+}
     // =====================================================
     // INIT
     // =====================================================
@@ -732,6 +792,8 @@ function setupAdminMenu() {
         function () {
 
             setupAdminMenu();
+
+            setupDisplayMenu();
 
             loadDashboard();
 
