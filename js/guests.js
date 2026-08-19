@@ -197,7 +197,7 @@ async function manualCheckin(id){
 
     id:id,
 
-    spreadsheetId: getSpreadsheetId()
+    spreadsheetId: getActiveSpreadsheetId()
 
 })
 
@@ -311,7 +311,7 @@ async function importExcel(e){
 
     guests:rows,
 
-    spreadsheetId: getSpreadsheetId()
+    spreadsheetId: getActiveSpreadsheetId()
 
 })
 
@@ -474,7 +474,7 @@ async function saveGuest(){
     notes:notes,
     tipe:tipe,
     fisik:fisik,
-    spreadsheetId: getSpreadsheetId()
+    spreadsheetId: getActiveSpreadsheetId()
 
 })
         });
