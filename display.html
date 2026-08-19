@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Display - Wedding Guestbook</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #214E43,
+                    #2f6a5c
+                );
+
+            font-family: Arial, sans-serif;
+
+            color: white;
+
+            overflow: hidden;
+
+        }
+
+
+        /* ================= DISPLAY ================= */
+
+        .display-page {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 40px;
+
+            text-align: center;
+
+        }
+
+
+        /* ================= LOGO ================= */
+
+        #weddingLogo {
+
+            width: 100px;
+
+            height: 100px;
+
+            object-fit: contain;
+
+            margin-bottom: 20px;
+
+            display: none;
+
+        }
+
+
+        /* ================= COUPLE ================= */
+
+        #coupleName {
+
+            margin: 0;
+
+            font-size: clamp(
+                40px,
+                5vw,
+                80px
+            );
+
+            font-weight: 700;
+
+        }
+
+
+        .welcome {
+
+            margin-top: 15px;
+
+            font-size: clamp(
+                22px,
+                2.5vw,
+                36px
+            );
+
+            opacity: .9;
+
+        }
+
+
+        /* ================= LATEST ================= */
+
+        .latest-title {
+
+            margin-top: 45px;
+
+            margin-bottom: 25px;
+
+            font-size: clamp(
+                25px,
+                3vw,
+                42px
+            );
+
+        }
+
+
+        #latestGuest {
+
+            width: min(
+                900px,
+                90vw
+            );
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+
+        }
+
+
+        .guest-card {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 18px 25px;
+
+            border-radius: 18px;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                .14
+            );
+
+            backdrop-filter: blur(10px);
+
+            text-align: left;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,.12);
+
+        }
+
+
+        .guest-icon {
+
+            font-size: 35px;
+
+            width: 55px;
+
+            text-align: center;
+
+        }
+
+
+        .guest-info {
+
+            flex: 1;
+
+        }
+
+
+        .guest-name {
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .guest-status {
+
+            font-size: 16px;
+
+            opacity: .8;
+
+        }
+
+
+        .guest-time {
+
+            font-size: 18px;
+
+            opacity: .8;
+
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+
+            padding: 30px;
+
+            border-radius: 18px;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                .1
+            );
+
+            font-size: 20px;
+
+        }
+
+
+        /* ================= FULLSCREEN BUTTON ================= */
+
+        #fullscreenBtn {
+
+            position: fixed;
+
+            right: 20px;
+
+            bottom: 20px;
+
+            border: none;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                .15
+            );
+
+            color: white;
+
+            padding: 12px 18px;
+
+            border-radius: 30px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+        }
+
+
+        #fullscreenBtn:hover {
+
+            background: rgba(
+                255,
+                255,
+                255,
+                .25
+            );
+
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            .display-page {
+
+                padding: 20px;
+
+            }
+
+            #coupleName {
+
+                font-size: 36px;
+
+            }
+
+            .welcome {
+
+                font-size: 20px;
+
+            }
+
+            .latest-title {
+
+                margin-top: 30px;
+
+            }
+
+            .guest-card {
+
+                padding: 15px;
+
+            }
+
+            .guest-name {
+
+                font-size: 18px;
+
+            }
+
+            .guest-time {
+
+                font-size: 14px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="display-page">
+
+
+    <!-- LOGO -->
+
+    <img
+        id="weddingLogo"
+        src=""
+        alt="Wedding Logo"
+    >
+
+
+    <!-- NAMA PENGANTIN -->
+
+    <h1 id="coupleName">
+
+        Loading...
+
+    </h1>
+
+
+    <!-- WELCOME -->
+
+    <div class="welcome">
+
+        Selamat Datang
+
+    </div>
+
+
+    <!-- TITLE -->
+
+    <div class="latest-title">
+
+        🎉 Tamu Terbaru 🎉
+
+    </div>
+
+
+    <!-- TAMU -->
+
+    <div id="latestGuest">
+
+        <div class="empty">
+
+            Memuat data tamu...
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<button
+    id="fullscreenBtn"
+    onclick="toggleFullscreen()"
+>
+    ⛶ Fullscreen
+</button>
+
+
+<script src="js/config.js"></script>
+
+<script src="js/display.js"></script>
+
+
+</body>
+
+</html>
