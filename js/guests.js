@@ -1,9 +1,61 @@
+// =====================================================
+// ACTIVE SPREADSHEET
+// =====================================================
+
+function getActiveSpreadsheetId() {
+
+    try {
+
+        const user =
+            JSON.parse(
+                localStorage.getItem("user") || "{}"
+            );
+
+        // =============================================
+        // SUPER ADMIN
+        // =============================================
+
+        if (
+            String(user.role || "")
+                .trim()
+                .toLowerCase() === "superadmin"
+            ||
+            String(user.username || "")
+                .trim()
+                .toLowerCase() === "admin"
+        ) {
+
+            return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+        }
+
+        // =============================================
+        // CUSTOMER
+        // =============================================
+
+        return (
+            localStorage.getItem(
+                "spreadsheetId"
+            ) || ""
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Gagal menentukan spreadsheet aktif:",
+            error
+        );
+
+        return "";
+
+    }
+
+}
 const API_URL = CONFIG.API_URL;
 
 let guests = [];
 
 const spreadsheetId =
-    localStorage.getItem("spreadsheetId") || "";
+    getActiveSpreadsheetId();
 
 // Pagination
 let currentPage = 1;
@@ -145,7 +197,7 @@ async function manualCheckin(id){
 
     id:id,
 
-    spreadsheetId:spreadsheetId
+    spreadsheetId: getSpreadsheetId()
 
 })
 
@@ -259,7 +311,7 @@ async function importExcel(e){
 
     guests:rows,
 
-    spreadsheetId:spreadsheetId
+    spreadsheetId: getSpreadsheetId()
 
 })
 
@@ -422,7 +474,7 @@ async function saveGuest(){
     notes:notes,
     tipe:tipe,
     fisik:fisik,
-    spreadsheetId:spreadsheetId
+    spreadsheetId: getSpreadsheetId()
 
 })
         });
