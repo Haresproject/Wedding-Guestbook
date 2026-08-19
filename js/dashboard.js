@@ -83,158 +83,146 @@ const IS_SUPER_ADMIN =
     }
 
 
+   // =====================================================
+// ADMIN DROPDOWN
+// =====================================================
+
+function setupAdminMenu() {
+
+    const adminName =
+        document.getElementById("adminName");
+
+    const adminMenu =
+        document.getElementById("adminMenu");
+
+    const licenseMenu =
+        document.getElementById("adminLicenseMenu");
+
+    const logoutMenu =
+        document.getElementById("logoutMenu");
+
+
+    if (!adminName || !adminMenu) {
+
+        console.error(
+            "Admin dropdown tidak ditemukan."
+        );
+
+        return;
+
+    }
+
+
     // =================================================
-    // ADMIN DROPDOWN
+    // TENTUKAN NAMA USER
     // =================================================
 
-    function setupAdminMenu() {
+    if (IS_SUPER_ADMIN) {
 
-        const adminName =
-            document.getElementById("adminName");
-
-        const adminMenu =
-            document.getElementById("adminMenu");
-
-        const licenseMenu =
-            document.getElementById("adminLicenseMenu");
-
-        const logoutMenu =
-            document.getElementById("logoutMenu");
+        adminName.innerHTML =
+            "👑 Super Admin ▾";
 
 
-        if (!adminName || !adminMenu) {
+        if (licenseMenu) {
 
-            console.error(
-                "Admin dropdown tidak ditemukan."
-            );
-
-            return;
+            licenseMenu.style.display =
+                "block";
 
         }
 
+    } else {
 
-        // =============================================
-        // SUPER ADMIN
-        // =============================================
-
-        if (IS_SUPER_ADMIN) {
-
-            adminName.innerHTML =
-                "👑 Super Admin ▾";
+        adminName.innerHTML =
+            "👤 Admin ▾";
 
 
-            if (licenseMenu) {
+        if (licenseMenu) {
 
-                licenseMenu.style.display =
-                    "block";
-
-            }
-
-        }
-
-
-        // =============================================
-        // CUSTOMER / ADMIN BIASA
-        // =============================================
-
-        else {
-
-            adminName.innerHTML =
-                "👤 Admin ▾";
-
-
-            if (licenseMenu) {
-
-                licenseMenu.style.display =
-                    "none";
-
-            }
-
-        }
-
-
-        // =============================================
-        // BUKA DROPDOWN
-        // =============================================
-
-        adminName.addEventListener(
-            "click",
-            function (e) {
-
-                e.preventDefault();
-
-                e.stopPropagation();
-
-                adminMenu.classList.toggle(
-                    "show"
-                );
-
-            }
-        );
-
-
-        // =============================================
-        // JANGAN TUTUP SAAT KLIK MENU
-        // =============================================
-
-        adminMenu.addEventListener(
-            "click",
-            function (e) {
-
-                e.stopPropagation();
-
-            }
-        );
-
-
-        // =============================================
-        // KLIK DI LUAR
-        // =============================================
-
-        document.addEventListener(
-            "click",
-            function (e) {
-
-                if (
-                    !adminMenu.contains(e.target) &&
-                    !adminName.contains(e.target)
-                ) {
-
-                    adminMenu.classList.remove(
-                        "show"
-                    );
-
-                }
-
-            }
-        );
-
-
-        // =============================================
-        // LOGOUT
-        // =============================================
-
-        if (logoutMenu) {
-
-            logoutMenu.addEventListener(
-                "click",
-                function (e) {
-
-                    e.preventDefault();
-
-                    localStorage.clear();
-
-                    sessionStorage.clear();
-
-                    window.location.href =
-                        "login.html";
-
-                }
-            );
+            licenseMenu.style.display =
+                "none";
 
         }
 
     }
+
+
+    // =================================================
+    // BUKA DROPDOWN
+    // =================================================
+
+    adminName.onclick = function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isOpen =
+            adminMenu.classList.contains("show");
+
+
+        if (isOpen) {
+
+            adminMenu.classList.remove("show");
+
+        } else {
+
+            adminMenu.classList.add("show");
+
+        }
+
+    };
+
+
+    // =================================================
+    // JANGAN TUTUP SAAT KLIK ISI DROPDOWN
+    // =================================================
+
+    adminMenu.onclick = function (e) {
+
+        e.stopPropagation();
+
+    };
+
+
+    // =================================================
+    // KLIK DI LUAR
+    // =================================================
+
+    document.onclick = function (e) {
+
+        if (
+            !adminMenu.contains(e.target) &&
+            !adminName.contains(e.target)
+        ) {
+
+            adminMenu.classList.remove("show");
+
+        }
+
+    };
+
+
+    // =================================================
+    // LOGOUT
+    // =================================================
+
+    if (logoutMenu) {
+
+        logoutMenu.onclick = function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            window.location.href =
+                "login.html";
+
+        };
+
+    }
+
+}
 
 
     // =====================================================
