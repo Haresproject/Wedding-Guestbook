@@ -59,6 +59,28 @@ function getSavedUser() {
 
 
 // =====================================================
+// CEK SUPER ADMIN
+// =====================================================
+
+function isSuperAdminUser(user) {
+
+    user =
+        user || {};
+
+    return (
+        String(user.role || "")
+            .trim()
+            .toLowerCase() === "superadmin"
+        ||
+        String(user.username || "")
+            .trim()
+            .toLowerCase() === "admin"
+    );
+
+}
+
+
+// =====================================================
 // SIMPAN SESSION CUSTOMER
 // =====================================================
 
@@ -102,6 +124,74 @@ function saveCustomerSession(
 
 
 // =====================================================
+// SIMPAN SESSION SUPER ADMIN
+// =====================================================
+
+function saveSuperAdminSession(
+    data
+) {
+
+    // -----------------------------------------------
+    // HAPUS SESSION CUSTOMER SAJA
+    // -----------------------------------------------
+
+    localStorage.removeItem(
+        "license"
+    );
+
+    localStorage.removeItem(
+        "spreadsheetId"
+    );
+
+    localStorage.removeItem(
+        "owner"
+    );
+
+    localStorage.removeItem(
+        "activatedUsername"
+    );
+
+    localStorage.removeItem(
+        "licenseUsername"
+    );
+
+    localStorage.removeItem(
+        "pendingActivationUsername"
+    );
+
+
+    // -----------------------------------------------
+    // SIMPAN LOGIN
+    // -----------------------------------------------
+
+    localStorage.setItem(
+        "login",
+        "true"
+    );
+
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify({
+
+            username:
+                data.username ||
+                "admin",
+
+            name:
+                data.name ||
+                "Super Admin",
+
+            role:
+                "superadmin"
+
+        })
+    );
+
+}
+
+
+// =====================================================
 // CEK LICENSE CUSTOMER
 // =====================================================
 
@@ -110,31 +200,37 @@ function hasLicenseForCurrentUser(
 ) {
 
     const savedLicense =
-        localStorage.getItem(
-            "license"
-        ) || "";
+        String(
+            localStorage.getItem(
+                "license"
+            ) || ""
+        ).trim();
 
 
     const savedSpreadsheetId =
-        localStorage.getItem(
-            "spreadsheetId"
-        ) || "";
+        String(
+            localStorage.getItem(
+                "spreadsheetId"
+            ) || ""
+        ).trim();
 
 
     const activatedUsername =
-        localStorage.getItem(
-            "activatedUsername"
-        ) || "";
+        String(
+            localStorage.getItem(
+                "activatedUsername"
+            ) || ""
+        ).trim();
 
 
     // -----------------------------------------------
-    // LICENSE ADA?
+    // LICENSE HARUS ADA
     // -----------------------------------------------
 
-    if (!savedLicense.trim()) {
+    if (!savedLicense) {
 
         console.log(
-            "❌ License belum ada."
+            "❌ License belum tersimpan."
         );
 
         return false;
@@ -143,13 +239,13 @@ function hasLicenseForCurrentUser(
 
 
     // -----------------------------------------------
-    // SPREADSHEET ADA?
+    // SPREADSHEET HARUS ADA
     // -----------------------------------------------
 
-    if (!savedSpreadsheetId.trim()) {
+    if (!savedSpreadsheetId) {
 
         console.log(
-            "❌ Spreadsheet ID belum ada."
+            "❌ Spreadsheet ID belum tersimpan."
         );
 
         return false;
@@ -158,7 +254,7 @@ function hasLicenseForCurrentUser(
 
 
     // -----------------------------------------------
-    // USERNAME AKTIVASI
+    // USERNAME LOGIN
     // -----------------------------------------------
 
     const currentUser =
@@ -167,11 +263,18 @@ function hasLicenseForCurrentUser(
             .toLowerCase();
 
 
+    // -----------------------------------------------
+    // USERNAME AKTIVASI
+    // -----------------------------------------------
+
     const activatedUser =
-        String(activatedUsername || "")
-            .trim()
+        activatedUsername
             .toLowerCase();
 
+
+    // -----------------------------------------------
+    // USERNAME AKTIVASI HARUS ADA
+    // -----------------------------------------------
 
     if (!activatedUser) {
 
@@ -185,7 +288,7 @@ function hasLicenseForCurrentUser(
 
 
     // -----------------------------------------------
-    // HARUS MILIK USER YANG SAMA
+    // HARUS USER YANG SAMA
     // -----------------------------------------------
 
     if (
@@ -212,13 +315,35 @@ function hasLicenseForCurrentUser(
     }
 
 
+    // -----------------------------------------------
+    // VALID
+    // -----------------------------------------------
+
     console.log(
-        "✅ License customer ditemukan."
+        "================================="
+    );
+
+    console.log(
+        "✅ CUSTOMER SUDAH AKTIF"
+    );
+
+    console.log(
+        "Customer:",
+        currentUser
+    );
+
+    console.log(
+        "License:",
+        savedLicense
     );
 
     console.log(
         "Spreadsheet:",
         savedSpreadsheetId
+    );
+
+    console.log(
+        "================================="
     );
 
 
@@ -277,7 +402,8 @@ async function login() {
 
     if (button) {
 
-        button.disabled = true;
+        button.disabled =
+            true;
 
         button.innerText =
             "MEMERIKSA...";
@@ -310,7 +436,8 @@ async function login() {
         if (
             username
                 .trim()
-                .toLowerCase() === "admin"
+                .toLowerCase() ===
+            "admin"
         ) {
 
             console.log(
@@ -323,7 +450,8 @@ async function login() {
                     API_URL,
                     {
 
-                        method: "POST",
+                        method:
+                            "POST",
 
                         headers: {
                             "Content-Type":
@@ -375,38 +503,11 @@ async function login() {
 
 
             // ---------------------------------------------
-            // SUPER ADMIN BOLEH BERSIHKAN SESSION LAMA
-            // ---------------------------------------------
-
-            localStorage.clear();
-
-
-            // ---------------------------------------------
             // SIMPAN SESSION SUPER ADMIN
             // ---------------------------------------------
 
-            localStorage.setItem(
-                "login",
-                "true"
-            );
-
-
-            localStorage.setItem(
-                "user",
-                JSON.stringify({
-
-                    username:
-                        data.username ||
-                        "admin",
-
-                    name:
-                        data.name ||
-                        "Super Admin",
-
-                    role:
-                        "superadmin"
-
-                })
+            saveSuperAdminSession(
+                data
             );
 
 
@@ -437,7 +538,8 @@ async function login() {
                 API_URL,
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
                         "Content-Type":
@@ -502,7 +604,7 @@ async function login() {
 
 
         // =================================================
-        // CEK LICENSE CUSTOMER
+        // CEK LICENSE
         // =================================================
 
         const sudahAktif =
@@ -512,13 +614,13 @@ async function login() {
 
 
         // =================================================
-        // SUDAH AKTIF
+        // CUSTOMER SUDAH AKTIF
         // =================================================
 
         if (sudahAktif) {
 
             console.log(
-                "✅ CUSTOMER SUDAH AKTIF"
+                "✅ Customer sudah memiliki license."
             );
 
 
@@ -536,11 +638,11 @@ async function login() {
 
 
         // =================================================
-        // BELUM AKTIF
+        // CUSTOMER BELUM AKTIF
         // =================================================
 
         console.log(
-            "🔐 CUSTOMER BELUM AKTIF"
+            "🔐 Customer belum memiliki license."
         );
 
 
@@ -622,7 +724,7 @@ function showMessage(
 
 
 // =====================================================
-// SUBMIT
+// SUBMIT FORM
 // =====================================================
 
 if (loginForm) {
@@ -639,126 +741,3 @@ if (loginForm) {
     );
 
 }
-
-
-// =====================================================
-// CEK SESSION SAAT LOGIN PAGE DIBUKA
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        const savedUser =
-            getSavedUser();
-
-
-        // =================================================
-        // BELUM LOGIN
-        // =================================================
-
-        if (
-            localStorage.getItem(
-                "login"
-            ) !== "true"
-        ) {
-
-            console.log(
-                "Login page siap."
-            );
-
-            return;
-
-        }
-
-
-        console.log(
-            "User sudah login:",
-            savedUser
-        );
-
-
-        // =================================================
-        // SUPER ADMIN
-        // =================================================
-
-        if (
-            String(
-                savedUser.role || ""
-            )
-                .trim()
-                .toLowerCase() ===
-            "superadmin"
-        ) {
-
-            window.location.href =
-                "dashboard.html";
-
-            return;
-
-        }
-
-
-        // =================================================
-        // CUSTOMER
-        // =================================================
-
-        const username =
-            String(
-                savedUser.username || ""
-            ).trim();
-
-
-        if (!username) {
-
-            localStorage.removeItem(
-                "login"
-            );
-
-            localStorage.removeItem(
-                "user"
-            );
-
-            return;
-
-        }
-
-
-        // =================================================
-        // CUSTOMER SUDAH AKTIF
-        // =================================================
-
-        if (
-            hasLicenseForCurrentUser(
-                username
-            )
-        ) {
-
-            console.log(
-                "✅ Session customer masih aktif."
-            );
-
-
-            window.location.href =
-                "dashboard.html";
-
-            return;
-
-        }
-
-
-        // =================================================
-        // CUSTOMER BELUM AKTIF
-        // =================================================
-
-        localStorage.setItem(
-            "pendingActivationUsername",
-            username
-        );
-
-
-        window.location.href =
-            "activation.html";
-
-    }
-);
