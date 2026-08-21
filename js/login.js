@@ -33,55 +33,7 @@ const message =
 
 
 // =====================================================
-// GET SAVED USER
-// =====================================================
-
-function getSavedUser() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem("user") || "{}"
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Gagal membaca user:",
-            error
-        );
-
-        return {};
-
-    }
-
-}
-
-
-// =====================================================
-// CEK SUPER ADMIN
-// =====================================================
-
-function isSuperAdminUser(user) {
-
-    user =
-        user || {};
-
-    return (
-        String(user.role || "")
-            .trim()
-            .toLowerCase() === "superadmin"
-        ||
-        String(user.username || "")
-            .trim()
-            .toLowerCase() === "admin"
-    );
-
-}
-
-
-// =====================================================
-// SIMPAN SESSION CUSTOMER
+// SAVE CUSTOMER SESSION
 // =====================================================
 
 function saveCustomerSession(
@@ -93,7 +45,6 @@ function saveCustomerSession(
         "login",
         "true"
     );
-
 
     localStorage.setItem(
         "user",
@@ -124,16 +75,14 @@ function saveCustomerSession(
 
 
 // =====================================================
-// SIMPAN SESSION SUPER ADMIN
+// SAVE SUPER ADMIN SESSION
 // =====================================================
 
 function saveSuperAdminSession(
     data
 ) {
 
-    // -----------------------------------------------
-    // HAPUS SESSION CUSTOMER SAJA
-    // -----------------------------------------------
+    // Hapus SESSION CUSTOMER SAJA
 
     localStorage.removeItem(
         "license"
@@ -159,10 +108,6 @@ function saveSuperAdminSession(
         "pendingActivationUsername"
     );
 
-
-    // -----------------------------------------------
-    // SIMPAN LOGIN
-    // -----------------------------------------------
 
     localStorage.setItem(
         "login",
@@ -199,7 +144,7 @@ function hasLicenseForCurrentUser(
     username
 ) {
 
-    const savedLicense =
+    const license =
         String(
             localStorage.getItem(
                 "license"
@@ -207,7 +152,7 @@ function hasLicenseForCurrentUser(
         ).trim();
 
 
-    const savedSpreadsheetId =
+    const spreadsheetId =
         String(
             localStorage.getItem(
                 "spreadsheetId"
@@ -220,131 +165,71 @@ function hasLicenseForCurrentUser(
             localStorage.getItem(
                 "activatedUsername"
             ) || ""
-        ).trim();
+        ).trim()
+        .toLowerCase();
 
 
-    // -----------------------------------------------
-    // LICENSE HARUS ADA
-    // -----------------------------------------------
-
-    if (!savedLicense) {
-
-        console.log(
-            "❌ License belum tersimpan."
-        );
-
-        return false;
-
-    }
+    const currentUsername =
+        String(
+            username || ""
+        ).trim()
+        .toLowerCase();
 
 
-    // -----------------------------------------------
-    // SPREADSHEET HARUS ADA
-    // -----------------------------------------------
+    console.log(
+        "=== CEK CUSTOMER LICENSE ==="
+    );
 
-    if (!savedSpreadsheetId) {
+    console.log(
+        "Login:",
+        currentUsername
+    );
 
-        console.log(
-            "❌ Spreadsheet ID belum tersimpan."
-        );
-
-        return false;
-
-    }
-
-
-    // -----------------------------------------------
-    // USERNAME LOGIN
-    // -----------------------------------------------
-
-    const currentUser =
-        String(username || "")
-            .trim()
-            .toLowerCase();
-
-
-    // -----------------------------------------------
-    // USERNAME AKTIVASI
-    // -----------------------------------------------
-
-    const activatedUser =
+    console.log(
+        "Activated:",
         activatedUsername
-            .toLowerCase();
-
-
-    // -----------------------------------------------
-    // USERNAME AKTIVASI HARUS ADA
-    // -----------------------------------------------
-
-    if (!activatedUser) {
-
-        console.log(
-            "❌ activatedUsername belum ada."
-        );
-
-        return false;
-
-    }
-
-
-    // -----------------------------------------------
-    // HARUS USER YANG SAMA
-    // -----------------------------------------------
-
-    if (
-        currentUser !==
-        activatedUser
-    ) {
-
-        console.log(
-            "❌ License milik customer lain."
-        );
-
-        console.log(
-            "Login:",
-            currentUser
-        );
-
-        console.log(
-            "Aktivasi:",
-            activatedUser
-        );
-
-        return false;
-
-    }
-
-
-    // -----------------------------------------------
-    // VALID
-    // -----------------------------------------------
-
-    console.log(
-        "================================="
-    );
-
-    console.log(
-        "✅ CUSTOMER SUDAH AKTIF"
-    );
-
-    console.log(
-        "Customer:",
-        currentUser
     );
 
     console.log(
         "License:",
-        savedLicense
+        license ? "ADA" : "KOSONG"
     );
 
     console.log(
         "Spreadsheet:",
-        savedSpreadsheetId
+        spreadsheetId
     );
 
-    console.log(
-        "================================="
-    );
+
+    if (!license) {
+
+        return false;
+
+    }
+
+
+    if (!spreadsheetId) {
+
+        return false;
+
+    }
+
+
+    if (!activatedUsername) {
+
+        return false;
+
+    }
+
+
+    if (
+        currentUsername !==
+        activatedUsername
+    ) {
+
+        return false;
+
+    }
 
 
     return true;
@@ -370,10 +255,6 @@ async function login() {
             : "";
 
 
-    // =================================================
-    // VALIDASI
-    // =================================================
-
     if (!username) {
 
         showMessage(
@@ -396,14 +277,9 @@ async function login() {
     }
 
 
-    // =================================================
-    // LOADING
-    // =================================================
-
     if (button) {
 
-        button.disabled =
-            true;
+        button.disabled = true;
 
         button.innerText =
             "MEMERIKSA...";
@@ -440,11 +316,6 @@ async function login() {
             "admin"
         ) {
 
-            console.log(
-                "👑 Memeriksa Super Admin..."
-            );
-
-
             const response =
                 await fetch(
                     API_URL,
@@ -480,16 +351,6 @@ async function login() {
                 await response.json();
 
 
-            console.log(
-                "SUPER ADMIN RESPONSE:",
-                data
-            );
-
-
-            // ---------------------------------------------
-            // LOGIN GAGAL
-            // ---------------------------------------------
-
             if (!data.success) {
 
                 showMessage(
@@ -502,17 +363,8 @@ async function login() {
             }
 
 
-            // ---------------------------------------------
-            // SIMPAN SESSION SUPER ADMIN
-            // ---------------------------------------------
-
             saveSuperAdminSession(
                 data
-            );
-
-
-            console.log(
-                "✅ SUPER ADMIN LOGIN BERHASIL"
             );
 
 
@@ -527,11 +379,6 @@ async function login() {
         // =================================================
         // CUSTOMER
         // =================================================
-
-        console.log(
-            "👤 Memeriksa Customer..."
-        );
-
 
         const response =
             await fetch(
@@ -571,16 +418,6 @@ async function login() {
             await response.json();
 
 
-        console.log(
-            "CUSTOMER LOGIN RESPONSE:",
-            data
-        );
-
-
-        // =================================================
-        // LOGIN CUSTOMER GAGAL
-        // =================================================
-
         if (!data.success) {
 
             showMessage(
@@ -594,7 +431,7 @@ async function login() {
 
 
         // =================================================
-        // SIMPAN SESSION CUSTOMER
+        // SIMPAN CUSTOMER
         // =================================================
 
         saveCustomerSession(
@@ -604,23 +441,17 @@ async function login() {
 
 
         // =================================================
-        // CEK LICENSE
+        // CEK LICENSE YANG SUDAH TERSIMPAN
         // =================================================
 
-        const sudahAktif =
+        if (
             hasLicenseForCurrentUser(
                 username
-            );
-
-
-        // =================================================
-        // CUSTOMER SUDAH AKTIF
-        // =================================================
-
-        if (sudahAktif) {
+            )
+        ) {
 
             console.log(
-                "✅ Customer sudah memiliki license."
+                "✅ CUSTOMER SUDAH AKTIF"
             );
 
 
@@ -638,11 +469,11 @@ async function login() {
 
 
         // =================================================
-        // CUSTOMER BELUM AKTIF
+        // BELUM AKTIF
         // =================================================
 
         console.log(
-            "🔐 Customer belum memiliki license."
+            "🔐 CUSTOMER BELUM AKTIF"
         );
 
 
@@ -654,8 +485,6 @@ async function login() {
 
         window.location.href =
             "activation.html";
-
-        return;
 
     }
     catch (error) {
@@ -697,7 +526,7 @@ async function login() {
 
 
 // =====================================================
-// PESAN
+// MESSAGE
 // =====================================================
 
 function showMessage(
@@ -712,10 +541,8 @@ function showMessage(
     message.innerText =
         text;
 
-
     message.className =
         "message error";
-
 
     message.style.display =
         "block";
@@ -724,7 +551,7 @@ function showMessage(
 
 
 // =====================================================
-// SUBMIT FORM
+// SUBMIT
 // =====================================================
 
 if (loginForm) {
