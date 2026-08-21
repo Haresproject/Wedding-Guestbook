@@ -91,7 +91,6 @@ function saveCustomerSession(data, username) {
 
 }
 
-
 // =====================================================
 // CEK LICENSE CUSTOMER
 // =====================================================
@@ -99,76 +98,130 @@ function saveCustomerSession(data, username) {
 function hasLicenseForCurrentUser(username) {
 
     const savedLicense =
-        localStorage.getItem(
-            "license"
-        ) || "";
+        localStorage.getItem("license") || "";
 
     const savedSpreadsheetId =
-        localStorage.getItem(
-            "spreadsheetId"
-        ) || "";
+        localStorage.getItem("spreadsheetId") || "";
 
     const activatedUsername =
-        localStorage.getItem(
-            "activatedUsername"
-        ) || "";
-
-    const licenseUsername =
-        localStorage.getItem(
-            "licenseUsername"
-        ) || "";
+        localStorage.getItem("activatedUsername") || "";
 
 
-    // Tidak ada license
-    if (!savedLicense) {
+    // =================================================
+    // LICENSE HARUS ADA
+    // =================================================
+
+    if (!savedLicense.trim()) {
+
+        console.log(
+            "❌ License belum tersimpan."
+        );
+
         return false;
+
     }
 
 
-    // Tidak ada spreadsheet
-    if (!savedSpreadsheetId) {
+    // =================================================
+    // SPREADSHEET ID HARUS ADA
+    // =================================================
+
+    if (!savedSpreadsheetId.trim()) {
+
+        console.log(
+            "❌ Spreadsheet ID belum tersimpan."
+        );
+
         return false;
+
     }
 
 
-    // Username yang mengaktifkan license
-    const activated =
-        activatedUsername
-            .trim()
-            .toLowerCase();
-
-
-    // Username pemilik license
-    const licenseOwner =
-        licenseUsername
-            .trim()
-            .toLowerCase();
-
+    // =================================================
+    // CEK USERNAME
+    // =================================================
 
     const currentUser =
-        username
+        String(username || "")
+            .trim()
+            .toLowerCase();
+
+
+    const activatedUser =
+        String(activatedUsername || "")
             .trim()
             .toLowerCase();
 
 
     // =================================================
-    // HARUS COCOK
+    // USERNAME AKTIVASI HARUS ADA
+    // =================================================
+
+    if (!activatedUser) {
+
+        console.log(
+            "❌ activatedUsername kosong."
+        );
+
+        return false;
+
+    }
+
+
+    // =================================================
+    // HARUS SESUAI
     // =================================================
 
     if (
-        activated !== currentUser ||
-        licenseOwner !== currentUser
+        currentUser !== activatedUser
     ) {
+
+        console.log(
+            "❌ License bukan milik customer ini."
+        );
+
+        console.log(
+            "Login:",
+            currentUser
+        );
+
+        console.log(
+            "Aktivasi:",
+            activatedUser
+        );
 
         return false;
 
     }
+
+
+    // =================================================
+    // VALID
+    // =================================================
+
+    console.log(
+        "✅ License customer ditemukan."
+    );
+
+    console.log(
+        "License:",
+        savedLicense
+    );
+
+    console.log(
+        "Spreadsheet:",
+        savedSpreadsheetId
+    );
+
+    console.log(
+        "Customer:",
+        currentUser
+    );
 
 
     return true;
 
 }
-
 
 // =====================================================
 // HAPUS LICENSE LAMA
