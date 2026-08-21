@@ -30,10 +30,8 @@ const IS_SUPER_ADMIN =
     // Super Admin = Spreadsheet milik kamu
     // Customer    = Spreadsheet dari license
 
-    const SPREADSHEET_ID =
-        IS_SUPER_ADMIN
-            ? (CONFIG.SUPER_ADMIN_SPREADSHEET_ID || "")
-            : (localStorage.getItem("spreadsheetId") || "");
+   const SPREADSHEET_ID =
+    getSessionSpreadsheetId();
 
 
     // =================================================
@@ -207,20 +205,16 @@ function setupAdminMenu() {
 
     if (logoutMenu) {
 
-        logoutMenu.onclick = function (e) {
+    logoutMenu.onclick = function (e) {
 
-            e.preventDefault();
-            e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
-            localStorage.clear();
-            sessionStorage.clear();
+        logout();
 
-            window.location.href =
-                "login.html";
+    };
 
-        };
-
-    }
+}
 
 }
 
