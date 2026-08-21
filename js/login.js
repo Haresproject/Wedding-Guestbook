@@ -33,7 +33,7 @@ const message =
 
 
 // =====================================================
-// HELPER
+// GET SAVED USER
 // =====================================================
 
 function getSavedUser() {
@@ -46,6 +46,11 @@ function getSavedUser() {
 
     } catch (error) {
 
+        console.error(
+            "Gagal membaca user:",
+            error
+        );
+
         return {};
 
     }
@@ -57,12 +62,16 @@ function getSavedUser() {
 // SIMPAN SESSION CUSTOMER
 // =====================================================
 
-function saveCustomerSession(data, username) {
+function saveCustomerSession(
+    data,
+    username
+) {
 
     localStorage.setItem(
         "login",
         "true"
     );
+
 
     localStorage.setItem(
         "user",
@@ -91,30 +100,41 @@ function saveCustomerSession(data, username) {
 
 }
 
+
 // =====================================================
 // CEK LICENSE CUSTOMER
 // =====================================================
 
-function hasLicenseForCurrentUser(username) {
+function hasLicenseForCurrentUser(
+    username
+) {
 
     const savedLicense =
-        localStorage.getItem("license") || "";
+        localStorage.getItem(
+            "license"
+        ) || "";
+
 
     const savedSpreadsheetId =
-        localStorage.getItem("spreadsheetId") || "";
+        localStorage.getItem(
+            "spreadsheetId"
+        ) || "";
+
 
     const activatedUsername =
-        localStorage.getItem("activatedUsername") || "";
+        localStorage.getItem(
+            "activatedUsername"
+        ) || "";
 
 
-    // =================================================
-    // LICENSE HARUS ADA
-    // =================================================
+    // -----------------------------------------------
+    // LICENSE ADA?
+    // -----------------------------------------------
 
     if (!savedLicense.trim()) {
 
         console.log(
-            "❌ License belum tersimpan."
+            "❌ License belum ada."
         );
 
         return false;
@@ -122,14 +142,14 @@ function hasLicenseForCurrentUser(username) {
     }
 
 
-    // =================================================
-    // SPREADSHEET ID HARUS ADA
-    // =================================================
+    // -----------------------------------------------
+    // SPREADSHEET ADA?
+    // -----------------------------------------------
 
     if (!savedSpreadsheetId.trim()) {
 
         console.log(
-            "❌ Spreadsheet ID belum tersimpan."
+            "❌ Spreadsheet ID belum ada."
         );
 
         return false;
@@ -137,9 +157,9 @@ function hasLicenseForCurrentUser(username) {
     }
 
 
-    // =================================================
-    // CEK USERNAME
-    // =================================================
+    // -----------------------------------------------
+    // USERNAME AKTIVASI
+    // -----------------------------------------------
 
     const currentUser =
         String(username || "")
@@ -153,14 +173,10 @@ function hasLicenseForCurrentUser(username) {
             .toLowerCase();
 
 
-    // =================================================
-    // USERNAME AKTIVASI HARUS ADA
-    // =================================================
-
     if (!activatedUser) {
 
         console.log(
-            "❌ activatedUsername kosong."
+            "❌ activatedUsername belum ada."
         );
 
         return false;
@@ -168,16 +184,17 @@ function hasLicenseForCurrentUser(username) {
     }
 
 
-    // =================================================
-    // HARUS SESUAI
-    // =================================================
+    // -----------------------------------------------
+    // HARUS MILIK USER YANG SAMA
+    // -----------------------------------------------
 
     if (
-        currentUser !== activatedUser
+        currentUser !==
+        activatedUser
     ) {
 
         console.log(
-            "❌ License bukan milik customer ini."
+            "❌ License milik customer lain."
         );
 
         console.log(
@@ -195,17 +212,8 @@ function hasLicenseForCurrentUser(username) {
     }
 
 
-    // =================================================
-    // VALID
-    // =================================================
-
     console.log(
         "✅ License customer ditemukan."
-    );
-
-    console.log(
-        "License:",
-        savedLicense
     );
 
     console.log(
@@ -213,41 +221,8 @@ function hasLicenseForCurrentUser(username) {
         savedSpreadsheetId
     );
 
-    console.log(
-        "Customer:",
-        currentUser
-    );
-
 
     return true;
-
-}
-
-// =====================================================
-// HAPUS LICENSE LAMA
-// =====================================================
-
-function clearCustomerLicense() {
-
-    localStorage.removeItem(
-        "license"
-    );
-
-    localStorage.removeItem(
-        "spreadsheetId"
-    );
-
-    localStorage.removeItem(
-        "owner"
-    );
-
-    localStorage.removeItem(
-        "activatedUsername"
-    );
-
-    localStorage.removeItem(
-        "licenseUsername"
-    );
 
 }
 
@@ -262,6 +237,7 @@ async function login() {
         usernameElement
             ? usernameElement.value.trim()
             : "";
+
 
     const password =
         passwordElement
@@ -328,7 +304,7 @@ async function login() {
     try {
 
         // =================================================
-        // 1. SUPER ADMIN
+        // SUPER ADMIN
         // =================================================
 
         if (
@@ -382,9 +358,9 @@ async function login() {
             );
 
 
-            // =================================================
-            // GAGAL
-            // =================================================
+            // ---------------------------------------------
+            // LOGIN GAGAL
+            // ---------------------------------------------
 
             if (!data.success) {
 
@@ -398,16 +374,16 @@ async function login() {
             }
 
 
-            // =================================================
-            // BERSIHKAN SESSION LAMA
-            // =================================================
+            // ---------------------------------------------
+            // SUPER ADMIN BOLEH BERSIHKAN SESSION LAMA
+            // ---------------------------------------------
 
             localStorage.clear();
 
 
-            // =================================================
+            // ---------------------------------------------
             // SIMPAN SESSION SUPER ADMIN
-            // =================================================
+            // ---------------------------------------------
 
             localStorage.setItem(
                 "login",
@@ -448,7 +424,7 @@ async function login() {
 
 
         // =================================================
-        // 2. CUSTOMER
+        // CUSTOMER
         // =================================================
 
         console.log(
@@ -500,7 +476,7 @@ async function login() {
 
 
         // =================================================
-        // CUSTOMER LOGIN GAGAL
+        // LOGIN CUSTOMER GAGAL
         // =================================================
 
         if (!data.success) {
@@ -516,7 +492,7 @@ async function login() {
 
 
         // =================================================
-        // SIMPAN USER SESSION
+        // SIMPAN SESSION CUSTOMER
         // =================================================
 
         saveCustomerSession(
@@ -536,38 +512,23 @@ async function login() {
 
 
         // =================================================
-        // BELUM AKTIF
+        // SUDAH AKTIF
         // =================================================
 
-        if (!sudahAktif) {
+        if (sudahAktif) {
 
             console.log(
-                "🔐 Customer belum memiliki license sendiri."
+                "✅ CUSTOMER SUDAH AKTIF"
             );
 
 
-            // Hapus license lama
-            // tetapi JANGAN hapus login/user
-
-            clearCustomerLicense();
-
-
-            // Tandai siapa yang akan melakukan aktivasi
-
-            localStorage.setItem(
-                "pendingActivationUsername",
-                username
-            );
-
-
-            console.log(
-                "Customer yang akan aktivasi:",
-                username
+            localStorage.removeItem(
+                "pendingActivationUsername"
             );
 
 
             window.location.href =
-                "activation.html";
+                "dashboard.html";
 
             return;
 
@@ -575,21 +536,22 @@ async function login() {
 
 
         // =================================================
-        // SUDAH AKTIF
+        // BELUM AKTIF
         // =================================================
 
         console.log(
-            "✅ Customer sudah memiliki license sendiri."
+            "🔐 CUSTOMER BELUM AKTIF"
         );
 
 
-        localStorage.removeItem(
-            "pendingActivationUsername"
+        localStorage.setItem(
+            "pendingActivationUsername",
+            username
         );
 
 
         window.location.href =
-            "dashboard.html";
+            "activation.html";
 
         return;
 
@@ -636,7 +598,9 @@ async function login() {
 // PESAN
 // =====================================================
 
-function showMessage(text) {
+function showMessage(
+    text
+) {
 
     if (!message) {
         return;
@@ -694,7 +658,9 @@ document.addEventListener(
         // =================================================
 
         if (
-            localStorage.getItem("login") !== "true"
+            localStorage.getItem(
+                "login"
+            ) !== "true"
         ) {
 
             console.log(
@@ -717,9 +683,12 @@ document.addEventListener(
         // =================================================
 
         if (
-            String(savedUser.role || "")
+            String(
+                savedUser.role || ""
+            )
                 .trim()
-                .toLowerCase() === "superadmin"
+                .toLowerCase() ===
+            "superadmin"
         ) {
 
             window.location.href =
@@ -742,7 +711,13 @@ document.addEventListener(
 
         if (!username) {
 
-            localStorage.clear();
+            localStorage.removeItem(
+                "login"
+            );
+
+            localStorage.removeItem(
+                "user"
+            );
 
             return;
 
@@ -758,6 +733,11 @@ document.addEventListener(
                 username
             )
         ) {
+
+            console.log(
+                "✅ Session customer masih aktif."
+            );
+
 
             window.location.href =
                 "dashboard.html";
