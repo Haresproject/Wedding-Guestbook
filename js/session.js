@@ -2,18 +2,23 @@
 // SESSION HELPER
 // =====================================================
 
+
+// =====================================================
+// GET USER
+// =====================================================
+
 function getUser() {
 
     try {
 
-        const user =
+        const raw =
             localStorage.getItem("user");
 
-        if (!user) {
+        if (!raw) {
             return null;
         }
 
-        return JSON.parse(user);
+        return JSON.parse(raw);
 
     } catch (error) {
 
@@ -55,11 +60,23 @@ function isSuperAdmin() {
         String(user.role || "")
             .trim()
             .toLowerCase() === "superadmin"
-        ||
-        String(user.username || "")
-            .trim()
-            .toLowerCase() === "admin"
     );
+
+}
+
+
+// =====================================================
+// GET USERNAME
+// =====================================================
+
+function getSessionUsername() {
+
+    const user =
+        getUser() || {};
+
+    return String(
+        user.username || ""
+    ).trim();
 
 }
 
@@ -70,20 +87,37 @@ function isSuperAdmin() {
 
 function getSessionSpreadsheetId() {
 
-    if (isSuperAdmin()) {
+    const user =
+        getUser() || {};
 
-        return (
-            CONFIG.SUPER_ADMIN_SPREADSHEET_ID ||
-            ""
-        );
+
+    // =================================================
+    // SUPER ADMIN
+    // =================================================
+
+    if (
+        String(user.role || "")
+            .trim()
+            .toLowerCase() ===
+        "superadmin"
+    ) {
+
+        return String(
+            CONFIG.SUPER_ADMIN_SPREADSHEET_ID || ""
+        ).trim();
 
     }
 
-    return (
+
+    // =================================================
+    // CUSTOMER
+    // =================================================
+
+    return String(
         localStorage.getItem(
             "spreadsheetId"
         ) || ""
-    );
+    ).trim();
 
 }
 
@@ -93,6 +127,10 @@ function getSessionSpreadsheetId() {
 // =====================================================
 
 function checkSession() {
+
+    // =================================================
+    // BELUM LOGIN
+    // =================================================
 
     if (!isLogin()) {
 
@@ -104,14 +142,26 @@ function checkSession() {
     }
 
 
+    // =================================================
+    // USER
+    // =================================================
+
     const user =
         getUser();
 
 
-    if (!user || !user.username) {
+    if (
+        !user ||
+        !user.username
+    ) {
 
-        localStorage.removeItem("login");
-        localStorage.removeItem("user");
+        localStorage.removeItem(
+            "login"
+        );
+
+        localStorage.removeItem(
+            "user"
+        );
 
         window.location.href =
             "login.html";
@@ -121,19 +171,19 @@ function checkSession() {
     }
 
 
-    // -----------------------------------------------
+    // =================================================
     // SUPER ADMIN
-    // -----------------------------------------------
+    // =================================================
 
     if (isSuperAdmin()) {
 
         console.log(
-            "👑 SUPER ADMIN SESSION"
+            "👑 SESSION SUPER ADMIN"
         );
 
         console.log(
             "Spreadsheet:",
-            CONFIG.SUPER_ADMIN_SPREADSHEET_ID
+            getSessionSpreadsheetId()
         );
 
         return true;
@@ -141,9 +191,9 @@ function checkSession() {
     }
 
 
-    // -----------------------------------------------
+    // =================================================
     // CUSTOMER
-    // -----------------------------------------------
+    // =================================================
 
     const spreadsheetId =
         getSessionSpreadsheetId();
@@ -151,8 +201,8 @@ function checkSession() {
 
     if (!spreadsheetId) {
 
-        console.warn(
-            "Customer belum memiliki Spreadsheet ID."
+        console.error(
+            "❌ CUSTOMER TIDAK MEMILIKI SPREADSHEET ID"
         );
 
         window.location.href =
@@ -164,12 +214,12 @@ function checkSession() {
 
 
     console.log(
-        "👤 CUSTOMER SESSION"
+        "👤 SESSION CUSTOMER"
     );
 
     console.log(
-        "User:",
-        user
+        "Username:",
+        user.username
     );
 
     console.log(
@@ -189,7 +239,14 @@ function checkSession() {
 
 function logout() {
 
-    // HANYA SESSION
+    console.log(
+        "🚪 Logout..."
+    );
+
+
+    // =================================================
+    // YANG DIHAPUS HANYA SESSION LOGIN
+    // =================================================
 
     localStorage.removeItem(
         "login"
@@ -203,16 +260,23 @@ function logout() {
         "pendingActivationUsername"
     );
 
-    sessionStorage.clear();
 
-
-    // JANGAN HAPUS:
+    // =================================================
+    // JANGAN HAPUS INI
+    // =================================================
     //
     // license
     // spreadsheetId
-    // owner
     // activatedUsername
     // licenseUsername
+    // owner
+    //
+    // Karena ini adalah DATA AKTIVASI CUSTOMER.
+    // =================================================
+
+
+    sessionStorage.clear();
+
 
     window.location.href =
         "login.html";
@@ -233,11 +297,17 @@ function logout() {
             .toLowerCase();
 
 
+    // =================================================
+    // PUBLIC PAGE
+    // =================================================
+
     const publicPages = [
+
         "",
         "index.html",
         "login.html",
         "activation.html"
+
     ];
 
 
@@ -251,6 +321,10 @@ function logout() {
 
     }
 
+
+    // =================================================
+    // INTERNAL PAGE
+    // =================================================
 
     checkSession();
 
