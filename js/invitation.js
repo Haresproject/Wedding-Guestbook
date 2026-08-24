@@ -59,22 +59,58 @@ const rowsPerPage = 10;
 
 
 // =====================================================
-// SPREADSHEET ID
+// ACTIVE SPREADSHEET
 // =====================================================
 
-function getSpreadsheetId(){
+function getActiveSpreadsheetId() {
 
-    if(IS_SUPER_ADMIN){
+    try {
+
+        const user =
+            JSON.parse(
+                localStorage.getItem("user") || "{}"
+            );
+
+        // =============================================
+        // SUPER ADMIN
+        // =============================================
+
+        if (
+            String(user.role || "")
+                .trim()
+                .toLowerCase() === "superadmin"
+            ||
+            String(user.username || "")
+                .trim()
+                .toLowerCase() === "admin"
+        ) {
+
+            return (
+                CONFIG.SUPER_ADMIN_SPREADSHEET_ID || ""
+            );
+
+        }
+
+        // =============================================
+        // CUSTOMER
+        // =============================================
 
         return (
-            CONFIG.SUPER_ADMIN_SPREADSHEET_ID ||
-            SPREADSHEET_ID ||
-            ""
+            localStorage.getItem(
+                "spreadsheetId"
+            ) || ""
         );
 
-    }
+    } catch (error) {
 
-    return SPREADSHEET_ID;
+        console.error(
+            "Gagal menentukan spreadsheet aktif:",
+            error
+        );
+
+        return "";
+
+    }
 
 }
 
@@ -88,7 +124,7 @@ async function loadGuests(){
     try{
 
         const spreadsheetId =
-            getSpreadsheetId();
+    getActiveSpreadsheetId();
 
 
         const url =
@@ -725,7 +761,7 @@ async function saveGuestEdit(){
 
 
     const spreadsheetId =
-        getSpreadsheetId();
+    getActiveSpreadsheetId();
 
 
     try{
@@ -1128,7 +1164,7 @@ async function sendWhatsapp(
     try{
 
         const spreadsheetId =
-            getSpreadsheetId();
+    getActiveSpreadsheetId();
 
 
         const settingsUrl =
@@ -1381,7 +1417,7 @@ async function deleteGuest(id){
 
 
     const spreadsheetId =
-        getSpreadsheetId();
+    getActiveSpreadsheetId();
 
 
     try{
