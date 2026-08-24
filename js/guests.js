@@ -63,9 +63,14 @@ async function loadGuests() {
 
     try {
 
+        const spreadsheetId =
+            getActiveSpreadsheetId();
+
         if (!spreadsheetId) {
 
-            console.error("Spreadsheet ID kosong.");
+            console.error(
+                "Spreadsheet ID kosong."
+            );
 
             return;
 
@@ -76,19 +81,56 @@ async function loadGuests() {
             API_URL +
             "?action=guests" +
             "&spreadsheetId=" +
-            encodeURIComponent(spreadsheetId) +
+            encodeURIComponent(
+                spreadsheetId
+            ) +
             "&t=" +
-            Date.now()
+            Date.now(),
+
+            {
+                cache: "no-store"
+            }
 
         );
 
-        guests = await response.json();
+        const data =
+            await response.json();
+
+        console.log(
+            "Guests:",
+            data
+        );
+
+        if (Array.isArray(data)) {
+
+            guests = data;
+
+        }
+        else if (
+            data &&
+            Array.isArray(data.guests)
+        ) {
+
+            guests = data.guests;
+
+        }
+        else {
+
+            guests = [];
+
+        }
+
+        currentPage = 1;
 
         renderGuests(guests);
 
-    } catch (err) {
+    }
+    catch (err) {
 
-        console.error("Load guests gagal:", err);
+        console.error(
+            "Load guests gagal:",
+            err
+        );
 
     }
 
