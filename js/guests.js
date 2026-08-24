@@ -63,8 +63,6 @@ async function loadGuests() {
 
     try {
 
-        const spreadsheetId = getActiveSpreadsheetId();
-
         if (!spreadsheetId) {
 
             console.error("Spreadsheet ID kosong.");
