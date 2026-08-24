@@ -228,19 +228,36 @@ async function manualCheckin(id){
 }
 
 // ================= SEARCH =================
-document.getElementById("search").addEventListener("keyup",function(){
 
-    const keyword = this.value.toLowerCase();
+document
+.getElementById("search")
+.addEventListener("keyup", function () {
 
-    const hasil = guests.filter(g =>
+    const keyword =
+        this.value
+            .toLowerCase()
+            .trim();
 
-        (g.nama || "")
-        .toLowerCase()
-        .includes(keyword)
+    const hasil =
+        guests.filter(g => {
 
-    );
+            const nama =
+                String(g.nama || "")
+                    .toLowerCase();
+
+            const id =
+                String(g.id || "")
+                    .toLowerCase();
+
+            return (
+                nama.includes(keyword) ||
+                id.includes(keyword)
+            );
+
+        });
 
     currentPage = 1;
+
     renderGuests(hasil);
 
 });
