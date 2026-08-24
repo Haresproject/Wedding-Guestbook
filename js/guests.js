@@ -54,33 +54,43 @@ const API_URL = CONFIG.API_URL;
 
 let guests = [];
 
-const spreadsheetId =
-    getActiveSpreadsheetId();
-
 // Pagination
 let currentPage = 1;
 const rowsPerPage = 10;
+
 // ================= LOAD DATA =================
 async function loadGuests() {
 
     try {
 
+        const spreadsheetId = getActiveSpreadsheetId();
+
+        if (!spreadsheetId) {
+
+            console.error("Spreadsheet ID kosong.");
+
+            return;
+
+        }
+
         const response = await fetch(
-    API_URL +
-    "?action=guests" +
-    "&spreadsheetId=" +
-    encodeURIComponent(spreadsheetId) +
-    "&t=" +
-    Date.now()
-);
+
+            API_URL +
+            "?action=guests" +
+            "&spreadsheetId=" +
+            encodeURIComponent(spreadsheetId) +
+            "&t=" +
+            Date.now()
+
+        );
 
         guests = await response.json();
 
         renderGuests(guests);
 
-    } catch(err){
+    } catch (err) {
 
-        console.error(err);
+        console.error("Load guests gagal:", err);
 
     }
 
@@ -205,7 +215,7 @@ async function manualCheckin(id){
 
         const data = await res.json();
 
-        alert(data.message);
+        alert(data.message || "Check-in berhasil.");
 
         loadGuests();
 
@@ -319,7 +329,7 @@ async function importExcel(e){
 
             const result = await res.json();
 
-            alert(result.message);
+            alert(result.message || "Import berhasil.");
 
             loadGuests();
 
@@ -483,21 +493,21 @@ async function saveGuest(){
 
         if(result.success){
 
-            alert("Tamu berhasil ditambahkan.");
+    alert(result.message || "Tamu berhasil ditambahkan.");
 
-            closeAddGuestModal();
+    closeAddGuestModal();
 
-            document.getElementById("guestNama").value = "";
-            document.getElementById("guestNotes").value = "";
-            document.getElementById("guestFisik").checked = false;
+    document.getElementById("guestNama").value = "";
+    document.getElementById("guestNotes").value = "";
+    document.getElementById("guestFisik").checked = false;
 
-            loadGuests();
+    loadGuests();
 
-        }else{
+}else{
 
-            alert(result.message);
+    alert(result.message || "Gagal menambahkan tamu.");
 
-        }
+}
 
     }catch(err){
 

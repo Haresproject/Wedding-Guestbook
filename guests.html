@@ -88,8 +88,8 @@
 
             <a href="scanner.html">📷 Scanner</a>
 
-            <a href="https://script.google.com/macros/s/AKfycbxypLyJtFO5DdrkBFHPEE6fGqG8HvHyubI4hxfN4jcb00m5auniNEjIvpfQLrFs5Y7P/exec?page=display" target="_blank">
-                📺 Display
+            <a href="display.html" id="displayMenu">
+             📺 Display
             </a>
 
             <a href="invitation.html">💌 Undangan</a>
@@ -271,23 +271,8 @@ z-index:9999;">
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script src="js/config.js"></script>
+<script src="js/session.js"></script>
 <script src="js/guests.js"></script>
-
-<script>
-
-if(localStorage.getItem("login")!="true"){
-
-    location.href="index.html";
-
-}
-
-function logout(){
-
-    localStorage.removeItem("login");
-
-    location.href="login.html";
-
-}
 
 </script>
 
