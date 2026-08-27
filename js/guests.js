@@ -291,10 +291,14 @@ document
                 String(g.id || "")
                     .toLowerCase();
 
+            const notes = String(g.notes || "")
+                     .toLowerCase();
+
             return (
-                nama.includes(keyword) ||
-                id.includes(keyword)
-            );
+             nama.includes(keyword) ||
+              id.includes(keyword) ||
+              notes.includes(keyword)
+                );
 
         });
 
