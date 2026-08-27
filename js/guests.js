@@ -33,9 +33,7 @@ function getActiveSpreadsheetId() {
         // =============================================
 
         return (
-            localStorage.getItem(
-                "spreadsheetId"
-            ) || ""
+            localStorage.getItem("spreadsheetId") || ""
         );
 
     } catch (error) {
@@ -46,13 +44,13 @@ function getActiveSpreadsheetId() {
         );
 
         return "";
-
     }
-
 }
+
 const API_URL = CONFIG.API_URL;
 
 let guests = [];
+let filteredGuests = [];
 
 // Pagination
 let currentPage = 1;
@@ -63,15 +61,11 @@ async function loadGuests() {
 
     try {
 
-        const spreadsheetId =
-            getActiveSpreadsheetId();
+        const spreadsheetId = getActiveSpreadsheetId();
 
         if (!spreadsheetId) {
 
-            console.error(
-                "Spreadsheet ID kosong."
-            );
-
+            console.error("Spreadsheet ID kosong.");
             return;
 
         }
@@ -81,9 +75,7 @@ async function loadGuests() {
             API_URL +
             "?action=guests" +
             "&spreadsheetId=" +
-            encodeURIComponent(
-                spreadsheetId
-            ) +
+            encodeURIComponent(spreadsheetId) +
             "&t=" +
             Date.now(),
 
@@ -93,44 +85,32 @@ async function loadGuests() {
 
         );
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
-        console.log(
-            "Guests:",
-            data
-        );
+        console.log("Guests:", data);
 
         if (Array.isArray(data)) {
 
             guests = data;
 
-        }
-        else if (
-            data &&
-            Array.isArray(data.guests)
-        ) {
+        } else if (data && Array.isArray(data.guests)) {
 
             guests = data.guests;
 
-        }
-        else {
+        } else {
 
             guests = [];
 
         }
 
+        filteredGuests = [...guests];
         currentPage = 1;
-
-        renderGuests(guests);
+        renderGuests(filteredGuests);
 
     }
     catch (err) {
 
-        console.error(
-            "Load guests gagal:",
-            err
-        );
+        console.error("Load guests gagal:", err);
 
     }
 
@@ -167,31 +147,31 @@ function getTipeBadge(tipe) {
 }
 
 // ================= TAMPILKAN TABEL =================
-function renderGuests(data){
+
+function renderGuests(data) {
 
     const tbody = document.getElementById("guestTable");
 
     let html = "";
 
     const start = (currentPage - 1) * rowsPerPage;
-const end = start + rowsPerPage;
+    const end = start + rowsPerPage;
 
-const pageData = data.slice(start, end);
+    const pageData = data.slice(start, end);
 
     pageData.forEach(guest => {
 
         const statusClass =
             guest.status === "HADIR"
-            ? "hadir"
-            : "belum";
+                ? "hadir"
+                : "belum";
 
         const tombol =
             guest.status === "HADIR"
-            ? `<button class="btn-disabled" disabled>✔ Sudah Hadir</button>`
-            : `<button class="btn-checkin"
-                onclick="manualCheckin('${guest.id}')">
-                ✅ Check-in
-               </button>`;
+                ? `<button class="btn-disabled" disabled>✔ Sudah Hadir</button>`
+                : `<button class="btn-checkin" onclick="manualCheckin('${guest.id}')">
+                    ✅ Check-in
+                   </button>`;
 
         html += `
         <tr>
@@ -200,13 +180,13 @@ const pageData = data.slice(start, end);
 
             <td>${guest.nama}</td>
 
-<td>${guest.notes || "-"}</td>
+            <td>${guest.notes || "-"}</td>
 
-<td>
-    <span class="${statusClass}">
-        ${guest.status}
-    </span>
-</td>
+            <td>
+                <span class="${statusClass}">
+                    ${guest.status}
+                </span>
+            </td>
 
             <td>${getTipeBadge(guest.tipe)}</td>
 
@@ -218,38 +198,43 @@ const pageData = data.slice(start, end);
     });
 
     tbody.innerHTML = html;
+
     updatePagination(data.length);
+
     const info = document.getElementById("tableInfo");
 
-if (info) {
+    if (info) {
 
-    const from = data.length === 0 ? 0 : start + 1;
-    const to = Math.min(end, data.length);
+        const from = data.length === 0 ? 0 : start + 1;
+        const to = Math.min(end, data.length);
 
-    info.innerText = `Menampilkan ${from}-${to} dari ${data.length} tamu`;
-}
+        info.innerText = `Menampilkan ${from}-${to} dari ${data.length} tamu`;
+
+    }
+
 }
 
 // ================= CHECK-IN MANUAL =================
-async function manualCheckin(id){
 
-    if(!confirm("Check-in tamu ini?")) return;
+async function manualCheckin(id) {
 
-    try{
+    if (!confirm("Check-in tamu ini?")) return;
 
-        const res = await fetch(API_URL,{
+    try {
 
-            method:"POST",
+        const res = await fetch(API_URL, {
 
-            body:JSON.stringify({
+            method: "POST",
 
-    action:"manualCheckin",
+            body: JSON.stringify({
 
-    id:id,
+                action: "manualCheckin",
 
-    spreadsheetId: getActiveSpreadsheetId()
+                id: id,
 
-})
+                spreadsheetId: getActiveSpreadsheetId()
+
+            })
 
         });
 
@@ -259,7 +244,7 @@ async function manualCheckin(id){
 
         loadGuests();
 
-    }catch(err){
+    } catch (err) {
 
         console.log(err);
 
@@ -272,80 +257,74 @@ async function manualCheckin(id){
 // ================= SEARCH =================
 
 document
-.getElementById("search")
-.addEventListener("keyup", function () {
+    .getElementById("search")
+    .addEventListener("keyup", function () {
 
-    const keyword =
-        this.value
-            .toLowerCase()
-            .trim();
+        const keyword =
+            this.value
+                .toLowerCase()
+                .trim();
 
-    const hasil =
-        guests.filter(g => {
+        filteredGuests = guests.filter(g => {
 
-            const nama =
-                String(g.nama || "")
-                    .toLowerCase();
-
-            const id =
-                String(g.id || "")
-                    .toLowerCase();
-
-            const notes = String(g.notes || "")
-                     .toLowerCase();
+            const nama = String(g.nama || "").toLowerCase();
+            const id = String(g.id || "").toLowerCase();
+            const notes = String(g.notes || "").toLowerCase();
 
             return (
-             nama.includes(keyword) ||
-              id.includes(keyword) ||
-              notes.includes(keyword)
-                );
+                nama.includes(keyword) ||
+                id.includes(keyword) ||
+                notes.includes(keyword)
+            );
 
         });
 
-    currentPage = 1;
+        currentPage = 1;
 
-    renderGuests(hasil);
+        renderGuests(filteredGuests);
 
-});
+    });
 
 // ================= FORMAT JAM =================
-function formatJam(jam){
 
-    if(!jam) return "-";
+function formatJam(jam) {
+
+    if (!jam) return "-";
 
     const d = new Date(jam);
 
-    return d.toLocaleTimeString("id-ID",{
+    return d.toLocaleTimeString("id-ID", {
 
-        hour:"2-digit",
+        hour: "2-digit",
 
-        minute:"2-digit"
+        minute: "2-digit"
 
     });
 
 }
 
 // ================= AUTO LOAD =================
+
 loadGuests();
 
 // ================= IMPORT EXCEL =================
 
 document
-.getElementById("excelFile")
-.addEventListener("change", importExcel);
+    .getElementById("excelFile")
+    .addEventListener("change", importExcel);
 
-async function importExcel(e){
+async function importExcel(e) {
 
     const file = e.target.files[0];
 
-    if(!file) return;
+    if (!file) return;
 
     const reader = new FileReader();
 
-    reader.onload = async function(evt){
+    reader.onload = async function (evt) {
 
-        const workbook = XLSX.read(evt.target.result,{
-            type:"binary"
+        const workbook = XLSX.read(evt.target.result, {
+            type: "binary"
         });
 
         const sheet = workbook.Sheets[
@@ -354,7 +333,7 @@ async function importExcel(e){
 
         const rows = XLSX.utils.sheet_to_json(sheet);
 
-        if(rows.length==0){
+        if (rows.length == 0) {
 
             alert("File Excel kosong.");
 
@@ -362,29 +341,27 @@ async function importExcel(e){
 
         }
 
-        if(!confirm(
-            "Import "+rows.length+" tamu?"
-        )) return;
+        if (!confirm("Import " + rows.length + " tamu?")) return;
 
-        try{
+        try {
 
-            const res = await fetch(API_URL,{
+            const res = await fetch(API_URL, {
 
-                method:"POST",
+                method: "POST",
 
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 },
 
-                body:JSON.stringify({
+                body: JSON.stringify({
 
-    action:"importGuests",
+                    action: "importGuests",
 
-    guests:rows,
+                    guests: rows,
 
-    spreadsheetId: getActiveSpreadsheetId()
+                    spreadsheetId: getActiveSpreadsheetId()
 
-})
+                })
 
             });
 
@@ -394,7 +371,7 @@ async function importExcel(e){
 
             loadGuests();
 
-        }catch(err){
+        } catch (err) {
 
             console.log(err);
 
@@ -408,9 +385,11 @@ async function importExcel(e){
 
 }
 
-function updatePagination(totalData){
+// ================= PAGINATION =================
 
-    const totalPages = Math.ceil(totalData / rowsPerPage);
+function updatePagination(totalData) {
+
+    const totalPages = Math.max(1, Math.ceil(totalData / rowsPerPage));
 
     document.getElementById("pageInfo").innerText =
         `Halaman ${currentPage} / ${totalPages}`;
@@ -420,23 +399,54 @@ function updatePagination(totalData){
 
     document.getElementById("nextBtn").disabled =
         currentPage === totalPages;
+
 }
 
-function exportExcel(){
+document.getElementById("prevBtn").onclick = () => {
 
-    const data = guests.map(g=>({
+    if (currentPage > 1) {
 
-        ID:g.id,
+        currentPage--;
 
-        Nama:g.nama,
+        renderGuests(filteredGuests);
 
-        Status:g.status,
+    }
 
-        Tipe:g.tipe,
+};
 
-        Jam:g.jam,
+document.getElementById("nextBtn").onclick = () => {
 
-        Tanggal:g.tanggal
+    const totalPages = Math.max(1, Math.ceil(filteredGuests.length / rowsPerPage));
+
+    if (currentPage < totalPages) {
+
+        currentPage++;
+
+        renderGuests(filteredGuests);
+
+    }
+
+};
+
+// ================= EXPORT =================
+
+function exportExcel() {
+
+    const data = guests.map(g => ({
+
+        ID: g.id,
+
+        Nama: g.nama,
+
+        Notes: g.notes || "",
+
+        Status: g.status,
+
+        Tipe: g.tipe,
+
+        Jam: g.jam,
+
+        Tanggal: g.tanggal
 
     }));
 
@@ -444,12 +454,13 @@ function exportExcel(){
 
     const ws = XLSX.utils.json_to_sheet(data);
 
-    XLSX.utils.book_append_sheet(wb,ws,"Daftar Tamu");
+    XLSX.utils.book_append_sheet(wb, ws, "Daftar Tamu");
 
-    XLSX.writeFile(wb,"Daftar_Tamu.xlsx");
+    XLSX.writeFile(wb, "Daftar_Tamu.xlsx");
 
 }
-async function exportPDF(){
+
+async function exportPDF() {
 
     const { jsPDF } = window.jspdf;
 
@@ -457,13 +468,15 @@ async function exportPDF(){
 
     doc.setFontSize(18);
 
-    doc.text("Daftar Tamu Wedding",14,18);
+    doc.text("Daftar Tamu Wedding", 14, 18);
 
-    const rows = guests.map(g=>[
+    const rows = guests.map(g => [
 
         g.id,
 
         g.nama,
+
+        g.notes || "-",
 
         g.status,
 
@@ -475,51 +488,28 @@ async function exportPDF(){
 
     doc.autoTable({
 
-        head:[["ID","Nama","Status","Tipe","Jam"]],
+        head: [["ID", "Nama", "Notes", "Status", "Tipe", "Jam"]],
 
-        body:rows,
+        body: rows,
 
-        startY:25
+        startY: 25
 
     });
 
     doc.save("Daftar_Tamu.pdf");
 
 }
-document.getElementById("prevBtn").onclick = () => {
 
-    if(currentPage > 1){
+// ================= TAMBAH TAMU =================
 
-        currentPage--;
-
-        renderGuests(guests);
-
-    }
-
-};
-
-document.getElementById("nextBtn").onclick = () => {
-
-    const totalPages = Math.ceil(guests.length / rowsPerPage);
-
-    if(currentPage < totalPages){
-
-        currentPage++;
-
-        renderGuests(guests);
-
-    }
-
-};
-
-async function saveGuest(){
+async function saveGuest() {
 
     const nama = document.getElementById("guestNama").value.trim();
     const notes = document.getElementById("guestNotes").value.trim();
     const tipe = document.getElementById("guestTipe").value;
     const fisik = document.getElementById("guestFisik").checked;
 
-    if(nama === ""){
+    if (nama === "") {
 
         alert("Nama tamu wajib diisi.");
 
@@ -527,50 +517,52 @@ async function saveGuest(){
 
     }
 
-    try{
+    try {
 
-        const res = await fetch(API_URL,{
+        const res = await fetch(API_URL, {
 
-            method:"POST",
+            method: "POST",
 
-            headers:{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json"
             },
 
-           body:JSON.stringify({
+            body: JSON.stringify({
 
-    action:"addGuest",
+                action: "addGuest",
 
-    nama:nama,
-    notes:notes,
-    tipe:tipe,
-    fisik:fisik,
-    spreadsheetId: getActiveSpreadsheetId()
+                nama: nama,
+                notes: notes,
+                tipe: tipe,
+                fisik: fisik,
 
-})
+                spreadsheetId: getActiveSpreadsheetId()
+
+            })
+
         });
 
         const result = await res.json();
 
-        if(result.success){
+        if (result.success) {
 
-    alert(result.message || "Tamu berhasil ditambahkan.");
+            alert(result.message || "Tamu berhasil ditambahkan.");
 
-    closeAddGuestModal();
+            closeAddGuestModal();
 
-    document.getElementById("guestNama").value = "";
-    document.getElementById("guestNotes").value = "";
-    document.getElementById("guestFisik").checked = false;
+            document.getElementById("guestNama").value = "";
+            document.getElementById("guestNotes").value = "";
+            document.getElementById("guestFisik").checked = false;
 
-    loadGuests();
+            loadGuests();
 
-}else{
+        } else {
 
-    alert(result.message || "Gagal menambahkan tamu.");
+            alert(result.message || "Gagal menambahkan tamu.");
 
-}
+        }
 
-    }catch(err){
+    } catch (err) {
 
         console.log(err);
 
@@ -579,13 +571,14 @@ async function saveGuest(){
     }
 
 }
-function showAddGuestModal(){
+
+function showAddGuestModal() {
 
     document.getElementById("addGuestModal").style.display = "flex";
 
 }
 
-function closeAddGuestModal(){
+function closeAddGuestModal() {
 
     document.getElementById("addGuestModal").style.display = "none";
 
