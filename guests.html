@@ -59,45 +59,61 @@
     background: #fef3c7;
     color: #b45309;
 }
-/* FILTER TIPE TAMU */
+/* =========================================
+   FILTER TIPE TAMU
+========================================= */
 
-.filter-row{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin:15px 0;
+.filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 15px 0;
 }
 
-.filter-tipe-btn{
-    padding:8px 16px;
-    border:none;
-    border-radius:999px;
-    background:#f1f5f9;
-    cursor:pointer;
-    font-weight:600;
+/* TOMBOL */
+
+.filter-tipe-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+
+    background: #ffffff;
+    color: #374151;
+
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: all 0.2s ease;
 }
 
-/* FILTER TIPE TAMU */
+/* ICON */
 
-.filter-row{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin:15px 0;
+.filter-icon {
+    font-size: 17px;
+    line-height: 1;
 }
 
-.filter-tipe-btn{
-    padding:8px 16px;
-    border:none;
-    border-radius:999px;
-    background:#f1f5f9;
-    cursor:pointer;
-    font-weight:600;
+/* HOVER */
+
+.filter-tipe-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
 }
 
-.filter-tipe-btn.active{
-    background:#14532d;
-    color:white;
+/* AKTIF */
+
+.filter-tipe-btn.active {
+    background: #ffffff;
+    border-color: #14532d;
+    color: #14532d;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 </style>
 
@@ -182,35 +198,40 @@
     <button
         class="filter-tipe-btn active"
         data-tipe="ALL"
-        onclick="filterTipe('ALL')">
+        onclick="filterTipe('ALL', this)">
+        <span class="filter-icon">👥</span>
         Semua
     </button>
 
     <button
         class="filter-tipe-btn"
         data-tipe="REGULER"
-        onclick="filterTipe('REGULER')">
+        onclick="filterTipe('REGULER', this)">
+        <span class="filter-icon">👤</span>
         Reguler
     </button>
 
     <button
         class="filter-tipe-btn"
         data-tipe="KELUARGA"
-        onclick="filterTipe('KELUARGA')">
+        onclick="filterTipe('KELUARGA', this)">
+        <span class="filter-icon">👥</span>
         Keluarga
     </button>
 
     <button
         class="filter-tipe-btn"
         data-tipe="VIP"
-        onclick="filterTipe('VIP')">
+        onclick="filterTipe('VIP', this)">
+        <span class="filter-icon">♕</span>
         VIP
     </button>
 
     <button
         class="filter-tipe-btn"
         data-tipe="BRIDESMAID"
-        onclick="filterTipe('BRIDESMAID')">
+        onclick="filterTipe('BRIDESMAID', this)">
+        <span class="filter-icon">♡</span>
         Bridesmaid
     </button>
 
