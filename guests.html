@@ -59,7 +59,46 @@
     background: #fef3c7;
     color: #b45309;
 }
+/* FILTER TIPE TAMU */
 
+.filter-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:15px 0;
+}
+
+.filter-tipe-btn{
+    padding:8px 16px;
+    border:none;
+    border-radius:999px;
+    background:#f1f5f9;
+    cursor:pointer;
+    font-weight:600;
+}
+
+/* FILTER TIPE TAMU */
+
+.filter-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:15px 0;
+}
+
+.filter-tipe-btn{
+    padding:8px 16px;
+    border:none;
+    border-radius:999px;
+    background:#f1f5f9;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.filter-tipe-btn.active{
+    background:#14532d;
+    color:white;
+}
 </style>
 
 </head>
@@ -137,6 +176,45 @@
     id="search"
     placeholder="Cari nama tamu..."
 >
+
+<div class="filter-row">
+
+    <button
+        class="filter-tipe-btn active"
+        data-tipe="ALL"
+        onclick="filterTipe('ALL')">
+        Semua
+    </button>
+
+    <button
+        class="filter-tipe-btn"
+        data-tipe="REGULER"
+        onclick="filterTipe('REGULER')">
+        Reguler
+    </button>
+
+    <button
+        class="filter-tipe-btn"
+        data-tipe="KELUARGA"
+        onclick="filterTipe('KELUARGA')">
+        Keluarga
+    </button>
+
+    <button
+        class="filter-tipe-btn"
+        data-tipe="VIP"
+        onclick="filterTipe('VIP')">
+        VIP
+    </button>
+
+    <button
+        class="filter-tipe-btn"
+        data-tipe="BRIDESMAID"
+        onclick="filterTipe('BRIDESMAID')">
+        Bridesmaid
+    </button>
+
+</div>
 
 <div id="tableInfo" class="table-info">
     Menampilkan 0–0 dari 0 tamu

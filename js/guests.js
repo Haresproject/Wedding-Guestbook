@@ -51,6 +51,7 @@ const API_URL = CONFIG.API_URL;
 
 let guests = [];
 let filteredGuests = [];
+let currentTypeFilter = "ALL";
 
 // Pagination
 let currentPage = 1;
@@ -143,6 +144,63 @@ function getTipeBadge(tipe) {
     }
 
     return `<span class="tipe-badge tipe-reguler">Reguler</span>`;
+
+}
+
+// ================= FILTER TIPE TAMU =================
+
+function filterTipe(tipe) {
+
+    currentTypeFilter = tipe;
+    currentPage = 1;
+
+    // Highlight tombol aktif
+    document.querySelectorAll(".filter-tipe-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    const activeBtn = document.querySelector(`[data-tipe="${tipe}"]`);
+
+    if (activeBtn) {
+        activeBtn.classList.add("active");
+    }
+
+    applyGuestFilter();
+
+}
+
+// ================= GABUNG SEARCH + FILTER =================
+
+function applyGuestFilter() {
+
+    const keyword = document
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    filteredGuests = guests.filter(g => {
+
+        const nama = String(g.nama || "").toLowerCase();
+        const id = String(g.id || "").toLowerCase();
+        const notes = String(g.notes || "").toLowerCase();
+        const tipe = String(g.tipe || "REGULER").toUpperCase();
+
+        const cocokSearch =
+            !keyword ||
+            nama.includes(keyword) ||
+            id.includes(keyword) ||
+            notes.includes(keyword);
+
+        const cocokTipe =
+            currentTypeFilter === "ALL" ||
+            tipe === currentTypeFilter;
+
+        return cocokSearch && cocokTipe;
+
+    });
+
+    renderGuests(filteredGuests);
 
 }
 
@@ -260,31 +318,12 @@ document
     .getElementById("search")
     .addEventListener("keyup", function () {
 
-        const keyword =
-            this.value
-                .toLowerCase()
-                .trim();
-
-        filteredGuests = guests.filter(g => {
-
-            const nama = String(g.nama || "").toLowerCase();
-            const id = String(g.id || "").toLowerCase();
-            const notes = String(g.notes || "").toLowerCase();
-
-            return (
-                nama.includes(keyword) ||
-                id.includes(keyword) ||
-                notes.includes(keyword)
-            );
-
-        });
-
         currentPage = 1;
 
-        renderGuests(filteredGuests);
+        applyGuestFilter();
 
     });
-
+    
 // ================= FORMAT JAM =================
 
 function formatJam(jam) {
