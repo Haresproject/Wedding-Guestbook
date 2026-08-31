@@ -149,24 +149,24 @@ function getTipeBadge(tipe) {
 
 // ================= FILTER TIPE TAMU =================
 
-function filterTipe(tipe) {
+function filterTipe(tipe, button) {
 
     currentTypeFilter = tipe;
     currentPage = 1;
 
-    // Highlight tombol aktif
-    document.querySelectorAll(".filter-tipe-btn").forEach(btn => {
-        btn.classList.remove("active");
-    });
+    // Hapus active dari semua tombol
+    document
+        .querySelectorAll(".filter-tipe-btn")
+        .forEach(btn => {
+            btn.classList.remove("active");
+        });
 
-    const activeBtn = document.querySelector(`[data-tipe="${tipe}"]`);
-
-    if (activeBtn) {
-        activeBtn.classList.add("active");
+    // Aktifkan tombol yang diklik
+    if (button) {
+        button.classList.add("active");
     }
 
     applyGuestFilter();
-
 }
 
 // ================= GABUNG SEARCH + FILTER =================
@@ -323,7 +323,7 @@ document
         applyGuestFilter();
 
     });
-    
+
 // ================= FORMAT JAM =================
 
 function formatJam(jam) {
