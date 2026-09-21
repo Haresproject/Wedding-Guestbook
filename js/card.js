@@ -1,5 +1,8 @@
 const API_URL = "https://wedguest.kosthandoko907.workers.dev";
 
+const SUPER_ADMIN_SPREADSHEET_ID =
+    "1UD0JkA5648XBuSETCMzukduZD_F-te-fZLc0kAOoM3Y";
+
 const params = new URLSearchParams(location.search);
 
 const id = params.get("id");
@@ -7,7 +10,6 @@ const autoDownload = params.get("download") === "1";
 
 console.log("ID:", id);
 console.log("Auto Download:", autoDownload);
-
 
 // ==========================================
 // GET ACTIVE SPREADSHEET
@@ -36,7 +38,7 @@ function getActiveSpreadsheetId() {
                 "CARD → menggunakan spreadsheet Super Admin"
             );
 
-            return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+            return SUPER_ADMIN_SPREADSHEET_ID;
 
         }
 
@@ -57,14 +59,15 @@ function getActiveSpreadsheetId() {
 
 
         // ======================================
-        // FALLBACK SUPER ADMIN
+        // FALLBACK
         // ======================================
 
         console.log(
             "CARD → spreadsheet user tidak ditemukan, fallback Super Admin"
         );
 
-        return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+        return SUPER_ADMIN_SPREADSHEET_ID;
+
 
     } catch (err) {
 
@@ -73,7 +76,7 @@ function getActiveSpreadsheetId() {
             err
         );
 
-        return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+        return SUPER_ADMIN_SPREADSHEET_ID;
 
     }
 
