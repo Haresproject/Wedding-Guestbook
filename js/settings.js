@@ -1,8 +1,14 @@
+// =====================================================
+// SETTINGS.JS
+// WEDDING GUESTBOOK
+// FINAL VERSION
+// =====================================================
+
 const API_URL = CONFIG.API_URL;
 
 
 // =====================================================
-// AMBIL SPREADSHEET ID CUSTOMER
+// AMBIL SPREADSHEET ID
 // =====================================================
 
 function getCustomerSpreadsheetId() {
@@ -13,9 +19,9 @@ function getCustomerSpreadsheetId() {
         );
 
 
-    // ================================================
+    // =================================================
     // SUPER ADMIN
-    // ================================================
+    // =================================================
 
     if (
         String(user.role || "")
@@ -27,14 +33,17 @@ function getCustomerSpreadsheetId() {
             .toLowerCase() === "admin"
     ) {
 
-        return "";
+        return (
+            CONFIG.SUPER_ADMIN_SPREADSHEET_ID ||
+            ""
+        );
 
     }
 
 
-    // ================================================
+    // =================================================
     // CUSTOMER
-    // ================================================
+    // =================================================
 
     return (
         localStorage.getItem(
@@ -57,20 +66,26 @@ async function loadSettings() {
             getCustomerSpreadsheetId();
 
 
-        let url =
-            API_URL +
-            "?action=settings";
+        if (!spreadsheetId) {
 
-
-        if (spreadsheetId) {
-
-            url +=
-                "&spreadsheetId=" +
-                encodeURIComponent(
-                    spreadsheetId
-                );
+            throw new Error(
+                "Spreadsheet ID tidak ditemukan."
+            );
 
         }
+
+
+        // =============================================
+        // URL SETTINGS
+        // =============================================
+
+        const url =
+            API_URL +
+            "?action=settings" +
+            "&spreadsheetId=" +
+            encodeURIComponent(
+                spreadsheetId
+            );
 
 
         console.log(
@@ -91,7 +106,8 @@ async function loadSettings() {
         if (!res.ok) {
 
             throw new Error(
-                "HTTP " + res.status
+                "HTTP " +
+                res.status
             );
 
         }
@@ -107,65 +123,122 @@ async function loadSettings() {
         );
 
 
-        // ============================================
-        // DATA UTAMA
-        // ============================================
-
-        document.getElementById("bride").value =
-            data.bride || "";
-
-
-        document.getElementById("groom").value =
-            data.groom || "";
-
-
-        document.getElementById("venue").value =
-            data.venue || "";
-
-
-        document.getElementById("invitationLink").value =
-            data.invitationLink || "";
-
-
-        document.getElementById("logo").value =
-            data.logo || "";
-
-
-        document.getElementById("background").value =
-            data.background || "";
-
-
-        document.getElementById("cardBackground").value =
-            data.cardBackground || "";
-
-
-        // ============================================
-        // CARD BACKGROUND PREVIEW
-        // ============================================
-
-        const cardBgPreview =
-            document.getElementById(
-                "cardBgPreview"
-            );
-
+        // =============================================
+        // VALIDASI RESPONSE
+        // =============================================
 
         if (
-            cardBgPreview &&
-            data.cardBackground
+            data &&
+            data.success === false
         ) {
 
-            cardBgPreview.src =
-                data.cardBackground;
-
-            cardBgPreview.style.display =
-                "block";
+            throw new Error(
+                data.message ||
+                "Gagal mengambil settings."
+            );
 
         }
 
 
-        // ============================================
+        // =============================================
+        // DATA UTAMA
+        // =============================================
+
+        const bride =
+            document.getElementById(
+                "bride"
+            );
+
+        const groom =
+            document.getElementById(
+                "groom"
+            );
+
+        const venue =
+            document.getElementById(
+                "venue"
+            );
+
+        const invitationLink =
+            document.getElementById(
+                "invitationLink"
+            );
+
+        const logo =
+            document.getElementById(
+                "logo"
+            );
+
+        const background =
+            document.getElementById(
+                "background"
+            );
+
+        const cardBackground =
+            document.getElementById(
+                "cardBackground"
+            );
+
+
+        if (bride) {
+
+            bride.value =
+                data.bride || "";
+
+        }
+
+
+        if (groom) {
+
+            groom.value =
+                data.groom || "";
+
+        }
+
+
+        if (venue) {
+
+            venue.value =
+                data.venue || "";
+
+        }
+
+
+        if (invitationLink) {
+
+            invitationLink.value =
+                data.invitationLink || "";
+
+        }
+
+
+        if (logo) {
+
+            logo.value =
+                data.logo || "";
+
+        }
+
+
+        if (background) {
+
+            background.value =
+                data.background || "";
+
+        }
+
+
+        if (cardBackground) {
+
+            cardBackground.value =
+                data.cardBackground || "";
+
+        }
+
+
+        // =============================================
         // LOGO PREVIEW
-        // ============================================
+        // =============================================
 
         const logoPreview =
             document.getElementById(
@@ -187,9 +260,9 @@ async function loadSettings() {
         }
 
 
-        // ============================================
+        // =============================================
         // BACKGROUND PREVIEW
-        // ============================================
+        // =============================================
 
         const bgPreview =
             document.getElementById(
@@ -211,21 +284,58 @@ async function loadSettings() {
         }
 
 
-        // ============================================
-        // DATE
-        // ============================================
+        // =============================================
+        // CARD BACKGROUND PREVIEW
+        // =============================================
 
-        if (data.date) {
+        const cardBgPreview =
+            document.getElementById(
+                "cardBgPreview"
+            );
+
+
+        if (
+            cardBgPreview &&
+            data.cardBackground
+        ) {
+
+            cardBgPreview.src =
+                data.cardBackground;
+
+            cardBgPreview.style.display =
+                "block";
+
+        }
+
+
+        // =============================================
+        // DATE
+        // =============================================
+
+        const dateElement =
+            document.getElementById(
+                "date"
+            );
+
+
+        if (
+            dateElement &&
+            data.date
+        ) {
 
             const d =
-                new Date(data.date);
+                new Date(
+                    data.date
+                );
 
 
-            if (!isNaN(d.getTime())) {
+            if (
+                !isNaN(
+                    d.getTime()
+                )
+            ) {
 
-                document.getElementById(
-                    "date"
-                ).value =
+                dateElement.value =
                     d.toISOString()
                         .split("T")[0];
 
@@ -234,19 +344,27 @@ async function loadSettings() {
         }
 
 
-        // ============================================
+        // =============================================
         // THEME
-        // ============================================
+        // =============================================
 
         const theme =
             data.theme ||
             "emerald";
 
 
-        document.getElementById(
-            "theme"
-        ).value =
-            theme;
+        const themeElement =
+            document.getElementById(
+                "theme"
+            );
+
+
+        if (themeElement) {
+
+            themeElement.value =
+                theme;
+
+        }
 
 
         applyTheme(
@@ -254,37 +372,62 @@ async function loadSettings() {
         );
 
 
-        // ============================================
+        // =============================================
         // USERNAME
-        // ============================================
+        // =============================================
 
-        document.getElementById(
-            "username"
-        ).value =
-            data.username ||
-            "admin";
+        const usernameElement =
+            document.getElementById(
+                "username"
+            );
 
 
-        // ============================================
+        if (usernameElement) {
+
+            usernameElement.value =
+                data.username ||
+                "admin";
+
+        }
+
+
+        // =============================================
         // PASSWORD
-        // ============================================
+        // =============================================
 
-        document.getElementById(
-            "password"
-        ).value =
-            data.password ||
-            "admin123";
+        const passwordElement =
+            document.getElementById(
+                "password"
+            );
 
 
-        // ============================================
+        if (passwordElement) {
+
+            passwordElement.value =
+                data.password ||
+                "admin123";
+
+        }
+
+
+        // =============================================
         // WHATSAPP TEMPLATE
-        // ============================================
+        // =============================================
 
-        document.getElementById(
-            "waTemplate"
-        ).value =
-            data.waTemplate ||
-            "";
+        const waTemplateElement =
+            document.getElementById(
+                "waTemplate"
+            );
+
+
+        if (waTemplateElement) {
+
+            waTemplateElement.value =
+                data.waTemplate ||
+                "";
+
+        }
+
 
     }
     catch (err) {
@@ -295,7 +438,8 @@ async function loadSettings() {
         );
 
         alert(
-            "Gagal memuat pengaturan."
+            "Gagal memuat pengaturan: " +
+            err.message
         );
 
     }
@@ -313,6 +457,40 @@ async function saveSettings() {
         getCustomerSpreadsheetId();
 
 
+    if (!spreadsheetId) {
+
+        alert(
+            "Spreadsheet ID tidak ditemukan."
+        );
+
+        return;
+
+    }
+
+
+    // =================================================
+    // AMBIL ELEMENT
+    // =================================================
+
+    const getValue =
+        function(id) {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+            return element
+                ? element.value
+                : "";
+
+        };
+
+
+    // =================================================
+    // BODY
+    // =================================================
+
     const body = {
 
         action:
@@ -322,64 +500,40 @@ async function saveSettings() {
             spreadsheetId,
 
         bride:
-            document.getElementById(
-                "bride"
-            ).value,
+            getValue("bride"),
 
         groom:
-            document.getElementById(
-                "groom"
-            ).value,
+            getValue("groom"),
 
         date:
-            document.getElementById(
-                "date"
-            ).value,
+            getValue("date"),
 
         venue:
-            document.getElementById(
-                "venue"
-            ).value,
+            getValue("venue"),
 
         invitationLink:
-            document.getElementById(
-                "invitationLink"
-            ).value,
+            getValue("invitationLink"),
 
         logo:
-            document.getElementById(
-                "logo"
-            ).value,
+            getValue("logo"),
 
         background:
-            document.getElementById(
-                "background"
-            ).value,
+            getValue("background"),
 
         theme:
-            document.getElementById(
-                "theme"
-            ).value,
+            getValue("theme"),
 
         username:
-            document.getElementById(
-                "username"
-            ).value,
+            getValue("username"),
 
         password:
-            document.getElementById(
-                "password"
-            ).value,
+            getValue("password"),
 
         waTemplate:
-            document.getElementById(
-                "waTemplate"
-            ).value,
+            getValue("waTemplate"),
 
         cardBackground:
-            document.getElementById(
-                "cardBackground"
-            ).value
+            getValue("cardBackground")
 
     };
 
@@ -417,7 +571,8 @@ async function saveSettings() {
         if (!res.ok) {
 
             throw new Error(
-                "HTTP " + res.status
+                "HTTP " +
+                res.status
             );
 
         }
@@ -428,12 +583,13 @@ async function saveSettings() {
 
 
         console.log(
-            "SAVE SETTINGS RESPONSE:",
+            "💾 SAVE SETTINGS RESPONSE:",
             result
         );
 
 
         if (
+            result &&
             result.success === false
         ) {
 
@@ -463,7 +619,8 @@ async function saveSettings() {
 
 
         alert(
-            "Gagal menyimpan pengaturan."
+            "Gagal menyimpan pengaturan: " +
+            err.message
         );
 
     }
@@ -597,7 +754,7 @@ async function uploadFile(file) {
 
 
             reader.onload =
-                async function (e) {
+                async function(e) {
 
                     try {
 
@@ -608,6 +765,15 @@ async function uploadFile(file) {
 
                         const spreadsheetId =
                             getCustomerSpreadsheetId();
+
+
+                        if (!spreadsheetId) {
+
+                            throw new Error(
+                                "Spreadsheet ID tidak ditemukan."
+                            );
+
+                        }
 
 
                         const res =
@@ -662,13 +828,21 @@ async function uploadFile(file) {
 
 
                         if (
-                            data.success === false ||
-                            !data.url
+                            data.success === false
                         ) {
 
                             throw new Error(
                                 data.message ||
-                                "URL upload tidak tersedia"
+                                "Upload gagal."
+                            );
+
+                        }
+
+
+                        if (!data.url) {
+
+                            throw new Error(
+                                "URL hasil upload tidak tersedia."
                             );
 
                         }
@@ -679,7 +853,7 @@ async function uploadFile(file) {
                         );
 
                     }
-                    catch (err) {
+                    catch(err) {
 
                         reject(
                             err
@@ -691,7 +865,7 @@ async function uploadFile(file) {
 
 
             reader.onerror =
-                function () {
+                function() {
 
                     reject(
                         new Error(
@@ -713,7 +887,7 @@ async function uploadFile(file) {
 
 
 // =====================================================
-// LOGO
+// LOGO UPLOAD
 // =====================================================
 
 const logoFile =
@@ -726,7 +900,7 @@ if (logoFile) {
 
     logoFile.addEventListener(
         "change",
-        async function () {
+        async function() {
 
             if (
                 this.files.length === 0
@@ -743,14 +917,17 @@ if (logoFile) {
                 );
 
 
-            preview.src =
-                URL.createObjectURL(
-                    file
-                );
+            if (preview) {
 
+                preview.src =
+                    URL.createObjectURL(
+                        file
+                    );
 
-            preview.style.display =
-                "block";
+                preview.style.display =
+                    "block";
+
+            }
 
 
             try {
@@ -768,10 +945,11 @@ if (logoFile) {
 
 
             }
-            catch (err) {
+            catch(err) {
 
                 alert(
-                    "Upload logo gagal"
+                    "Upload logo gagal: " +
+                    err.message
                 );
 
 
@@ -788,7 +966,7 @@ if (logoFile) {
 
 
 // =====================================================
-// BACKGROUND
+// BACKGROUND UPLOAD
 // =====================================================
 
 const bgFile =
@@ -801,7 +979,7 @@ if (bgFile) {
 
     bgFile.addEventListener(
         "change",
-        async function () {
+        async function() {
 
             if (
                 this.files.length === 0
@@ -818,14 +996,17 @@ if (bgFile) {
                 );
 
 
-            preview.src =
-                URL.createObjectURL(
-                    file
-                );
+            if (preview) {
 
+                preview.src =
+                    URL.createObjectURL(
+                        file
+                    );
 
-            preview.style.display =
-                "block";
+                preview.style.display =
+                    "block";
+
+            }
 
 
             try {
@@ -843,10 +1024,11 @@ if (bgFile) {
 
 
             }
-            catch (err) {
+            catch(err) {
 
                 alert(
-                    "Upload background gagal"
+                    "Upload background gagal: " +
+                    err.message
                 );
 
 
@@ -863,7 +1045,7 @@ if (bgFile) {
 
 
 // =====================================================
-// CARD BACKGROUND
+// CARD BACKGROUND UPLOAD
 // =====================================================
 
 const cardBgFile =
@@ -876,7 +1058,7 @@ if (cardBgFile) {
 
     cardBgFile.addEventListener(
         "change",
-        async function () {
+        async function() {
 
             if (
                 this.files.length === 0
@@ -893,14 +1075,17 @@ if (cardBgFile) {
                 );
 
 
-            preview.src =
-                URL.createObjectURL(
-                    file
-                );
+            if (preview) {
 
+                preview.src =
+                    URL.createObjectURL(
+                        file
+                    );
 
-            preview.style.display =
-                "block";
+                preview.style.display =
+                    "block";
+
+            }
 
 
             try {
@@ -918,10 +1103,11 @@ if (cardBgFile) {
 
 
             }
-            catch (err) {
+            catch(err) {
 
                 alert(
-                    "Upload background QR gagal"
+                    "Upload background QR gagal: " +
+                    err.message
                 );
 
 
