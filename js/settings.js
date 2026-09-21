@@ -45,26 +45,23 @@ function getCustomerSpreadsheetId() {
 }
 
 
-// ================= LOAD SETTINGS =================
+// =====================================================
+// LOAD SETTINGS
+// =====================================================
 
-async function loadSettings(){
+async function loadSettings() {
 
-    try{
+    try {
 
         const spreadsheetId =
             getCustomerSpreadsheetId();
 
-
-        // ============================================
-        // BUAT URL SETTINGS
-        // ============================================
 
         let url =
             API_URL +
             "?action=settings";
 
 
-        // Customer
         if (spreadsheetId) {
 
             url +=
@@ -91,6 +88,15 @@ async function loadSettings(){
             );
 
 
+        if (!res.ok) {
+
+            throw new Error(
+                "HTTP " + res.status
+            );
+
+        }
+
+
         const data =
             await res.json();
 
@@ -102,7 +108,7 @@ async function loadSettings(){
 
 
         // ============================================
-        // DATA SETTINGS
+        // DATA UTAMA
         // ============================================
 
         document.getElementById("bride").value =
@@ -137,17 +143,21 @@ async function loadSettings(){
         // CARD BACKGROUND PREVIEW
         // ============================================
 
-        if(data.cardBackground){
-
+        const cardBgPreview =
             document.getElementById(
                 "cardBgPreview"
-            ).src =
+            );
+
+
+        if (
+            cardBgPreview &&
+            data.cardBackground
+        ) {
+
+            cardBgPreview.src =
                 data.cardBackground;
 
-
-            document.getElementById(
-                "cardBgPreview"
-            ).style.display =
+            cardBgPreview.style.display =
                 "block";
 
         }
@@ -157,17 +167,21 @@ async function loadSettings(){
         // LOGO PREVIEW
         // ============================================
 
-        if(data.logo){
-
+        const logoPreview =
             document.getElementById(
                 "logoPreview"
-            ).src =
+            );
+
+
+        if (
+            logoPreview &&
+            data.logo
+        ) {
+
+            logoPreview.src =
                 data.logo;
 
-
-            document.getElementById(
-                "logoPreview"
-            ).style.display =
+            logoPreview.style.display =
                 "block";
 
         }
@@ -177,17 +191,21 @@ async function loadSettings(){
         // BACKGROUND PREVIEW
         // ============================================
 
-        if(data.background){
-
+        const bgPreview =
             document.getElementById(
                 "bgPreview"
-            ).src =
+            );
+
+
+        if (
+            bgPreview &&
+            data.background
+        ) {
+
+            bgPreview.src =
                 data.background;
 
-
-            document.getElementById(
-                "bgPreview"
-            ).style.display =
+            bgPreview.style.display =
                 "block";
 
         }
@@ -197,17 +215,21 @@ async function loadSettings(){
         // DATE
         // ============================================
 
-        if(data.date){
+        if (data.date) {
 
             const d =
                 new Date(data.date);
 
 
-            document.getElementById(
-                "date"
-            ).value =
-                d.toISOString()
-                    .split("T")[0];
+            if (!isNaN(d.getTime())) {
+
+                document.getElementById(
+                    "date"
+                ).value =
+                    d.toISOString()
+                        .split("T")[0];
+
+            }
 
         }
 
@@ -216,16 +238,19 @@ async function loadSettings(){
         // THEME
         // ============================================
 
-        document.getElementById(
-            "theme"
-        ).value =
+        const theme =
             data.theme ||
             "emerald";
 
 
+        document.getElementById(
+            "theme"
+        ).value =
+            theme;
+
+
         applyTheme(
-            data.theme ||
-            "emerald"
+            theme
         );
 
 
@@ -261,13 +286,16 @@ async function loadSettings(){
             data.waTemplate ||
             "";
 
-
     }
-    catch(err){
+    catch (err) {
 
         console.error(
             "LOAD SETTINGS ERROR:",
             err
+        );
+
+        alert(
+            "Gagal memuat pengaturan."
         );
 
     }
@@ -275,97 +303,78 @@ async function loadSettings(){
 }
 
 
-// ================= SAVE SETTINGS =================
+// =====================================================
+// SAVE SETTINGS
+// =====================================================
 
-async function saveSettings(){
+async function saveSettings() {
 
     const spreadsheetId =
         getCustomerSpreadsheetId();
 
-
-    // ================================================
-    // BODY
-    // ================================================
 
     const body = {
 
         action:
             "saveSettings",
 
-
-        // ============================================
-        // CUSTOMER SPREADSHEET
-        // ============================================
-
         spreadsheetId:
             spreadsheetId,
-
 
         bride:
             document.getElementById(
                 "bride"
             ).value,
 
-
         groom:
             document.getElementById(
                 "groom"
             ).value,
-
 
         date:
             document.getElementById(
                 "date"
             ).value,
 
-
         venue:
             document.getElementById(
                 "venue"
             ).value,
-
 
         invitationLink:
             document.getElementById(
                 "invitationLink"
             ).value,
 
-
         logo:
             document.getElementById(
                 "logo"
             ).value,
-
 
         background:
             document.getElementById(
                 "background"
             ).value,
 
-
         theme:
             document.getElementById(
                 "theme"
             ).value,
-
 
         username:
             document.getElementById(
                 "username"
             ).value,
 
-
         password:
             document.getElementById(
                 "password"
             ).value,
 
-
         waTemplate:
             document.getElementById(
                 "waTemplate"
             ).value,
-
 
         cardBackground:
             document.getElementById(
@@ -381,7 +390,7 @@ async function saveSettings(){
     );
 
 
-    try{
+    try {
 
         const res =
             await fetch(
@@ -391,7 +400,7 @@ async function saveSettings(){
                     method:
                         "POST",
 
-                    headers:{
+                    headers: {
                         "Content-Type":
                             "application/json"
                     },
@@ -405,6 +414,15 @@ async function saveSettings(){
             );
 
 
+        if (!res.ok) {
+
+            throw new Error(
+                "HTTP " + res.status
+            );
+
+        }
+
+
         const result =
             await res.json();
 
@@ -415,6 +433,20 @@ async function saveSettings(){
         );
 
 
+        if (
+            result.success === false
+        ) {
+
+            alert(
+                result.message ||
+                "Gagal menyimpan pengaturan."
+            );
+
+            return;
+
+        }
+
+
         alert(
             result.message ||
             "Pengaturan berhasil disimpan."
@@ -422,7 +454,7 @@ async function saveSettings(){
 
 
     }
-    catch(err){
+    catch (err) {
 
         console.error(
             "SAVE SETTINGS ERROR:",
@@ -431,7 +463,7 @@ async function saveSettings(){
 
 
         alert(
-            "Gagal menyimpan."
+            "Gagal menyimpan pengaturan."
         );
 
     }
@@ -439,40 +471,42 @@ async function saveSettings(){
 }
 
 
-// ================= THEME =================
+// =====================================================
+// THEME
+// =====================================================
 
-function applyTheme(theme){
+function applyTheme(theme) {
 
     const themes = {
 
-        emerald:{
-            primary:"#214E43",
-            secondary:"#2f6a5c",
-            accent:"#E8C547"
+        emerald: {
+            primary: "#214E43",
+            secondary: "#2f6a5c",
+            accent: "#E8C547"
         },
 
-        gold:{
-            primary:"#B8860B",
-            secondary:"#D4AF37",
-            accent:"#F5DEB3"
+        gold: {
+            primary: "#B8860B",
+            secondary: "#D4AF37",
+            accent: "#F5DEB3"
         },
 
-        rosegold:{
-            primary:"#B76E79",
-            secondary:"#D98C99",
-            accent:"#F4D6CC"
+        rosegold: {
+            primary: "#B76E79",
+            secondary: "#D98C99",
+            accent: "#F4D6CC"
         },
 
-        royalblue:{
-            primary:"#1E3A8A",
-            secondary:"#2563EB",
-            accent:"#60A5FA"
+        royalblue: {
+            primary: "#1E3A8A",
+            secondary: "#2563EB",
+            accent: "#60A5FA"
         },
 
-        black:{
-            primary:"#222222",
-            secondary:"#444444",
-            accent:"#C9A227"
+        black: {
+            primary: "#222222",
+            secondary: "#444444",
+            accent: "#C9A227"
         }
 
     };
@@ -503,11 +537,21 @@ function applyTheme(theme){
 }
 
 
-document
-    .getElementById("theme")
-    .addEventListener(
+// =====================================================
+// THEME CHANGE
+// =====================================================
+
+const themeElement =
+    document.getElementById(
+        "theme"
+    );
+
+
+if (themeElement) {
+
+    themeElement.addEventListener(
         "change",
-        function(){
+        function () {
 
             applyTheme(
                 this.value
@@ -516,30 +560,46 @@ document
         }
     );
 
+}
 
-document
-    .getElementById("saveBtn")
-    .addEventListener(
+
+// =====================================================
+// SAVE BUTTON
+// =====================================================
+
+const saveButton =
+    document.getElementById(
+        "saveBtn"
+    );
+
+
+if (saveButton) {
+
+    saveButton.addEventListener(
         "click",
         saveSettings
     );
 
+}
 
-// ================= UPLOAD FILE =================
 
-async function uploadFile(file){
+// =====================================================
+// UPLOAD FILE
+// =====================================================
+
+async function uploadFile(file) {
 
     return new Promise(
-        (resolve,reject)=>{
+        (resolve, reject) => {
 
             const reader =
                 new FileReader();
 
 
             reader.onload =
-                async function(e){
+                async function (e) {
 
-                    try{
+                    try {
 
                         const base64 =
                             e.target.result
@@ -558,7 +618,7 @@ async function uploadFile(file){
                                     method:
                                         "POST",
 
-                                    headers:{
+                                    headers: {
                                         "Content-Type":
                                             "application/json"
                                     },
@@ -587,23 +647,57 @@ async function uploadFile(file){
                             );
 
 
+                        if (!res.ok) {
+
+                            throw new Error(
+                                "HTTP " +
+                                res.status
+                            );
+
+                        }
+
+
                         const data =
                             await res.json();
+
+
+                        if (
+                            data.success === false ||
+                            !data.url
+                        ) {
+
+                            throw new Error(
+                                data.message ||
+                                "URL upload tidak tersedia"
+                            );
+
+                        }
 
 
                         resolve(
                             data.url
                         );
 
-
                     }
-                    catch(err){
+                    catch (err) {
 
                         reject(
                             err
                         );
 
                     }
+
+                };
+
+
+            reader.onerror =
+                function () {
+
+                    reject(
+                        new Error(
+                            "File gagal dibaca."
+                        )
+                    );
 
                 };
 
@@ -618,15 +712,23 @@ async function uploadFile(file){
 }
 
 
-// ================= LOGO =================
+// =====================================================
+// LOGO
+// =====================================================
 
-document
-    .getElementById("logoFile")
-    .addEventListener(
+const logoFile =
+    document.getElementById(
+        "logoFile"
+    );
+
+
+if (logoFile) {
+
+    logoFile.addEventListener(
         "change",
-        async function(){
+        async function () {
 
-            if(
+            if (
                 this.files.length === 0
             ) return;
 
@@ -635,21 +737,23 @@ document
                 this.files[0];
 
 
-            document.getElementById(
-                "logoPreview"
-            ).src =
+            const preview =
+                document.getElementById(
+                    "logoPreview"
+                );
+
+
+            preview.src =
                 URL.createObjectURL(
                     file
                 );
 
 
-            document.getElementById(
-                "logoPreview"
-            ).style.display =
+            preview.style.display =
                 "block";
 
 
-            try{
+            try {
 
                 const url =
                     await uploadFile(
@@ -664,14 +768,14 @@ document
 
 
             }
-            catch(err){
+            catch (err) {
 
                 alert(
                     "Upload logo gagal"
                 );
 
 
-                console.log(
+                console.error(
                     err
                 );
 
@@ -680,16 +784,26 @@ document
         }
     );
 
+}
 
-// ================= BACKGROUND =================
 
-document
-    .getElementById("bgFile")
-    .addEventListener(
+// =====================================================
+// BACKGROUND
+// =====================================================
+
+const bgFile =
+    document.getElementById(
+        "bgFile"
+    );
+
+
+if (bgFile) {
+
+    bgFile.addEventListener(
         "change",
-        async function(){
+        async function () {
 
-            if(
+            if (
                 this.files.length === 0
             ) return;
 
@@ -698,21 +812,23 @@ document
                 this.files[0];
 
 
-            document.getElementById(
-                "bgPreview"
-            ).src =
+            const preview =
+                document.getElementById(
+                    "bgPreview"
+                );
+
+
+            preview.src =
                 URL.createObjectURL(
                     file
                 );
 
 
-            document.getElementById(
-                "bgPreview"
-            ).style.display =
+            preview.style.display =
                 "block";
 
 
-            try{
+            try {
 
                 const url =
                     await uploadFile(
@@ -727,14 +843,14 @@ document
 
 
             }
-            catch(err){
+            catch (err) {
 
                 alert(
                     "Upload background gagal"
                 );
 
 
-                console.log(
+                console.error(
                     err
                 );
 
@@ -743,16 +859,26 @@ document
         }
     );
 
+}
 
-// ================= CARD BACKGROUND =================
 
-document
-    .getElementById("cardBgFile")
-    .addEventListener(
+// =====================================================
+// CARD BACKGROUND
+// =====================================================
+
+const cardBgFile =
+    document.getElementById(
+        "cardBgFile"
+    );
+
+
+if (cardBgFile) {
+
+    cardBgFile.addEventListener(
         "change",
-        async function(){
+        async function () {
 
-            if(
+            if (
                 this.files.length === 0
             ) return;
 
@@ -761,21 +887,23 @@ document
                 this.files[0];
 
 
-            document.getElementById(
-                "cardBgPreview"
-            ).src =
+            const preview =
+                document.getElementById(
+                    "cardBgPreview"
+                );
+
+
+            preview.src =
                 URL.createObjectURL(
                     file
                 );
 
 
-            document.getElementById(
-                "cardBgPreview"
-            ).style.display =
+            preview.style.display =
                 "block";
 
 
-            try{
+            try {
 
                 const url =
                     await uploadFile(
@@ -790,14 +918,14 @@ document
 
 
             }
-            catch(err){
+            catch (err) {
 
                 alert(
                     "Upload background QR gagal"
                 );
 
 
-                console.log(
+                console.error(
                     err
                 );
 
@@ -806,7 +934,11 @@ document
         }
     );
 
+}
 
-// ================= INIT =================
+
+// =====================================================
+// INIT
+// =====================================================
 
 loadSettings();
