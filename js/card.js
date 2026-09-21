@@ -9,9 +9,91 @@ console.log("ID:", id);
 console.log("Auto Download:", autoDownload);
 
 
+// ==========================================
+// GET ACTIVE SPREADSHEET
+// ==========================================
+
+function getActiveSpreadsheetId() {
+
+    try {
+
+        const user =
+            JSON.parse(
+                localStorage.getItem("user") || "{}"
+            );
+
+        // ======================================
+        // SUPER ADMIN
+        // ======================================
+
+        if (
+            String(user.role || "")
+                .trim()
+                .toLowerCase() === "superadmin"
+        ) {
+
+            console.log(
+                "CARD → menggunakan spreadsheet Super Admin"
+            );
+
+            return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+
+        }
+
+
+        // ======================================
+        // CUSTOMER
+        // ======================================
+
+        if (user.spreadsheetId) {
+
+            console.log(
+                "CARD → menggunakan spreadsheet customer"
+            );
+
+            return user.spreadsheetId;
+
+        }
+
+
+        // ======================================
+        // FALLBACK SUPER ADMIN
+        // ======================================
+
+        console.log(
+            "CARD → spreadsheet user tidak ditemukan, fallback Super Admin"
+        );
+
+        return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+
+    } catch (err) {
+
+        console.error(
+            "Gagal mengambil spreadsheet:",
+            err
+        );
+
+        return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+
+    }
+
+}
+
+
+// ==========================================
+// LOAD CARD
+// ==========================================
+
 async function load() {
 
-    console.log("Mulai load kartu...");
+    console.log(
+        "Mulai load kartu..."
+    );
+
+
+    // ======================================
+    // CEK ID
+    // ======================================
 
     if (!id) {
 
@@ -19,7 +101,37 @@ async function load() {
             "ID tamu tidak ditemukan";
 
         return;
+
     }
+
+
+    // ======================================
+    // SPREADSHEET
+    // ======================================
+
+    const spreadsheetId =
+        getActiveSpreadsheetId();
+
+
+    if (!spreadsheetId) {
+
+        document.getElementById("name").innerText =
+            "Spreadsheet customer tidak ditemukan";
+
+        console.error(
+            "CARD → spreadsheetId kosong"
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "Spreadsheet ID:",
+        spreadsheetId
+    );
+
 
     try {
 
@@ -27,17 +139,49 @@ async function load() {
         // AMBIL DATA TAMU
         // ==========================================
 
-        const response = await fetch(
+        const url =
             API_URL +
-            "?action=guest&id=" +
+            "?action=guest" +
+            "&id=" +
             encodeURIComponent(id) +
+            "&spreadsheetId=" +
+            encodeURIComponent(spreadsheetId) +
             "&t=" +
-            Date.now()
+            Date.now();
+
+
+        console.log(
+            "CARD API:",
+            url
         );
 
-        const result = await response.json();
 
-        console.log("RESPONSE API:", result);
+        const response =
+            await fetch(url);
+
+
+        // ==========================================
+        // CEK HTTP
+        // ==========================================
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "RESPONSE API:",
+            result
+        );
 
 
         // ==========================================
@@ -47,9 +191,11 @@ async function load() {
         if (!result.success) {
 
             document.getElementById("name").innerText =
-                result.message || "Tamu tidak ditemukan";
+                result.message ||
+                "Tamu tidak ditemukan";
 
             return;
+
         }
 
 
@@ -57,27 +203,26 @@ async function load() {
         // AMBIL GUEST
         // ==========================================
 
-        // Support dua kemungkinan format API:
-        //
-        // { success:true, guest:{...} }
-        //
-        // atau
-        //
-        // { success:true, id:"001", nama:"..." }
-
         const guest =
             result.guest || result;
 
 
-        console.log("GUEST:", guest);
+        console.log(
+            "GUEST:",
+            guest
+        );
 
 
-        if (!guest.id && !guest.nama) {
+        if (
+            !guest.id &&
+            !guest.nama
+        ) {
 
             document.getElementById("name").innerText =
                 "Data tamu kosong";
 
             return;
+
         }
 
 
@@ -94,45 +239,69 @@ async function load() {
         // ==========================================
 
         const bg =
-            document.getElementById("background");
+            document.getElementById(
+                "background"
+            );
 
-        bg.src =
-            "assets/card-background.png";
+
+        if (bg) {
+
+            bg.src =
+                "assets/card-background.png";
+
+        }
 
 
-// ==========================================
-// QR CODE
-// ==========================================
+        // ==========================================
+        // QR CODE
+        // ==========================================
 
-const qr =
-    document.getElementById("qr");
+        const qr =
+            document.getElementById("qr");
 
-if (qr) {
 
-    qr.innerHTML = "";
+        if (qr) {
 
-    new QRCode(qr, {
+            qr.innerHTML = "";
 
-        text: String(guest.id),
 
-        width: 160,
+            new QRCode(
+                qr,
+                {
 
-        height: 160,
+                    text:
+                        String(guest.id),
 
-        correctLevel:
-            QRCode.CorrectLevel.M
+                    width:
+                        160,
 
-    });
+                    height:
+                        160,
 
-}
+                    correctLevel:
+                        QRCode.CorrectLevel.M
 
-     // ==========================================
-    // TUNGGU BACKGROUND
-    // ==========================================
+                }
+            );
 
-        await waitImage(bg);
+        }
 
-        console.log("Kartu sudah siap");
+
+        // ==========================================
+        // TUNGGU BACKGROUND
+        // ==========================================
+
+        if (bg) {
+
+            await waitImage(bg);
+
+        }
+
+
+        console.log(
+            "Kartu sudah siap"
+        );
+
 
         // ==========================================
         // AUTO DOWNLOAD
@@ -144,14 +313,17 @@ if (qr) {
                 "AUTO DOWNLOAD AKTIF"
             );
 
-            setTimeout(() => {
 
-                downloadCard();
+            setTimeout(
+                () => {
 
-            }, 700);
+                    downloadCard();
+
+                },
+                700
+            );
 
         }
-
 
     } catch (err) {
 
@@ -160,8 +332,9 @@ if (qr) {
             err
         );
 
+
         document.getElementById("name").innerText =
-            "Terjadi kesalahan";
+            "Terjadi kesalahan saat memuat kartu";
 
     }
 
@@ -174,23 +347,30 @@ if (qr) {
 
 function waitImage(img) {
 
-    return new Promise(resolve => {
+    return new Promise(
+        resolve => {
 
-        if (
-            img.complete &&
-            img.naturalWidth > 0
-        ) {
+            if (
+                img.complete &&
+                img.naturalWidth > 0
+            ) {
 
-            resolve();
-            return;
+                resolve();
+
+                return;
+
+            }
+
+
+            img.onload =
+                () => resolve();
+
+
+            img.onerror =
+                () => resolve();
 
         }
-
-        img.onload = () => resolve();
-
-        img.onerror = () => resolve();
-
-    });
+    );
 
 }
 
@@ -227,7 +407,18 @@ async function downloadCard() {
         // ======================================
 
         const card =
-            document.getElementById("card");
+            document.getElementById(
+                "card"
+            );
+
+
+        if (!card) {
+
+            throw new Error(
+                "Element #card tidak ditemukan"
+            );
+
+        }
 
 
         // ======================================
@@ -239,15 +430,20 @@ async function downloadCard() {
                 card,
                 {
 
-                    scale: 3,
+                    scale:
+                        3,
 
-                    useCORS: true,
+                    useCORS:
+                        true,
 
-                    allowTaint: false,
+                    allowTaint:
+                        false,
 
-                    backgroundColor: null,
+                    backgroundColor:
+                        null,
 
-                    logging: false
+                    logging:
+                        false
 
                 }
             );
@@ -260,11 +456,14 @@ async function downloadCard() {
         const name =
             document.getElementById(
                 "name"
-            ).innerText || "Tamu";
+            ).innerText ||
+            "Tamu";
 
 
         const link =
-            document.createElement("a");
+            document.createElement(
+                "a"
+            );
 
 
         link.download =
@@ -279,17 +478,22 @@ async function downloadCard() {
             );
 
 
-        document.body.appendChild(link);
+        document.body.appendChild(
+            link
+        );
+
 
         link.click();
 
-        document.body.removeChild(link);
+
+        document.body.removeChild(
+            link
+        );
 
 
         console.log(
             "DOWNLOAD BERHASIL"
         );
-
 
     } catch (err) {
 
@@ -310,21 +514,28 @@ async function downloadCard() {
 function loadHtml2Canvas() {
 
     return new Promise(
-        (resolve, reject) => {
+        (
+            resolve,
+            reject
+        ) => {
 
             const script =
                 document.createElement(
                     "script"
                 );
 
+
             script.src =
                 "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+
 
             script.onload =
                 resolve;
 
+
             script.onerror =
                 reject;
+
 
             document.head.appendChild(
                 script
