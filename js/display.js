@@ -45,11 +45,82 @@ function isLoggedIn() {
 
 function getSpreadsheetId() {
 
-    return (
-        localStorage.getItem(
-            "spreadsheetId"
-        ) || ""
-    );
+    try {
+
+        const user =
+            getUser();
+
+
+        // =============================================
+        // SUPER ADMIN
+        // =============================================
+
+        if (
+            String(user.role || "")
+                .trim()
+                .toLowerCase() === "superadmin"
+        ) {
+
+            console.log(
+                "DISPLAY → menggunakan spreadsheet Super Admin"
+            );
+
+            return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+
+        }
+
+
+        // =============================================
+        // CUSTOMER
+        // =============================================
+
+        const spreadsheetId =
+            localStorage.getItem(
+                "spreadsheetId"
+            );
+
+
+        if (spreadsheetId) {
+
+            console.log(
+                "DISPLAY → menggunakan spreadsheet customer"
+            );
+
+            return spreadsheetId;
+
+        }
+
+
+        // =============================================
+        // FALLBACK SUPER ADMIN
+        // =============================================
+
+        if (
+            CONFIG &&
+            CONFIG.SUPER_ADMIN_SPREADSHEET_ID
+        ) {
+
+            console.log(
+                "DISPLAY → spreadsheet customer kosong, fallback Super Admin"
+            );
+
+            return CONFIG.SUPER_ADMIN_SPREADSHEET_ID;
+
+        }
+
+
+        return "";
+
+    } catch (error) {
+
+        console.error(
+            "Gagal mengambil spreadsheet Display:",
+            error
+        );
+
+        return "";
+
+    }
 
 }
 
